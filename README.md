@@ -13,7 +13,3 @@ AP Outcomes are often correlated to measures of socioeconomic factors. There is 
     > Keep all schools for now
     > Find duplicate universities (especially of those in different locations)
     > Online institutions?
-
-## Authors
-
-SJMcElhenney
