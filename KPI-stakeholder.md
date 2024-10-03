@@ -1,5 +1,21 @@
 # KPI and Stakeholder Statement
 
+## Summary of Project
+
+Copied from readme.
+
+AP Outcomes are often correlated to measures of socioeconomic factors. There is a somewhat reduced relationship between universities in a state and the income of that state. We are identifying relationships between Carnegie classifications of universities in a state and College Board AP Exam metrics.
+
+## Description of dataset
+
+1. Carnegie University Classifications
+     > Carnegie is the organization maintaining the classification of universities.
+     > Data includes many basic and specialized university categories (ex. R1/R2, historically black universities, hispanic serving institutions)
+     > Includes university state/city
+2. AP Metric Data from the College Board
+     > Must be obtained from College Board
+     > Metrics include outcome, availability, and amount of students taking exams aggregated to most likely the state level
+
 ## KPIs
 
 ### Predictive Verification
