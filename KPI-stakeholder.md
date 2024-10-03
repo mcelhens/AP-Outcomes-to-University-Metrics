@@ -24,7 +24,7 @@ AP Outcomes are often correlated to measures of socioeconomic factors. There is 
 
 ### Trends to identify for potential predictions
 
-1. Depending on the distribution of types of unviersities what distributions have seemingly beneficial outcome for AP results?
+1. Depending on the distribution of types of universities what distributions have seemingly beneficial outcome for AP results?
 2. Corrected for population (or geographic area), does having more of X university type improve AP outcome?
 3. Corrected for region of the united states are there trends?
 4. Relationship between minority schools and minority performance for example historically black institutions or hispanic serving?
