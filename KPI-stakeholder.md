@@ -1,6 +1,6 @@
 # KPI and Stakeholder Statement
 
-Shannon Jay McElhenney, Raymond Tana, Prabhat Devkota, Jung-Tsung Li
+Shannon Jay McElhenney, Raymond Tana, Prabhat Devkota, Jung-Tsung Li, Shrabana Hazra
 
 ## Summary of Project
 
