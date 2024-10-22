@@ -4,14 +4,20 @@ Authors: Shannon Jay McElhenney, Raymond Tana, Jung-Tsung Li, Shrabana Hazra, Pr
 
 AP Outcomes are often correlated to measures of socioeconomic factors. There is a somewhat reduced relationship between universities in a state and the income of that state. We are identifying relationships between Carnegie classifications of universities in a state and College Board AP Exam metrics.
 
-## To-do Items (03 Oct 2024)
+## To-do Items 
 
-1. KPI/Shareholder Statement-Draft (04 Oct 2024)
-2. Contact college board for data
-    > Ask Roman/Steven about contacting the college board and their opinion on the county/state issue
-3. Select reasonable metrics from Carnegie data
-    > Reduce fileset
-        > Select metrics not in basic definitions to include, keep all basic definitions for now
-    > Keep all schools for now
-    > Find duplicate universities (especially of those in different locations)
-    > Online institutions?
+1. Investigate potential additional data.
+2. Preliminary investigations and visualizations.
+3. Start thinking about statistics.
+
+## Data references and required packages
+
+### Data references in no particular style
+
+Indiana University Center for Postsecondary Research (n.d.). The Carnegie Classification of Institutions of Higher Education, 2021 edition, Bloomington, IN: Author.
+
+### Packages for python
+
+Pandas
+Seaborn
+Matplotlib
