@@ -21,3 +21,4 @@ Indiana University Center for Postsecondary Research (n.d.). The Carnegie Classi
 Pandas
 Seaborn
 Matplotlib
+Numpy
