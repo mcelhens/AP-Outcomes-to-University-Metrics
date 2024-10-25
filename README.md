@@ -20,9 +20,10 @@ United States Census Bureau -- the United States Office of Management and Budget
 
 ### Packages for python
 
-Pandas
-Seaborn
-Matplotlib
-Numpy
-Scipy
+`Streamlit`
+`Pandas`
+`Seaborn`
+`Matplotlib`
+`Numpy`
+`Scipy`
 
