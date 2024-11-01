@@ -30,4 +30,4 @@ GA Department of Community Affairs Office of Research, Municipalities by County
 `Matplotlib`
 `Numpy`
 `Scipy`
-
+`Plotly`
