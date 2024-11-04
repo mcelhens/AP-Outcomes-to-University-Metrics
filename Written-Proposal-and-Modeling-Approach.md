@@ -16,7 +16,7 @@ For a few states, we were able to find comprehensive data from over the past fiv
 
 We plan to model outcomes on AP exams (i.e., the *passing rate*, which means the proportion of students who scored 3, 4, or 5 on at least one of their exams) as a function of a few key features. 
 - *Average per-capita income* within a county
-- Measure of *university presence* aggregated into several university classifications (R1/R2; undergraduate; or professional/associate), affiliations (public; private), size, and/or selectivity
+- Measure of *university presence* aggregated into several university classifications (R1/R2; undergraduate; professional; or associates), affiliations (public; private), size, and/or selectivity
   -  Simpler method: tally of universities also in that county
   -  More complex method: tallies of universities in a $R$-mile radius of that county
 - Hypothetically "irrelevant" features 
