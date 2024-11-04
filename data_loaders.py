@@ -3,11 +3,18 @@
 import pandas as pd
 
 
-def gimmeCarnegieLimted():
+def gimmeCarnegieLimted(): # limitations need revision
     """ Returns the limited Carnegie Dataset
         County information should be applied post-loading where appropriate
     """
-    carnegie=pd.read_excel('data/CCIHE2021-PublicData_limited.xlsx',sheet_name='Data') # Carnegie university clasification as dataframe
+    carnegie=pd.read_csv('data/CCIHE2021-PublicData_limited.csv') # Carnegie university clasification as dataframe
+    return carnegie
+
+def gimmeCarnegieFull():
+    """ Returns the limited Carnegie Dataset
+        County information should be applied post-loading where appropriate
+    """
+    carnegie=pd.read_excel('data/CCIHE2021-PublicData.xlsx',sheet_name='Data') # Carnegie university clasification as dataframe
     return carnegie
 
 def gimmeOutcomes(year):
@@ -49,13 +56,9 @@ def gimmeAvailability(year):
 
     return availability
 
-def gimmeGA(year):
-    """Returns GA AP data along your choice of year counties were fixed manually"""
-    ga_outcomes=pd.read_excel('data/GA_AP_combined-limited.xlsx',sheet_name=str(year),index_col='County')
-
-    temp=pd.DataFrame({'Passing Ratio':ga_outcomes['Passing Ratio'].groupby(ga_outcomes.index).mean(),'Number of Tests':ga_outcomes['NUMBER_TESTS_TAKEN'].groupby(ga_outcomes.index).sum(),'Number of Tests Passed':ga_outcomes['NOTESTS_3ORHIGHER'].groupby(ga_outcomes.index).sum()}).reset_index()
-
-    ga_outcomes=temp
+def gimmeGA():
+    """Returns GA AP data counties were fixed manually, atlanta is pulled into Fulton county all other non-county districts are dropped"""
+    ga_outcomes=pd.read_csv('data/GA_2019-23_counties.csv')
     return ga_outcomes
 
 
