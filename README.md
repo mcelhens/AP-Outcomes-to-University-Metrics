@@ -39,5 +39,6 @@ Federal Reserve Bank of St. Louis
 `Numpy`
 `Scipy`
 `Plotly`
-'statsmodels'
-'sklearn'
+`statsmodels`
+`sklearn`
+`geopy`
