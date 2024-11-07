@@ -33,12 +33,12 @@ Federal Reserve Bank of St. Louis
 ### Packages for python
 
 `Streamlit`
-`Pandas`
-`Seaborn`
-`Matplotlib`
-`Numpy`
-`Scipy`
-`Plotly`
 `statsmodels`
 `sklearn`
+`Pandas`
+`Numpy`
+`Scipy`
 `geopy`
+`Matplotlib`
+`Plotly`
+`Seaborn`
