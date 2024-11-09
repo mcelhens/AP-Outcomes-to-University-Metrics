@@ -61,6 +61,12 @@ def gimmeGA():
     ga_outcomes=pd.read_csv('data/GA_2019-23_counties.csv')
     return ga_outcomes
 
+def gimmeIN():
+    """Returns Indiana (IN) AP data"""
+    in_outcomes = pd.read_csv(path_to_fixed_IN_data)
+
+    return outcomes
+
 
 
 def gimmeGA_Counties():
@@ -76,3 +82,4 @@ def gimmeGA_Counties():
             ga_counties.append([county,city.replace("\n", "")])
     ga_counties=pd.DataFrame(ga_counties,columns=['County','City'])
     return ga_counties
+
