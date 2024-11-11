@@ -34,7 +34,7 @@ def load_and_filter_shapefile(state_fips_of_interest):
 def prepare_data(geoids):
     # Fix a random seed
     np.random.seed(5)
-    years = ['2020', '2021', '2022', '2023']
+    years = ['2019', '2020', '2021', '2022']
     data_frames = []
     for year in years:
         data = pd.DataFrame({
