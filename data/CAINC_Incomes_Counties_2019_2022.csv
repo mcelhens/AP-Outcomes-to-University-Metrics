@@ -9401,9 +9401,9 @@
 " ""55077""","Marquette, WI",Personal income (thousands of dollars) ,Thousands of dollars,629373,664175,718404,772004,773811
 " ""55077""","Marquette, WI",Population (persons) 1/,Number of persons,15397,15541,15594,15777,15779
 " ""55077""","Marquette, WI",Per capita personal income (dollars) 2/,Dollars,40876,42737,46069,48932,49041
-" ""55078""","Menominee, WI*",Personal income (thousands of dollars) ,Thousands of dollars,138774,147581,157795,177260,173901
-" ""55078""","Menominee, WI*",Population (persons) 1/,Number of persons,4359,4290,4256,4292,4197
-" ""55078""","Menominee, WI*",Per capita personal income (dollars) 2/,Dollars,31836,34401,37076,41300,41435
+" ""55078""","Menominee, WI",Personal income (thousands of dollars) ,Thousands of dollars,138774,147581,157795,177260,173901
+" ""55078""","Menominee, WI",Population (persons) 1/,Number of persons,4359,4290,4256,4292,4197
+" ""55078""","Menominee, WI",Per capita personal income (dollars) 2/,Dollars,31836,34401,37076,41300,41435
 " ""55079""","Milwaukee, WI",Personal income (thousands of dollars) ,Thousands of dollars,44055784,45077846,47536977,51723659,51617850
 " ""55079""","Milwaukee, WI",Population (persons) 1/,Number of persons,942669,941127,938527,924207,918661
 " ""55079""","Milwaukee, WI",Per capita personal income (dollars) 2/,Dollars,46735,47898,50651,55965,56188
@@ -9449,18 +9449,18 @@
 " ""55107""","Rusk, WI",Personal income (thousands of dollars) ,Thousands of dollars,623081,634043,678932,734989,747771
 " ""55107""","Rusk, WI",Population (persons) 1/,Number of persons,14177,14228,14179,14116,14186
 " ""55107""","Rusk, WI",Per capita personal income (dollars) 2/,Dollars,43950,44563,47883,52068,52712
-" ""55109""","St. Croix, WI",Personal income (thousands of dollars) ,Thousands of dollars,5006556,5293643,5597173,6190800,6478914
-" ""55109""","St. Croix, WI",Population (persons) 1/,Number of persons,91288,92467,93874,95055,96017
-" ""55109""","St. Croix, WI",Per capita personal income (dollars) 2/,Dollars,54844,57249,59624,65129,67477
+" ""55109""","Saint Croix, WI",Personal income (thousands of dollars) ,Thousands of dollars,5006556,5293643,5597173,6190800,6478914
+" ""55109""","Saint Croix, WI",Population (persons) 1/,Number of persons,91288,92467,93874,95055,96017
+" ""55109""","Saint Croix, WI",Per capita personal income (dollars) 2/,Dollars,54844,57249,59624,65129,67477
 " ""55111""","Sauk, WI",Personal income (thousands of dollars) ,Thousands of dollars,3124532,3427887,3661518,4105210,4081573
 " ""55111""","Sauk, WI",Population (persons) 1/,Number of persons,65344,65586,65793,65740,65777
 " ""55111""","Sauk, WI",Per capita personal income (dollars) 2/,Dollars,47817,52266,55652,62446,62052
 " ""55113""","Sawyer, WI",Personal income (thousands of dollars) ,Thousands of dollars,739335,796048,849194,935910,946332
 " ""55113""","Sawyer, WI",Population (persons) 1/,Number of persons,17551,17798,18123,18247,18559
 " ""55113""","Sawyer, WI",Per capita personal income (dollars) 2/,Dollars,42125,44727,46857,51291,50990
-" ""55115""","Shawano, WI*",Personal income (thousands of dollars) ,Thousands of dollars,1714113,1792848,1905149,2040749,2062440
-" ""55115""","Shawano, WI*",Population (persons) 1/,Number of persons,40780,40855,40873,40812,40886
-" ""55115""","Shawano, WI*",Per capita personal income (dollars) 2/,Dollars,42033,43883,46611,50004,50444
+" ""55115""","Shawano, WI",Personal income (thousands of dollars) ,Thousands of dollars,1714113,1792848,1905149,2040749,2062440
+" ""55115""","Shawano, WI",Population (persons) 1/,Number of persons,40780,40855,40873,40812,40886
+" ""55115""","Shawano, WI",Per capita personal income (dollars) 2/,Dollars,42033,43883,46611,50004,50444
 " ""55117""","Sheboygan, WI",Personal income (thousands of dollars) ,Thousands of dollars,6005261,6115738,6487359,6922115,7112794
 " ""55117""","Sheboygan, WI",Population (persons) 1/,Number of persons,117363,117703,118030,117697,117841
 " ""55117""","Sheboygan, WI",Per capita personal income (dollars) 2/,Dollars,51168,51959,54964,58813,60359
@@ -9599,7 +9599,3 @@
 " ""98000""",Far West,Personal income (thousands of dollars) ,Thousands of dollars,3339906496,3524619652,3828494482,4179488126,4193955215
 " ""98000""",Far West,Population (persons) 1/,Number of persons,56477384,56663461,56770093,56467775,56406816
 " ""98000""",Far West,Per capita personal income (dollars) 2/,Dollars,59137,62203,67439,74015,74352
-Note: See the included footnote file.,,,,,,,,
-"CAINC1: County and MSA personal income summary: personal income, population, per capita personal income ",,,,,,,,
-"Last updated: November 16, 2023-- new statistics for 2022; revised statistics for 1979-2021.",,,,,,,,
-U.S. Bureau of Economic Analysis,,,,,,,,
