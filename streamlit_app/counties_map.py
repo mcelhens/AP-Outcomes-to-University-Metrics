@@ -16,8 +16,10 @@ st.set_page_config(
 )
 
 def main():
+    states_of_interest = ['GA', 'WI', 'MA']
     # Example DataFrame for universities
-    universities_df = pd.read_csv('carnegie_with_location.csv')[['name', 'latitude', 'longitude']]
+    universities_df = pd.read_csv('../data/carnegie_with_location.csv')[['name', 'stabbr', 'latitude', 'longitude']]
+    universities_df = universities_df[universities_df['stabbr'].isin(states_of_interest)]
     # Prepare your data
     counties_map_data = pd.read_csv('States_Counties_Map_Data.csv')
     # List of features to select from
