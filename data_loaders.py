@@ -14,6 +14,19 @@ def gimmeCountyIncomes(prefix = ''):
     incomes['State_Abbreviation'] = incomes.apply(lambda row: split_county_state(row['GeoName'], county = False), axis = 1)
     return incomes[['County', 'State_Abbreviation', '2018', '2019', '2020', '2021', '2022']]
 
+def gimmeCountyPopulation(prefix = ''): 
+    """Returns the county level data for population"""
+    population = pd.read_csv(prefix + 'data/CAINC_Incomes_Counties_2019_2022.csv')
+    population = population[population['Description'] == 'Population (persons) 1/']
+    population = population[population['GeoName'].str.contains(',')]
+    def split_county_state(geoName, county = True):
+        S = geoName.split(', ')
+        return S[0] if county else S[len(S) - 1]
+    population['County'] = population.apply(lambda row: split_county_state(row['GeoName'], county = True), axis = 1)
+    population['State_Abbreviation'] = population.apply(lambda row: split_county_state(row['GeoName'], county = False), axis = 1)
+    return population[['County', 'State_Abbreviation', '2018', '2019', '2020', '2021', '2022']]
+
+
 def gimmeCarnegieLimted(prefix = ''): # limitations need revision
     """ Returns the limited Carnegie Dataset
         County information should be applied post-loading where appropriate
