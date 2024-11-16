@@ -485,7 +485,7 @@
 483,130226,Quinnipiac University,Hamden,CT,21,18,18,18,17,17,16,8,1,2,2,0,1,0,0,0,0,0,3800,1,"275 Mt Carmel Ave, Hamden, CT 06518, USA",41.4189262,-72.8936493
 484,130253,Sacred Heart University,Fairfield,CT,21,18,18,18,17,17,16,8,1,2,2,0,0,0,0,0,0,0,3180,2,"5151 Park Ave, Fairfield, CT 06825, USA",41.220562,-73.2423947
 485,130314,University of Saint Joseph,West Hartford,CT,21,19,19,18,17,18,16,6,1,2,2,0,0,0,0,0,0,0,384,1,"1678 Asylum Ave, West Hartford, CT 06117, USA",41.7819528,-72.7305002
-486,130396,Gateway Community College,New Haven,CT,40,7,7,2,4,4,2,0,1,4,1,0,0,0,0,0,0,0,0,,"108 N 40th St, Phoenix, AZ 85034, USA",33.4498319,-111.9983646
+486,130396,Gateway Community College,New Haven,CT,40,7,7,2,4,4,2,0,1,4,1,0,0,0,0,0,0,0,0,,"20 Church St, New Haven, CT 06510",41.304453,-72.927015
 487,130493,Southern Connecticut State University,New Haven,CT,21,18,18,18,18,18,14,18,1,1,1,0,0,0,0,0,0,0,2240,2,"501 Crescent St, New Haven, CT 06515, USA",41.3317662,-72.9483416
 488,130590,Trinity College,Hartford,CT,31,21,21,21,21,21,7,8,1,2,2,0,0,0,0,0,0,0,1700,3,"300 Summit St, Hartford, CT 06106, USA",41.7477163,-72.6905038
 489,130606,Tunxis Community College,Farmington,CT,40,4,4,2,4,4,2,0,1,4,1,0,0,0,0,0,0,0,0,,"271 Scott Swamp Rd, Farmington, CT 06032, USA",41.70614399999999,-72.8794757
@@ -728,7 +728,7 @@
 726,145336,Governors State University,University Park,IL,21,18,18,18,18,18,14,18,3,1,1,0,0,0,0,0,0,0,272,1,"1 University Pkwy, University Park, IL 60484, USA",41.4483962,-87.7161863
 727,145372,Greenville University,Greenville,IL,32,22,22,20,20,20,16,9,3,2,2,0,0,0,0,0,0,0,801,1,"315 E College Ave, Greenville, IL 62246, USA",38.894586,-89.4084334
 728,145497,Hebrew Theological College,Skokie,IL,51,24,24,24,24,21,9,0,3,2,2,0,0,0,0,0,0,0,120,1,"7135 Carpenter Rd, Skokie, IL 60077, USA",42.0108542,-87.760724
-729,145521,Highland Community College,Freeport,IL,40,2,2,6,6,6,2,0,3,4,1,0,0,0,0,0,0,0,0,,"606 W Main St, Highland, KS 66035, USA",39.85998800000001,-95.2715864
+729,145521,Highland Community College,Freeport,IL,40,2,2,6,6,6,2,0,3,4,1,0,0,0,0,0,0,0,0,,"2998 W Pearl City Rd, Freeport, IL 61032",42.282708,-89.673662
 730,145558,Rosalind Franklin University of Medicine and Science,North Chicago,IL,52,25,25,25,25,25,6,18,3,2,2,0,1,0,0,0,0,0,574,0,"3333 N Green Bay Rd, North Chicago, IL 60064, USA",42.3003584,-87.8588156
 731,145600,University of Illinois Chicago,Chicago,IL,15,15,15,15,15,15,14,14,3,1,1,0,1,0,0,0,0,0,3510,2,"1200 W Harrison St, Chicago, IL 60607, USA",41.8686034,-87.6484377
 732,145619,Benedictine University,Lisle,IL,21,18,18,17,17,18,16,18,3,2,2,0,0,0,0,0,0,0,534,1,"5700 College Rd, Lisle, IL 60532, USA",41.7784418,-88.0952683
@@ -758,7 +758,7 @@
 756,146603,Lewis and Clark Community College,Godfrey,IL,40,4,4,6,9,6,2,0,3,4,1,0,0,0,0,0,0,0,0,,"5800 Godfrey Rd, Godfrey, IL 62035, USA",38.951806,-90.1944326
 757,146612,Lewis University,Romeoville,IL,21,18,18,18,18,18,16,12,3,2,2,0,0,0,0,0,0,0,1251,2,"1 University Pkwy, Romeoville, IL 60446, USA",41.6048101,-88.0796259
 758,146667,Lincoln Christian University,Lincoln,IL,51,24,24,24,24,20,17,8,3,2,2,0,0,0,0,0,0,0,486,1,"100 Campus View Dr, Lincoln, IL 62656, USA",40.1489112,-89.3461545
-759,146676,Lincoln College,Lincoln,IL,40,23,23,23,23,22,18,0,3,2,2,0,0,0,0,0,0,0,653,2,"7225 Winton Dr Building 128, Indianapolis, IN 46268",39.884039,-86.246697
+759,146676,Lincoln College,Lincoln,IL,40,23,23,23,23,22,18,0,3,2,2,0,0,0,0,0,0,0,653,2,"300 Keokuk St, Lincoln, IL 62656",40.157705,-89.36054
 760,146685,Lincoln Land Community College,Springfield,IL,40,3,3,9,6,6,2,0,3,4,1,0,0,0,0,0,0,0,0,,"5250 Shepherd Rd, Springfield, IL 62703, USA",39.72035109999999,-89.6120151
 761,146700,Lincoln College of Technology-Melrose Park,Melrose Park,IL,-2,-2,-2,11,11,7,3,0,3,6,3,0,0,0,0,0,0,0,0,,"8317 W North Ave, Melrose Park, IL 60160, USA",41.90549499999999,-87.8320724
 762,146719,Loyola University Chicago,Chicago,IL,15,16,16,16,16,16,13,14,3,2,2,0,1,0,0,0,0,0,4723,3,"1032 W Sheridan Rd, Chicago, IL 60660, USA",41.9983568,-87.6569374
@@ -795,7 +795,7 @@
 793,148380,Rock Valley College,Rockford,IL,40,3,3,6,4,6,2,0,3,4,1,0,0,0,0,0,0,0,0,,"3301 N Mulford Rd, Rockford, IL 61114, USA",42.3081071,-88.9939767
 794,148405,Rockford University,Rockford,IL,21,19,19,20,20,20,16,9,3,2,2,0,0,0,0,0,0,0,439,1,"5050 E State St, Rockford, IL 61108, USA",42.2688957,-89.0187474
 795,148487,Roosevelt University,Chicago,IL,21,18,18,18,17,17,16,18,3,2,2,0,0,0,0,0,0,0,763,1,"430 S Michigan Ave, Chicago, IL 60605, USA",41.8760026,-87.6251806
-796,148496,Dominican University,River Forest,IL,21,18,18,18,18,18,13,13,3,2,2,0,0,0,0,1,1,0,462,1,"470 Western Hwy S, Orangeburg, NY 10962, USA",41.0479726,-73.9504541
+796,148496,Dominican University,River Forest,IL,21,18,18,18,18,18,13,13,3,2,2,0,0,0,0,1,1,0,462,1,"7900 Division St, River Forest, IL 60305",41.902354,-87.82205
 797,148511,Rush University,Chicago,IL,52,25,25,25,25,25,20,17,3,2,2,0,1,0,0,0,0,0,0,0,"1653 W Congress Pkwy #12, Chicago, IL 60612, USA",41.8734416,-87.6689797
 798,148575,Saint Francis Medical Center College of Nursing,Peoria,IL,53,26,26,26,26,26,20,3,3,2,2,0,0,0,0,0,0,0,80,0,"511 NE Greenleaf St, Peoria, IL 61603, USA",40.7012608,-89.5901983
 799,148584,University of St Francis,Joliet,IL,21,18,18,18,17,17,16,12,3,2,2,0,0,0,0,0,0,0,435,1,"500 Wilcox St, Joliet, IL 60435, USA",41.5332096,-88.0975858
@@ -921,7 +921,7 @@
 919,154262,St Luke's College,Sioux City,IA,40,9,9,26,26,26,18,0,4,2,2,0,0,0,0,0,0,0,0,0,"2800 Pierce St # 410, Sioux City, IA 51104, USA",42.5200439,-96.4047698
 920,154350,Simpson College,Indianola,IA,32,21,21,21,21,22,13,11,4,2,2,0,0,0,0,0,0,0,1264,2,"701 N C St, Indianola, IA 50125, USA",41.3660163,-93.562973
 921,154378,Southeastern Community College,West Burlington,IA,40,2,2,5,6,7,3,0,4,4,1,0,0,0,0,0,0,0,249,,"1500 W Agency Rd, West Burlington, IA 52655, USA",40.8145996,-91.1733814
-922,154396,Southwestern Community College,Creston,IA,40,1,1,6,6,5,2,0,4,4,1,0,0,0,0,0,0,0,221,,"225 Industrial Park Loop, Franklin, NC 28734, USA",35.1628998,-83.433274
+922,154396,Southwestern Community College,Creston,IA,40,1,1,6,6,5,2,0,4,4,1,0,0,0,0,0,0,0,221,,"1501 W Townline St, Creston, IA 50801",41.072189,-94.38123
 923,154493,Upper Iowa University,Fayette,IA,32,20,20,19,18,18,16,10,4,2,2,0,0,0,0,0,0,0,752,0,"605 Washington St, Fayette, IA 52142, USA",42.841022,-91.799848
 924,154518,Waldorf University,Forest City,IA,33,22,22,22,19,19,19,10,4,3,3,0,0,0,0,0,0,0,493,1,"106 S 6th St, Forest City, IA 50436, USA",43.2625343,-93.6424472
 925,154527,Wartburg College,Waverly,IA,32,21,21,21,21,21,12,0,4,2,2,0,0,0,0,0,0,0,1409,1,"100 Wartburg Blvd, Waverly, IA 50677, USA",42.7287897,-92.4832333
@@ -1263,7 +1263,7 @@
 1261,169442,College for Creative Studies,Detroit,MI,56,30,30,30,30,30,19,8,3,2,2,0,0,0,0,0,0,0,626,2,"201 E Kirby St, Detroit, MI 48202",42.359,-83.062
 1262,169479,Davenport University,Grand Rapids,MI,55,19,19,18,18,18,19,7,3,2,2,0,0,0,0,0,0,0,852,0,"6191 Kraft Ave SE, Grand Rapids, MI 49512, USA",42.84967289999999,-85.5299791
 1263,169521,Delta College,University Center,MI,40,3,3,5,4,1,1,0,3,4,1,0,0,0,0,0,0,0,0,,"1961 Delta Rd, University Center, MI 48710, USA",43.5590084,-83.9858873
-1264,169655,MIAT College of Technology,Canton,MI,-2,-2,-2,11,11,11,4,0,3,6,3,0,0,0,0,0,0,0,0,,"533 Northpark Central Dr, Houston, TX 77073, USA",29.993801,-95.416618
+1264,169655,MIAT College of Technology,Canton,MI,-2,-2,-2,11,11,11,4,0,3,6,3,0,0,0,0,0,0,0,0,,"2955 Haggerty Rd, Canton, MI 48188",42.285763,-83.445452
 1265,169716,University of Detroit Mercy,Detroit,MI,21,18,18,18,17,17,16,18,3,2,2,0,1,0,0,0,0,0,965,2,"4001 W McNichols Rd, Detroit, MI 48221, USA",42.4140847,-83.1379388
 1266,169798,Eastern Michigan University,Ypsilanti,MI,21,18,18,17,16,16,17,18,3,1,1,0,0,0,0,0,0,0,3946,1,"900 Oakwood St, Ypsilanti, MI 48197, USA",42.2506803,-83.624089
 1267,169910,Ferris State University,Big Rapids,MI,22,19,19,19,17,17,19,18,3,1,1,0,0,0,0,0,0,0,3219,1,"1201 S State St, Big Rapids, MI 49307, USA",43.6839617,-85.4852488
@@ -1289,7 +1289,7 @@
 1287,170675,Lawrence Technological University,Southfield,MI,21,18,18,18,18,18,19,17,3,2,2,0,0,0,0,0,0,0,967,1,"21000 W 10 Mile Rd, Southfield, MI 48075, USA",42.4751235,-83.2507416
 1288,170790,Macomb Community College,Warren,MI,40,5,5,6,5,4,2,0,3,4,1,0,0,0,0,0,0,0,0,,"14500 12 Mile Rd, Warren, MI 48088, USA",42.5051879,-82.9729882
 1289,170806,Madonna University,Livonia,MI,21,18,18,18,18,19,19,8,3,2,2,0,0,0,0,0,0,0,430,1,"36600 Schoolcraft Rd, Livonia, MI 48150, USA",42.3857893,-83.4062995
-1290,170967,Rochester University,Rochester Hills,MI,33,22,22,22,22,22,16,3,3,2,2,0,0,0,0,0,0,0,310,1,"Rochester, NY, USA",43.1305531,-77.6260033
+1290,170967,Rochester University,Rochester Hills,MI,33,22,22,22,22,22,16,3,3,2,2,0,0,0,0,0,0,0,310,1,"800 W Avon Rd, Rochester Hills, MI 48307",42.666342,-83.143228
 1291,170976,University of Michigan-Ann Arbor,Ann Arbor,MI,15,15,15,15,15,15,11,14,3,1,1,0,1,0,0,0,0,0,12242,3,"500 S State St, Ann Arbor, MI 48109, USA",42.277145,-83.7382071
 1292,171100,Michigan State University,East Lansing,MI,15,15,15,15,15,15,14,14,3,1,1,1,1,0,0,0,0,0,17445,2,"East Lansing, MI, USA",42.7250725,-84.4790827
 1293,171128,Michigan Technological University,Houghton,MI,16,16,16,16,16,16,20,15,3,1,1,0,0,0,0,0,0,0,3267,3,"1400 Townsend Dr, Houghton, MI 49931, USA",47.1164646,-88.5437704
@@ -2006,7 +2006,7 @@
 2004,199634,Sandhills Community College,Pinehurst,NC,40,2,2,5,5,4,2,0,5,4,1,0,0,0,0,0,0,0,0,,"3395 Airport Rd, Pinehurst, NC 28374, USA",35.2206627,-79.4082322
 2005,199643,Shaw University,Raleigh,NC,32,22,22,22,22,22,13,11,5,2,2,0,0,1,0,0,1,0,1095,2,"118 E South St, Raleigh, NC 27601, USA",35.771043,-78.6379262
 2006,199698,St. Andrews University,Laurinburg,NC,31,21,21,22,22,22,16,2,5,2,2,0,0,0,0,0,0,0,628,2,"1700 Dogwood Mile St, Laurinburg, NC 28352, USA",34.7429968,-79.4809853
-2007,199722,Southeastern Community College,Whiteville,NC,40,2,2,9,5,5,2,0,5,4,1,0,0,0,0,0,0,0,0,,"1500 W Agency Rd, West Burlington, IA 52655, USA",40.8145996,-91.1733814
+2007,199722,Southeastern Community College,Whiteville,NC,40,2,2,9,5,5,2,0,5,4,1,0,0,0,0,0,0,0,0,,"4564 Chadbourn Hwy, Whiteville, NC 28472",34.331551,-78.782149
 2008,199731,Southwestern Community College,Sylva,NC,40,2,2,6,5,5,2,0,5,4,1,0,0,0,0,0,0,0,0,,"225 Industrial Park Loop, Franklin, NC 28734, USA",35.1628998,-83.433274
 2009,199740,Stanly Community College,Albemarle,NC,40,2,2,6,5,6,2,0,5,4,1,0,0,0,0,0,0,0,0,,"141 College Dr, Albemarle, NC 28001, USA",35.33928119999999,-80.2360883
 2010,199759,Southeastern Baptist Theological Seminary,Wake Forest,NC,51,24,-2,18,18,17,14,18,5,2,2,0,0,0,0,0,0,0,849,1,"Stealey Hall - Main Administration Building, 100 N Wingate St, Wake Forest, NC 27587, USA",35.980711,-78.5124232
@@ -2523,7 +2523,7 @@
 2521,219602,Austin Peay State University,Clarksville,TN,21,19,19,18,18,18,13,4,5,1,1,0,0,0,0,0,0,0,1803,1,"601 College St, Clarksville, TN 37044, USA",36.5357938,-87.3534175
 2522,219639,Baptist Health Sciences University,Memphis,TN,40,26,26,26,26,26,18,0,5,2,2,0,0,0,0,0,0,0,195,0,"1003 Monroe Ave, Memphis, TN 38104, USA",35.1390155,-90.0282849
 2523,219709,Belmont University,Nashville,TN,21,18,18,18,17,17,16,8,5,2,2,0,0,0,0,0,0,0,3787,2,"1900 Belmont Blvd, Nashville, TN 37212, USA",36.1329081,-86.7941702
-2524,219718,Bethel University,McKenzie,TN,31,20,20,18,18,18,19,10,5,2,2,0,0,0,0,0,0,0,922,1,"3900 Bethel Dr, St Paul, MN 55112, USA",45.0582445,-93.1621869
+2524,219718,Bethel University,McKenzie,TN,31,20,20,18,18,18,19,10,5,2,2,0,0,0,0,0,0,0,922,1,"325 Cherry Ave, McKenzie, TN 38201",36.14189,-88.514775
 2525,219790,Bryan College-Dayton,Dayton,TN,32,22,22,20,20,20,16,7,5,2,2,0,0,0,0,0,0,0,663,1,"721 Bryan Dr, Dayton, TN 37321, USA",35.4987044,-84.9983812
 2526,219806,Carson-Newman University,Jefferson City,TN,21,21,21,19,17,17,13,12,5,2,2,0,0,0,0,0,0,0,1172,1,"1646 Russell Ave, Jefferson City, TN 37760, USA",36.1218768,-83.4906048
 2527,219824,Chattanooga State Community College,Chattanooga,TN,40,3,3,4,4,4,2,0,5,4,1,0,0,0,0,0,0,0,0,,"4501 Amnicola Hwy, Chattanooga, TN 37406, USA",35.1002107,-85.2373751
@@ -2755,7 +2755,7 @@
 2753,230995,Norwich University,Northfield,VT,21,19,19,18,18,18,16,4,1,2,2,0,0,0,0,0,0,0,2227,2,"158 Harmon Dr, Northfield, VT 05663, USA",44.1387642,-72.6615774
 2754,231059,Saint Michael's College,Colchester,VT,21,21,21,21,21,21,10,9,1,2,2,0,0,0,0,0,0,0,1498,1,"One Winooski Park, Colchester, VT 05439, USA",44.49598,-73.163743
 2755,231068,SIT Graduate Institute,Brattleboro,VT,22,19,19,32,19,20,0,6,1,2,2,0,0,0,0,0,0,0,0,0,"1 Kipling Rd, Brattleboro, VT 05301, USA",42.8903298,-72.5645828
-2756,231095,Sterling College,Craftsbury Common,VT,40,32,32,21,21,22,12,0,1,2,2,0,0,0,0,0,0,0,118,1,"125 W Cooper Ave, Sterling, KS 67579, USA",38.2202739,-98.2071638
+2756,231095,Sterling College,Craftsbury Common,VT,40,32,32,21,21,22,12,0,1,2,2,0,0,0,0,0,0,0,118,1,"16 Sterling Dr, Craftsbury Common, VT 05827",44.65238,-72.382372
 2757,231147,Vermont Law and Graduate School,South Royalton,VT,57,31,31,31,31,31,0,3,1,2,2,0,0,0,0,0,0,0,0,0,"164 Chelsea St, South Royalton, VT 05068, USA",43.8214067,-72.5209881
 2758,231165,Vermont Technical College,Randolph,VT,54,23,23,23,23,23,5,3,1,1,1,0,0,0,0,0,0,0,589,2,"124 Admin Dr, Randolph Center, VT 05061, USA",43.938717,-72.604721
 2759,231174,University of Vermont,Burlington,VT,15,16,16,16,16,16,13,17,1,1,1,1,1,0,0,0,0,0,5872,3,"Burlington, VT 05405, USA",44.4778528,-73.1964637
@@ -3562,7 +3562,7 @@
 3560,456153,MediaTech Institute-Houston,Houston,TX,-2,-2,-2,-2,-2,12,4,0,6,6,3,0,0,0,0,0,0,0,0,,"3324 Walnut Bend Ln, Houston, TX 77042, USA",29.7248527,-95.5682337
 3561,456205,Miller-Motte College-Raleigh,Raleigh,NC,-2,-2,-2,10,10,10,4,0,5,6,3,0,0,0,0,0,0,0,0,,"3901 Capital Blvd STE 151, Raleigh, NC 27604, USA",35.8345948,-78.5858849
 3562,456454,Fortis College-Salt Lake City,Salt Lake City,UT,-2,-2,-2,10,10,10,4,0,7,6,3,0,0,0,0,0,0,0,0,,"3949 S 700 E #150, Salt Lake City, UT 84107, USA",40.6858482,-111.8705285
-3563,456481,Polytechnic University of Puerto Rico-Miami,Miami,FL,-2,-2,-2,29,29,22,20,7,5,2,2,0,0,0,0,1,1,0,0,1,Puerto Rico,18.220833,-66.590149
+3563,456481,Polytechnic University of Puerto Rico-Miami,Miami,FL,-2,-2,-2,29,29,22,20,7,5,2,2,0,0,0,0,1,1,0,0,1,"8180 NW 36th St #401, Doral, FL 33166",25.808869,-80.328714
 3564,456490,Polytechnic University of Puerto Rico-Orlando,Orlando,FL,-2,-2,-2,29,29,22,19,8,5,2,2,0,0,0,0,1,1,0,0,1,"550 N Econlockhatchee Trail, Orlando, FL 32825, USA",28.5515775,-81.2539983
 3565,456542,Geisinger Commonwealth School of Medicine,Scranton,PA,-2,-2,-2,20,25,25,0,8,2,2,2,0,1,0,0,0,0,0,0,0,"525 Pine St, Scranton, PA 18509, USA",41.41329959999999,-75.6553625
 3566,456579,Miller-Motte College-McCann-Allentown,Allentown,PA,-2,-2,-2,-2,9,7,3,0,2,6,3,0,0,0,0,0,0,0,0,,"Allentown, PA, USA",40.6022939,-75.4714098
