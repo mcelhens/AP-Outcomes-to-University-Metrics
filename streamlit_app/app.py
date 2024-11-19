@@ -10,6 +10,7 @@ import geopandas as gpd
 import folium
 from shapely import wkt
 import pickle
+data_prefix = '../data/'
 
 ############################# ▲▲▲▲▲▲ IMPORTS ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ GLOBALS ▼▼▼▼▼▼ #############################
@@ -188,6 +189,13 @@ def reconstruct_geo(pre_geo_data):
     geo_data = gpd.GeoDataFrame(pre_geo_data, geometry = 'geometry')
     geo_data.set_crs(epsg = 4326, inplace = True)
     return geo_data
+
+def pickled_plot(filepath, prefix = ''): 
+    try:
+        with open(prefix + filepath, 'rb') as f:
+            st.plotly_chart(pickle.load(f))
+    except:
+        pass
 
 ############################# ▲▲▲▲▲▲   METHODS  ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ APP LAYOUT ▼▼▼▼▼▼ #############################
@@ -407,6 +415,7 @@ def main():
     ############################# ▼▼▼▼▼▼ MASSACHUSETTS TAB ▼▼▼▼▼▼ #############################
 
     with tab4: 
+        pickled_path = 'MA_pickled/'
         st.markdown("## Massachusetts")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Massachusetts. Analysis on this state was particularly fruitful for the abundance of data on a school district level.
@@ -442,9 +451,7 @@ def main():
                         ''')
 
             # Scores
-            with open('../data/MA_pickled/MA_score_distribution.pkl', 'rb') as f:
-                fig = pickle.load(f)
-                st.plotly_chart(fig)
+            pickled_plot('MA_score_distribution.pkl', prefix = data_prefix + pickled_path)
 
         with right_co:
             ##----------CHOROPLETH MAP OF MASSACHUSETTS
@@ -486,29 +493,26 @@ def main():
                          )
             ############################# ▲▲▲▲▲▲ MASSACHUSETTS UNIVERSITIES TABLE ▲▲▲▲▲▲ #############################
 
-        # Some basic trends with AP Performance
+        # Plot some trends with AP Performance, various features, etc.
         st.markdown("### Trends with AP Performance")
+        
 
+        MA_pickled_plots = ['MA_pass_vs_dorm_bed_land_grant_inverse_distance.pkl', 'MA_pass_vs_dorm_bed_private_inverse_distance.pkl', 'MA_pass_vs_dorm_bed_public_inverse_distance.pkl', 'MA_pass_vs_dorm_bed_R1R2_inverse_distance.pkl', 'MA_pass_vs_dorm_bed_STEM_inverse_distance.pkl', 'MA_pass_vs_enrollment_land_grant_inverse_distance.pkl', 'MA_pass_vs_enrollment_private_nfp_inverse_distance.pkl', 'MA_pass_vs_enrollment_Public_inverse_distance.pkl', 'MA_pass_vs_enrollment_R1R2_inverse_distance.pkl', 'MA_pass_vs_enrollment_STEM_inverse_distance.pkl', 'MA_pass_vs_Land_Grant_Inverse_Distance.pkl', 'MA_pass_vs_per_pupil_expenditures.pkl', 'MA_pass_vs_Private_nfp_Inverse_Distance.pkl', 'MA_pass_vs_Public_Inverse_Distance.pkl', 'MA_pass_vs_R1_R2_inverse_distance.pkl', 'MA_pass_vs_R1R2_Inverse_Distance.pkl', 'MA_pass_vs_school_district_income.pkl', 'MA_pass_vs_school_district_population.pkl', 'MA_pass_vs_STEM_Inverse_Distance.pkl']
         left_co, right_co = st.columns(2)
         with left_co:
-            with open('../data/MA_pickled/MA_pass_vs_school_district_income.pkl', 'rb') as f:
-                fig = pickle.load(f)
-                st.plotly_chart(fig)
-            with open('../data/MA_pickled/MA_pass_vs_school_district_population.pkl', 'rb') as f:
-                fig = pickle.load(f)
-                st.plotly_chart(fig)
+            for plot_filepath in MA_pickled_plots[:int(len(MA_pickled_plots) / 2)]:
+                print(plot_filepath)
+                pickled_plot(plot_filepath, prefix = data_prefix + pickled_path)
+                
         with right_co:
-            with open('../data/MA_pickled/MA_pass_vs_R1_R2_inverse_distance.pkl', 'rb') as f:
-                fig = pickle.load(f)
-                st.plotly_chart(fig)
-            with open('../data/MA_pickled/MA_pass_vs_per_pupil_expenditures.pkl', 'rb') as f:
-                fig = pickle.load(f)
-                st.plotly_chart(fig)
+            for plot_filepath in MA_pickled_plots[int(len(MA_pickled_plots) / 2):]:
+                pickled_plot(plot_filepath, prefix = data_prefix + pickled_path)
 
     ############################# ▲▲▲▲▲▲ MASSACHUSETTS TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼   WISCONSIN TAB   ▼▼▼▼▼▼ #############################
 
     with tab5: 
+        pickled_path = 'WI_pickled/'
         st.markdown("## Wisconsin")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Wisconsin. 
@@ -546,9 +550,7 @@ def main():
                         ''')
             
             # Scores
-            with open('../data/WI_pickled/WI_score_distribution.pkl', 'rb') as f:
-                fig = pickle.load(f)
-                st.plotly_chart(fig)
+            pickled_plot('WI_score_distribution.pkl', prefix = data_prefix + pickled_path)
 
         with right_co:
             ##----------CHOROPLETH MAP OF WISCONSIN
@@ -597,6 +599,7 @@ def main():
     ############################# ▼▼▼▼▼▼  GEORGIA TAB  ▼▼▼▼▼▼ #############################
 
     with tab6: 
+        pickled_path = 'GA_pickled/'
         st.markdown("## Georgia")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Georgia. 
@@ -632,9 +635,7 @@ def main():
                         ''')
             
             # Scores
-            with open('../data/GA_pickled/GA_score_distribution.pkl', 'rb') as f:
-                fig = pickle.load(f)
-                st.plotly_chart(fig)
+            pickled_plot('GA_score_distribution.pkl', prefix = data_prefix + pickled_path)
 
         with right_co:
             ##----------CHOROPLETH MAP OF GEORGIA
