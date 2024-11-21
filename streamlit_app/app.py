@@ -15,12 +15,17 @@ data_prefix = '../data/'
 print("---------Raymond's printout--------------")
 import os
 print("Current working directory:", os.getcwd())
+print("Could try accessing the US data with file path", Path(__file__).parent / "US_States_Map_Data.csv")
+print("Now changing the path")
 path = Path(__file__).parent / "streamlit_app"
 print("Now `path` set equal to", path)
+print("\tand `Path(__file__).parent ==", Path(__file__).parent)
 print("Could try accessing the US data with file path", Path(__file__).parent / "US_States_Map_Data.csv")
+print("Current working directory:", os.getcwd())
 print("-----------------------------------------")
 
-US_States_map_data_path = Path(__file__).parent / "US_States_Map_Data.csv"
+US_States_map_data_path = path + '/' + "US_States_Map_Data.csv"
+
 
 ############################# ▲▲▲▲▲▲ IMPORTS ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ GLOBALS ▼▼▼▼▼▼ #############################
