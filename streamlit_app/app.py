@@ -10,22 +10,8 @@ import geopandas as gpd
 import folium
 from shapely import wkt
 import pickle
-data_prefix = '../data/'
-
-print("---------Raymond's printout--------------")
-import os
-print("Current working directory:", os.getcwd())
-print("Could try accessing the US data with file path", Path(__file__).parent / "US_States_Map_Data.csv")
-print("Now changing the path")
-path = Path(__file__).parent / "streamlit_app"
-print("Now `path` set equal to", path)
-print("\tand `Path(__file__).parent ==", Path(__file__).parent)
-print("Could try accessing the US data with file path", Path(__file__).parent / "US_States_Map_Data.csv")
-print("Current working directory:", os.getcwd())
-print("-----------------------------------------")
-
-US_States_map_data_path = path + '/' + "US_States_Map_Data.csv"
-
+data_prefix = str(Path(__file__).parent) + '/../data/'
+here_prefix = str(Path(__file__).parent) + '/'
 
 ############################# ▲▲▲▲▲▲ IMPORTS ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ GLOBALS ▼▼▼▼▼▼ #############################
@@ -82,7 +68,7 @@ st.set_page_config(
 
 @st.cache_data
 def load_universities_data():
-    universities_data = pd.read_csv('../data/carnegie_with_location.csv')[['name', 'stabbr', 'latitude', 'longitude']]
+    universities_data = pd.read_csv(data_prefix + 'carnegie_with_location.csv')[['name', 'stabbr', 'latitude', 'longitude']]
     MA_nearby_universities = universities_data[universities_data['stabbr'].isin(MA_neighbors)]
     WI_nearby_universities = universities_data[universities_data['stabbr'].isin(WI_neighbors)]
     GA_nearby_universities = universities_data[universities_data['stabbr'].isin(GA_neighbors)]
@@ -90,31 +76,30 @@ def load_universities_data():
 
 @st.cache_data
 def load_national_choropleth_data():
-    # return pd.read_csv('US_States_Map_Data.csv')
-    return pd.read_csv(US_States_map_data_path)
+    return pd.read_csv(here_prefix + "US_States_Map_Data.csv")
 
 @st.cache_data
 def load_county_choropleth_data():
-    counties_map_data = pd.read_csv('States_Counties_Map_Data.csv')
+    counties_map_data = pd.read_csv(here_prefix + 'States_Counties_Map_Data.csv')
     counties_map_data['Year'] = counties_map_data['Year'].astype(str)
     return counties_map_data[counties_map_data['Year'] == '2022']
     
 @st.cache_data
 def load_broader_categories():
-    return pd.read_csv('../data/broader_categories_counts.csv')
+    return pd.read_csv(data_prefix + 'broader_categories_counts.csv')
 
 @st.cache_data
 def get_state_summaries():
-    MA_stats = pd.read_csv('MA_summary_stats.csv')
-    WI_stats = pd.read_csv('WI_summary_stats.csv')
-    GA_stats = pd.read_csv('GA_summary_stats.csv')
+    MA_stats = pd.read_csv(here_prefix + 'MA_summary_stats.csv')
+    WI_stats = pd.read_csv(here_prefix + 'WI_summary_stats.csv')
+    GA_stats = pd.read_csv(here_prefix + 'GA_summary_stats.csv')
     return MA_stats, WI_stats, GA_stats
 
 @st.cache_data
 def get_state_AP_tables():
-    MA_AP_table = pd.read_csv('MA_AP_table.csv')
-    WI_AP_table = pd.read_csv('WI_AP_table.csv')
-    GA_AP_table = pd.read_csv('GA_AP_table.csv')
+    MA_AP_table = pd.read_csv(here_prefix + 'MA_AP_table.csv')
+    WI_AP_table = pd.read_csv(here_prefix + 'WI_AP_table.csv')
+    GA_AP_table = pd.read_csv(here_prefix + 'GA_AP_table.csv')
     return MA_AP_table, WI_AP_table, GA_AP_table
 
 ############################# ▲▲▲▲▲▲ CACHING ▲▲▲▲▲▲ #############################
@@ -210,8 +195,9 @@ def pickled_plot(filepath, prefix = ''):
     try:
         with open(prefix + filepath, 'rb') as f:
             st.plotly_chart(pickle.load(f))
-    except:
-        pass
+    except Exception as e:
+        print(f"Failed to load pickled asset with filepath {prefix + filepath}")
+        print(f"Error encountered: {e}")
 
 ############################# ▲▲▲▲▲▲   METHODS  ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ APP LAYOUT ▼▼▼▼▼▼ #############################
@@ -431,7 +417,7 @@ def main():
     ############################# ▼▼▼▼▼▼ MASSACHUSETTS TAB ▼▼▼▼▼▼ #############################
 
     with tab4: 
-        pickled_path = 'MA_pickled/'
+        pickled_path = data_prefix + 'MA_pickled/'
         st.markdown("## Massachusetts")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Massachusetts. Analysis on this state was particularly fruitful for the abundance of data on a school district level.
@@ -467,7 +453,7 @@ def main():
                         ''')
 
             # Scores
-            pickled_plot('MA_score_distribution.pkl', prefix = data_prefix + pickled_path)
+            pickled_plot('MA_score_distribution.pkl', prefix = pickled_path)
 
         with right_co:
             ##----------CHOROPLETH MAP OF MASSACHUSETTS
@@ -518,17 +504,17 @@ def main():
         with left_co:
             for plot_filepath in MA_pickled_plots[:int(len(MA_pickled_plots) / 2)]:
                 print(plot_filepath)
-                pickled_plot(plot_filepath, prefix = data_prefix + pickled_path)
+                pickled_plot(plot_filepath, prefix = pickled_path)
                 
         with right_co:
             for plot_filepath in MA_pickled_plots[int(len(MA_pickled_plots) / 2):]:
-                pickled_plot(plot_filepath, prefix = data_prefix + pickled_path)
+                pickled_plot(plot_filepath, prefix = pickled_path)
 
     ############################# ▲▲▲▲▲▲ MASSACHUSETTS TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼   WISCONSIN TAB   ▼▼▼▼▼▼ #############################
 
     with tab5: 
-        pickled_path = 'WI_pickled/'
+        pickled_path = data_prefix + 'WI_pickled/'
         st.markdown("## Wisconsin")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Wisconsin. 
@@ -566,7 +552,7 @@ def main():
                         ''')
             
             # Scores
-            pickled_plot('WI_score_distribution.pkl', prefix = data_prefix + pickled_path)
+            pickled_plot('WI_score_distribution.pkl', prefix = pickled_path)
 
         with right_co:
             ##----------CHOROPLETH MAP OF WISCONSIN
@@ -615,7 +601,7 @@ def main():
     ############################# ▼▼▼▼▼▼  GEORGIA TAB  ▼▼▼▼▼▼ #############################
 
     with tab6: 
-        pickled_path = 'GA_pickled/'
+        pickled_path = data_prefix + 'GA_pickled/'
         st.markdown("## Georgia")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Georgia. 
@@ -651,7 +637,7 @@ def main():
                         ''')
             
             # Scores
-            pickled_plot('GA_score_distribution.pkl', prefix = data_prefix + pickled_path)
+            pickled_plot('GA_score_distribution.pkl', prefix = pickled_path)
 
         with right_co:
             ##----------CHOROPLETH MAP OF GEORGIA
