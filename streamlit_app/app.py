@@ -9,9 +9,18 @@ from pathlib import Path
 import geopandas as gpd
 import folium
 from shapely import wkt
-import pickle``
+import pickle
 data_prefix = '../data/'
+
+print("---------Raymond's printout--------------")
+import os
+print("Current working directory:", os.getcwd())
 path = Path(__file__).parent / "streamlit_app"
+print("Now `path` set equal to", path)
+print("Could try accessing the US data with file path", Path(__file__).parent / "US_States_Map_Data.csv")
+print("-----------------------------------------")
+
+US_States_map_data_path = Path(__file__).parent / "US_States_Map_Data.csv"
 
 ############################# ▲▲▲▲▲▲ IMPORTS ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ GLOBALS ▼▼▼▼▼▼ #############################
@@ -76,7 +85,8 @@ def load_universities_data():
 
 @st.cache_data
 def load_national_choropleth_data():
-    return pd.read_csv('US_States_Map_Data.csv')
+    # return pd.read_csv('US_States_Map_Data.csv')
+    return pd.read_csv(US_States_map_data_path)
 
 @st.cache_data
 def load_county_choropleth_data():
