@@ -9,8 +9,9 @@ from pathlib import Path
 import geopandas as gpd
 import folium
 from shapely import wkt
-import pickle
+import pickle``
 data_prefix = '../data/'
+path = Path(__file__).parent / "streamlit_app"
 
 ############################# ▲▲▲▲▲▲ IMPORTS ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ GLOBALS ▼▼▼▼▼▼ #############################
