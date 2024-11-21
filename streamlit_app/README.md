@@ -9,7 +9,7 @@ Demo based on: [![Open in Streamlit](https://static.streamlit.io/badges/streamli
 1. Install the requirements
 
    ```
-   $ conda install pandas streamlit
+   $ conda install pandas streamlit 
    $ conda install -c conda-forge streamlit-folium
    ```
 
