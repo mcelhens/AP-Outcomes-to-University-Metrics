@@ -70,7 +70,7 @@ def gimmeGA_Counties():
     with open('data/GA_counties.txt') as topo_file:
         for line in topo_file:
             if 'County' in line:
-                county=line[:-7]
+                county=line[:-8]
                 continue
             else: city=line
             ga_counties.append([county,city.replace("\n", "")])
