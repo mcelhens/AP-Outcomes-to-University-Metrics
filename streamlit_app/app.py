@@ -63,7 +63,7 @@ model_features_dict = {
 st.set_page_config(
     layout = 'wide',
     page_title = 'AP Outcomes vs University Metrics',
-    page_icon = 'https://preview.redd.it/uxmxgdgoqdz81.jpg?width=640&crop=smart&auto=webp&s=ca71011f6de31eb654b50a972b14806b19e98e52', # This is an emoji shortcode. Could be a URL too.
+    page_icon = ':material/school:', # This is an emoji shortcode. Could be a URL too.
 )
 
 @st.cache_data
@@ -395,20 +395,39 @@ def main():
 
         st.markdown('''
             ### Feature Selection
+                    
+            
+            
                     ''')
 
         st.markdown('''
             ### Distance-Based Features
+            
+            Certain features used for prediction of AP scores depend on contributions from nearby universities. We compared two main schemes of engineering such features:
+            1. Take weighted averages using a weighting function that smoothly decreases with distance. 
+            2. Combine the contributions from the closet few universities.
                     
-            Our approach towards engineering features that aim to capture a tally of nearby universities or a local average of a variable is to take weighted averages using a weighting function that smoothly decreases with distance. 
+            Below we outline these two methods, and it turned out that features based on the second method usually out-performed those designed in the first method.
                     
-            Every university, county, and school district in our datasets is assigned a set of coordinates. Whenever we wish to average a variable $X$ (say, the number of dorm rooms on campus) that depends on university, we take the following approach (which will in particular apply to the situation of measuring distance to universities of a certain type by setting $X \equiv 1$). Rather than disregard universities beyond some cutoff distance or to gather only the closest few schools, we take a weighted average of the variable $X$ across all universities according to some function that shrinks with distance. If university $i$ is at distance $d_i$ from a given school district and has value $X = X_i$, then we estimate the feature value of variable $X$ about this school district to be:
+            #### 1. Weighted Average
+                    
+            Every university, county, and school district in our datasets is assigned a set of coordinates. Whenever we wish to average a variable $X$ (say, the number of dorm rooms on campus) that depends on university, we take the following approach (which will also apply to the situation of measuring distance to universities of a certain type by considering $X \equiv 1$). We take a weighted average of the variable $X$ across all universities according to some function that shrinks with distance. If university $i$ is at distance $d_i$ from a given school district and has value $X = X_i$, then we estimate the feature value of variable $X$ about this school district to be:
                     
             $$
                 \widetilde{X} = \sum_i w(d_i) \cdot X_i \quad \\text{where} \quad w(d) = \\frac{1}{1 + \\frac{d}{\\varepsilon}}.
             $$
                     
             In this model, $\\varepsilon > 0$ serves as a smoothing factor which we set to 10 miles. This choice comes with the interpretation of 10 miles being a good scale for what kinds of distances over which are reasonable to expect universities to have a consistant impacts on the education of nearby high schoolers. Universities within 10 miles of a school district will contribute much more to the sum than schools beyond that. 
+                    
+            #### 2. Combining Contributions from Closest Few
+                    
+            In order to measure variable $X$ about a fixed location, add the value of $X$ at the closest, say, $N$ universities. If university $i$ is at distance $d_i$ from a given school district and has variable value $X_i$, then we estimate the feature value of variable $X$ about the school district to be:
+                    
+            $$
+                \widetilde{X}[N] = \\frac{1}{N} \sum_{n = 1}^N \{X_{i_n} : \\text{$(d_{i_n})$ are the smallest $N$ distances}\}.
+            $$    
+                    
+            We compared some values of $N$ such as nearest 2 or nearest 5 universities.
                     ''')
                     
 
@@ -606,7 +625,7 @@ def main():
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Georgia. 
                     
-            Georgia is a mid-sized state (24th largest by land area) with a relatively **high population** (8th largest by population). Over half (57.2%) of the state's population is **concentrated in the Atlanta metro area**, which also hosts some of the state's most influential universities like Georgia Institute of Technology and the Unviersity of Georgia. Moreover, Georgia is **33.2% Black or African American**, and offers 9 **historically Black colleges**, ranking third across all states in both respects. Georgia's main industries are **areospace, automotive, and manufacturing**. 
+            Georgia is a mid-sized state (24th largest by land area) with a relatively **high population** (8th largest by population). Over half (57.2%) of the state's population is **concentrated in the Atlanta metro area**, which also hosts some of the state's most influential universities like Georgia Institute of Technology and the Unviersity of Georgia. Moreover, Georgia is **33.2% Black or African American**, and offers 9 **historically Black colleges**, ranking third across all states in both respects. Moorehouse College is a notable example that has been home to celebrated African American graduates and recent investments in research on issues affecting Black men. Georgia's main industries are **areospace, automotive, and manufacturing**. 
                     
             ### Summary
                     ''')
