@@ -25,6 +25,28 @@ def wisconsin_pred_2023_24(lat, long):
         row = pd.DataFrame(row).T
         row['population'] = pop
         row['per_capita_income'] = inc
-        return random_forest.predict(row)#pd.DataFrame(row).T #inc_pop[(inc_pop.County == county) & (inc_pop.State_Abbreviation == state)]
+        return random_forest.predict(row)
     else:
         return "Invalid coordinates"
+    
+
+def WI_predict_perturb(county,pci_change=0,pop_change=0):
+    
+    #Takes a county in Wisconsin along with the change in income and population, and returns change in pass rate predicted by our model.
+
+    wisconsin_data = pd.read_csv('data/Wisconsin/train_test_split/Wisconsin_closest_five_method.csv')
+    random_forest=joblib.load('data/WI_pickled/WI_random_forest_model.pkl')
+    row = wisconsin_data[wisconsin_data.COUNTY == 'Adams'][wisconsin_data.columns[9:]].iloc[0]
+    inc_pop = pd.read_csv('data/County_Income_Population_2023.csv')
+    pci = inc_pop[(inc_pop.County == county) & (inc_pop.State_Abbreviation == 'WI')]
+    inc = int(pci.Income.values[0])
+    pop = int(pci.Population.values[0])
+    row = pd.DataFrame(row).T
+    row['population'] = pop
+    row['per_capita_income'] = inc
+    prediction = random_forest.predict(row)
+    changed_row = row.copy(deep=True)
+    changed_row['population'] = pop+pop_change
+    changed_row['per_capita_income'] = inc + pci_change
+    new_prediction = random_forest.predict(changed_row)
+    return new_prediction-prediction
