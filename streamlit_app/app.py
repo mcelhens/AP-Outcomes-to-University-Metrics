@@ -4,14 +4,15 @@ import plotly.express as px
 import plotly.graph_objects as go
 import math
 import streamlit as st
-from streamlit_folium import st_folium, folium_static
+from streamlit_folium import st_folium
 from pathlib import Path
 import geopandas as gpd
 import folium
 from shapely import wkt
 import pickle
-data_prefix = str(Path(__file__).parent) + '/../data/'
 here_prefix = str(Path(__file__).parent) + '/'
+data_prefix = here_prefix + '../data/'
+html_prefix = data_prefix + 'html/'
 
 ############################# ▲▲▲▲▲▲ IMPORTS ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ GLOBALS ▼▼▼▼▼▼ #############################
@@ -34,7 +35,7 @@ national_features_dict = {
     'Total No. AP Exams': 'Total',
     'Offer 5+ Exams (%)': '5+Exams%',
     'Asian Participation (%)': '%Asian',
-    'Hispanic/Latino Participation (%)': '%HispanicOrLatino',
+    'Hispanic or Latino Participation (%)': '%HispanicOrLatino',
     'White Participation (%)': '%White',
     'Black or African American Participation (%)': '%BlackOrAfricanAmerican',
     'Native American or Alaska Native Participation (%)': '%NativeAmericanOrAlaskaNative',
@@ -122,73 +123,6 @@ def predict_ap_pass_rate(county, year, feature, new_value):
     change_direction = 'increase' if prediction_change >= 0 else 'decrease'
     return change_direction, abs(prediction_change)
 
-def choropleth(geo_data, 
-               selected_feature, 
-               university_data, 
-               features_dict,
-               title,
-               fields,
-               aliases,
-               center,
-               zoom):
-    # Define the choropleth layer based on the selected feature and year
-        choropleth_layer = folium.Choropleth(
-            geo_data = geo_data,
-            name = f'{title} choropleth',
-            data = geo_data,
-            columns = ['GEOID', features_dict[selected_feature]],
-            key_on = 'feature.properties.GEOID',
-            fill_color = 'YlOrRd',
-            nan_fill_color = 'lightgrey',
-            fill_opacity = 0.7,
-            line_opacity = 0.2,
-            legend_name = f'{selected_feature} {title}'
-        )
-
-        # Define tooltips with certain areas
-        area_tooltips = folium.GeoJson(
-            geo_data,
-            name = f'{title} tooltips',
-            control = False,
-            style_function = lambda x: {'fillColor': 'transparent', 'color': 'transparent'},
-            tooltip = folium.features.GeoJsonTooltip(
-                fields = fields,
-                aliases = aliases,
-                localize = True
-            )
-        )
-
-        if university_data is not None:
-            # Add a new layer for university markers
-            university_layer = folium.FeatureGroup(name = f'{title} universities')
-            # Add markers for each university in the DataFrame
-            for _, row in university_data.iterrows():
-                folium.Circle(
-                    radius = 300,
-                    fill = False,
-                    color = "black",
-                    fill_color = "orange",
-                    opacity = 1,
-                    fill_opacity = 0.2,
-                    weight = 2,
-                    location = [row['latitude'], row['longitude']],
-                    popup = folium.Popup(f"{row['name']}", max_width = 300),
-                    tooltip = row['name']
-                ).add_to(university_layer)
-
-        # Map center coordinates
-        m = folium.Map(location = center, zoom_start = zoom)
-        # Add choropleth layer to the map
-        choropleth_layer.add_to(m)
-        # Add the area tooltips to the map
-        area_tooltips.add_to(m)
-        # Add the university layer to the map
-        university_layer.add_to(m)
-        # Add a layer control to toggle layers
-        folium.LayerControl().add_to(m)
-        # Render the map in Streamlit using folium_static
-        folium_static(m)
-
 def reconstruct_geo(pre_geo_data):
     pre_geo_data['geometry'] = pre_geo_data['geometry'].apply(wkt.loads)
     geo_data = gpd.GeoDataFrame(pre_geo_data, geometry = 'geometry')
@@ -201,6 +135,14 @@ def pickled_plot(filepath, prefix = ''):
             st.plotly_chart(pickle.load(f))
     except Exception as e:
         print(f"Failed to load pickled asset with filepath {prefix + filepath}")
+        print(f"Error encountered: {e}")
+
+def display_html_plot(filepath, height = 500):
+    try:
+        with open(html_prefix + filepath, 'r') as f:
+            st.components.v1.html(f.read(), height = height)
+    except Exception as e:
+        print(f"Failed to load html asset with filepath {html_prefix + filepath}")
         print(f"Error encountered: {e}")
 
 ############################# ▲▲▲▲▲▲   METHODS  ▲▲▲▲▲▲ #############################
@@ -279,20 +221,9 @@ def main():
         ############################# ▼▼▼▼▼▼ NATIONAL CHOROPLETH ▼▼▼▼▼▼ #############################
 
         st.markdown("### National AP Performance, Availability, and Participation Data")
-
         national_selected_feature = st.selectbox("Select Feature to Display", national_features_dict.keys(), key = 'select a feature national choropleth')
-        # Generate the Choropleth map of all US states
-        choropleth(
-            geo_data = national_geo_data, 
-            selected_feature = national_selected_feature, 
-            university_data = universities_data, 
-            features_dict = national_features_dict,
-            title = 'All States AP Performance and Demographics 2022',
-            fields = ['State', 'PassRate', 'Mean', 'Total', '5+Exams%', '%Asian', '%HispanicOrLatino', '%White', '%BlackOrAfricanAmerican', '%NativeAmericanOrAlaskaNative', '%NativeHawaiianOrOtherPacificIslander', '%TwoOrMoreRaces'],
-            aliases = ['State Name:', 'Pass Rate (%)', 'Mean AP Score', 'Total No. AP Exams', 'Offer 5+ Exams (%)', '% Asian:', '% Hispanic/Latino:', '% White:', '% Black or African American:', '% Native American or Alaska Native:', '% Native Hawaiian or other Pacific Islander:', '% Two or More Races:'],
-            center = [40, -96],
-            zoom = 4
-        )        
+        display_html_plot(f'National {national_selected_feature} Choropleth.html')
+
         ############################# ▲▲▲▲▲▲ NATIONAL CHOROPLETH ▲▲▲▲▲▲ #############################
 
     ############################# ▲▲▲▲▲▲       HOME TAB       ▲▲▲▲▲▲ #############################
@@ -308,20 +239,8 @@ def main():
         st.markdown("### County-level Choropleth Map")
 
         st.markdown("#### Map Options")
-        selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature main choropleth')
-
-        # Generate the Choropleth map of counties in our states of interest
-        choropleth(
-            geo_data = county_geo_data, 
-            selected_feature = selected_feature, 
-            university_data = universities_data, 
-            features_dict = features_dict,
-            title = 'States of Interest by County 2022',
-            fields = ['County_State', 'PassRate', 'Income', 'Population', 'Year'],
-            aliases = ['County:', 'AP Pass Rate (%):', 'Per-capita Income: $', 'Population:', 'Year:'],
-            center = [39.5, -82],
-            zoom = 5
-        )
+        county_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature main choropleth')
+        display_html_plot(f'County {county_selected_feature} Choropleth.html')
 
         ############################# ▲▲▲▲▲▲ COUNTY CHOROPLETH ▲▲▲▲▲▲ #############################
         ############################# ▼▼▼▼▼▼   PERTURBATIONS   ▼▼▼▼▼▼ #############################
@@ -455,7 +374,7 @@ def main():
 
             ### Model Selection
 
-            Using $5$-fold cross validation on our training dataset with our selected features, we compared various models' performance on our combined dataset across our three states of interest (MA, WI, GA). Those models included:
+            Using $5$-fold cross validation on our training dataset with our selected features, we compared various models' performance on individual states' and the combined dataset (MA + WI + GA). Those models included:
             - Naive Average
             - Ordinary Least Squares Regression
             - Ridge Regression
@@ -463,6 +382,8 @@ def main():
             - Random Forest
             - Adaboost
             - XGBoost
+
+            XGBoost and Random Forest were the top two performers across the states, but XGBoost was the best model in most contexts. 
                     ''')
                     
     ############################# ▲▲▲▲▲▲   OUR MODEL TAB   ▲▲▲▲▲▲ #############################
@@ -518,19 +439,7 @@ def main():
 
             ############################# ▼▼▼▼▼▼ MASSACHUSETTS CHOROPLETH ▼▼▼▼▼▼ #############################  
             MA_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature MA choropleth')
-
-            # Generate the Choropleth map of MA counties and nearby universities
-            choropleth(
-                geo_data = MA_geo_data, 
-                selected_feature = MA_selected_feature, 
-                university_data = MA_nearby_universities,
-                features_dict = features_dict, 
-                title = 'Massachusetts by County 2022',
-                fields = ['County_State', 'PassRate', 'Income', 'Population', 'Year'],
-                aliases = ['County:', 'AP Pass Rate (%):', 'Per-capita Income: $', 'Population:', 'Year:'],
-                center = [42.4, -71.7],
-                zoom = 8
-            )
+            display_html_plot(f'Massachusetts {MA_selected_feature} Choropleth.html')
             ############################# ▲▲▲▲▲▲ MASSACHUSETTS CHOROPLETH ▲▲▲▲▲▲ #############################  
 
             st.markdown('''
@@ -623,19 +532,7 @@ def main():
 
             ############################# ▼▼▼▼▼▼ WISCONSIN CHOROPLETH ▼▼▼▼▼▼ #############################
             WI_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature WI choropleth')
-
-            # Generate the Choropleth map of WI counties and nearby universities
-            choropleth(
-                geo_data = WI_geo_data, 
-                selected_feature = WI_selected_feature, 
-                university_data = WI_nearby_universities, 
-                features_dict = features_dict,
-                title = 'Wisconsin by County 2022',
-                fields = ['County_State', 'PassRate', 'Income', 'Population', 'Year'],
-                aliases = ['County:', 'AP Pass Rate (%):', 'Per-capita Income: $', 'Population:', 'Year:'],
-                center = [44.5, -88.8],
-                zoom = 6
-            )
+            display_html_plot(f'Wisconsin {WI_selected_feature} Choropleth.html')
             ############################# ▲▲▲▲▲▲ WISCONSIN CHOROPLETH ▲▲▲▲▲▲ #############################
 
             st.markdown('''
@@ -727,19 +624,7 @@ def main():
 
             ############################# ▼▼▼▼▼▼ GEORGIA CHOROPLETH ▼▼▼▼▼▼ #############################
             GA_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature GA choropleth')
-            
-            # Generate the Choropleth map of GA counties and nearby universities
-            choropleth(
-                geo_data = GA_geo_data, 
-                selected_feature = GA_selected_feature, 
-                university_data = GA_nearby_universities, 
-                features_dict = features_dict,
-                title = 'Georgia by County 2022',
-                fields = ['County_State', 'PassRate', 'Income', 'Population', 'Year'],
-                aliases = ['County:', 'AP Pass Rate (%):', 'Per-capita Income: $', 'Population:', 'Year:'],
-                center = [32.2, -82.9],
-                zoom = 6
-            )
+            display_html_plot(f'Georgia {GA_selected_feature} Choropleth.html')
             ############################# ▲▲▲▲▲▲ GEORGIA CHOROPLETH ▲▲▲▲▲▲ #############################
 
             st.markdown('''
