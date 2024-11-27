@@ -455,7 +455,7 @@ def main():
 
             ### Model Selection
 
-            Using $5$-fold cross validation on our training dataset with our selected features, we compared various models' performance on our combined dataset across our three states of interest (MA, WI, GA). Those models included:
+            Using $5$-fold cross validation on our training dataset with our selected features, we compared various models' performance on individual states' and the combined dataset (MA + WI + GA). Those models included:
             - Naive Average
             - Ordinary Least Squares Regression
             - Ridge Regression
@@ -463,6 +463,8 @@ def main():
             - Random Forest
             - Adaboost
             - XGBoost
+
+            XGBoost and Random Forest were the top two performers across the states, but XGBoost was the best model in most contexts. 
                     ''')
                     
     ############################# ▲▲▲▲▲▲   OUR MODEL TAB   ▲▲▲▲▲▲ #############################
