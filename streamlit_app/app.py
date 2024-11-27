@@ -17,10 +17,11 @@ here_prefix = str(Path(__file__).parent) + '/'
 ############################# ▼▼▼▼▼▼ GLOBALS ▼▼▼▼▼▼ #############################
 
 # years = ['2019', '2020', '2021', '2022']
-states_of_interest = ['GA', 'WI', 'MA']
+states_of_interest = ['GA', 'WI', 'MA', 'NC']
 MA_neighbors = ['MA', 'NY', 'CT', 'NH', 'RI', 'ME', 'VT', 'NH']
 WI_neighbors = ['WI', 'MI', 'MN', 'IA', 'IL']
 GA_neighbors = ['GA', 'NC', 'SC', 'FL', 'AL', 'TN']
+# NC_neighbors = ['SC', 'GA', 'TN', 'VA']
 
 features_dict = {
     'AP Pass Rate (3 or higher)': 'PassRate',
@@ -63,7 +64,7 @@ model_features_dict = {
 st.set_page_config(
     layout = 'wide',
     page_title = 'AP Outcomes vs University Metrics',
-    page_icon = 'https://preview.redd.it/uxmxgdgoqdz81.jpg?width=640&crop=smart&auto=webp&s=ca71011f6de31eb654b50a972b14806b19e98e52', # This is an emoji shortcode. Could be a URL too.
+    page_icon = ':material/school:', # This is an emoji shortcode. Could be a URL too.
 )
 
 @st.cache_data
@@ -72,7 +73,8 @@ def load_universities_data():
     MA_nearby_universities = universities_data[universities_data['stabbr'].isin(MA_neighbors)]
     WI_nearby_universities = universities_data[universities_data['stabbr'].isin(WI_neighbors)]
     GA_nearby_universities = universities_data[universities_data['stabbr'].isin(GA_neighbors)]
-    return universities_data, MA_nearby_universities, WI_nearby_universities, GA_nearby_universities
+    # NC_nearby_universities = universities_data[universities_data['stabbr'].isin(NC_neighbors)]
+    return universities_data, MA_nearby_universities, WI_nearby_universities, GA_nearby_universities#, NC_nearby_universities
 
 @st.cache_data
 def load_national_choropleth_data():
@@ -93,14 +95,16 @@ def get_state_summaries():
     MA_stats = pd.read_csv(here_prefix + 'MA_summary_stats.csv')
     WI_stats = pd.read_csv(here_prefix + 'WI_summary_stats.csv')
     GA_stats = pd.read_csv(here_prefix + 'GA_summary_stats.csv')
-    return MA_stats, WI_stats, GA_stats
+    # NC_stats = pd.read_csv(here_prefix + 'NC_summary_stats.csv')
+    return MA_stats, WI_stats, GA_stats#, NC_stats
 
 @st.cache_data
 def get_state_AP_tables():
     MA_AP_table = pd.read_csv(here_prefix + 'MA_AP_table.csv')
     WI_AP_table = pd.read_csv(here_prefix + 'WI_AP_table.csv')
     GA_AP_table = pd.read_csv(here_prefix + 'GA_AP_table.csv')
-    return MA_AP_table, WI_AP_table, GA_AP_table
+    # NC_AP_table = pd.read_csv(here_prefix + 'NC_AP_table.csv')
+    return MA_AP_table, WI_AP_table, GA_AP_table# , NC_AP_table
 
 ############################# ▲▲▲▲▲▲ CACHING ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ METHODS ▼▼▼▼▼▼ #############################
@@ -219,6 +223,7 @@ def main():
     MA_geo_data = county_geo_data[county_geo_data['State_Abbreviation'] == 'MA']
     WI_geo_data = county_geo_data[county_geo_data['State_Abbreviation'] == 'WI']
     GA_geo_data = county_geo_data[county_geo_data['State_Abbreviation'] == 'GA']
+    # NC_geo_data = county_geo_data[county_geo_data['State_Abbreviation'] == 'NC']
     
     ############################# ▲▲▲▲▲▲ CACHED ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼ STYLES ▼▼▼▼▼▼ #############################
@@ -244,7 +249,7 @@ def main():
     ############################# ▲▲▲▲▲▲ HEADER ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  TABS  ▼▼▼▼▼▼ #############################
 
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs(["Home", "Data Exploration", "Our Model", "Massachusetts", "Wisconsin", "Georgia", "References"])
+    tab1, tab2, tab3, tab4, tab5, tab6, tab8 = st.tabs(["Home", "Data Exploration", "Our Model", "Massachusetts", "Wisconsin", "Georgia", "References"])
 
     ############################# ▼▼▼▼▼▼ HOME TAB ▼▼▼▼▼▼ #############################
 
@@ -394,25 +399,72 @@ def main():
         st.markdown("## Our Model")
 
         st.markdown('''
-            ### Feature Selection
-                    ''')
+            The success of our model is largely driven by the features we select. The features we use are determined by a few criteria: **relevant**, **easy to obtain**, **easy to interpret**, and **easy to compute**.
 
-        st.markdown('''
-            ### Distance-Based Features
+            We tested models using a number of features, some of which were directly sourced from the datasets we use, and some of which were constructed from other features. In this tab, we present our general procedure for engineering and selecting features for the final model, as well as present the features we use in our final model.
                     
-            Our approach towards engineering features that aim to capture a tally of nearby universities or a local average of a variable is to take weighted averages using a weighting function that smoothly decreases with distance. 
+            ### Engineering Distance-Based Features
+            
+            Certain features used for prediction of AP scores depend on contributions from nearby universities. We compared two main schemes of engineering such features:
+            1. Take weighted averages using a weighting function that smoothly decreases with distance. 
+            2. Combine the contributions from the closet few universities.
                     
-            Every university, county, and school district in our datasets is assigned a set of coordinates. Whenever we wish to average a variable $X$ (say, the number of dorm rooms on campus) that depends on university, we take the following approach (which will in particular apply to the situation of measuring distance to universities of a certain type by setting $X \equiv 1$). Rather than disregard universities beyond some cutoff distance or to gather only the closest few schools, we take a weighted average of the variable $X$ across all universities according to some function that shrinks with distance. If university $i$ is at distance $d_i$ from a given school district and has value $X = X_i$, then we estimate the feature value of variable $X$ about this school district to be:
+            Below we outline these two methods, and it turned out that features based on the second method usually out-performed those designed in the first method.
+                    
+            #### 1. Weighted Average
+                    
+            Every university, county, and school district in our datasets is assigned a set of coordinates. Whenever we wish to average a variable $X$ (say, the number of dorm rooms on campus) that depends on university, we take the following approach (which will also apply to the situation of measuring distance to universities of a certain type by considering $X \equiv 1$). We take a weighted average of the variable $X$ across all universities according to some function that shrinks with distance. If university $i$ is at distance $d_i$ from a given school district and has value $X = X_i$, then we estimate the feature value of variable $X$ about this school district to be:
                     
             $$
-                \widetilde{X} = \sum_i w(d_i) \cdot X_i \quad \\text{where} \quad w(d) = \\frac{1}{1 + \\frac{d}{\\varepsilon}}.
+                \widetilde{X}[\\varepsilon] = \sum_i w(d_i) \cdot X_i \quad \\text{where} \quad w(d) = \\frac{1}{1 + \\frac{d}{\\varepsilon}}.
             $$
                     
             In this model, $\\varepsilon > 0$ serves as a smoothing factor which we set to 10 miles. This choice comes with the interpretation of 10 miles being a good scale for what kinds of distances over which are reasonable to expect universities to have a consistant impacts on the education of nearby high schoolers. Universities within 10 miles of a school district will contribute much more to the sum than schools beyond that. 
+                    
+            #### 2. Combining Contributions from Closest Few
+                    
+            In order to measure variable $X$ about a fixed location, add the value of $X$ at the closest, say, $N$ universities. If university $i$ is at distance $d_i$ from a given school district and has variable value $X_i$, then we estimate the feature value of variable $X$ about the school district to be:
+                    
+            $$
+                \widetilde{X}[N] = \\frac{1}{N} \sum_{n = 1}^N \{X_{i_n} : \\text{$(d_{i_n})$ are the smallest $N$ distances}\}.
+            $$    
+                    
+            We compared some values of $N$ such as nearest 2 or nearest 5 universities.
+
+            ### Feature Selection
+
+            Feature selection (i.e., feature elimination) is important for a few reasons:
+            1. Some regression models depend on features being functionally independent.
+            2. Feature selection can reduce overfitting.
+            3. Feature selection can reduce the number of features used in the model, which can make the model more interpretable.
+
+            Other models are more robust to having high correlations between features. Regardless, we employed the popular feature selection method of Principal Component Analysis (PCA). We used the scikit-learn library to perform PCA, and found the following results.
+
+            `insert PCA plot here`
+
+            Various feature importance metrics are available for feature selection as well. We made use of [Shapley (SHAP) values](https://shap.readthedocs.io/en/latest/example_notebooks/overviews/An%20introduction%20to%20explainable%20AI%20with%20Shapley%20values.html) for this. SHAP values are a measure of how much a feature contributes to the model's output, and they come from the study of game theory where the output of a cooperative game depends on whether a player has joined the game or not. Higher SHAP values indicate that the feature -- when included in the model -- is more influential in the model's predictions compared to when the feature is excluded. Various tabs include the SHAP plots for each resolution, and can be read from top to bottom: the highest features being the most important. 
+
+            ### Final Model Features
+
+            Final model features were determined first by hypothesizing what features might be most influential in the model through data exploration on a subset of our combined dataset across the three states of interest (Massachusetts, Wisconsin, and Georgia), and then by performing a combination of PCA and comparison of SHAP values. We describe the full set of selected features below, listed in order of general importance:
+            - `Per capita income`: the average per capita income in a given locality.
+            - `Population`: the population of the entire locality (state, county, or school district).
+            - `Distance to Closets Five Universities`: really, this feature was included many times but for a number of types of universities (as determined by the Carnegie Classification): R1/R2, Public, Private Non-Profit, Land Grant, and STEM-focused.
+            - `Average Enrollment in Closest Five Universities`: again, split by university type.
+            - `Average Number of Dorm Rooms in Closest Five Universities`: again, split by university type.
+
+            ### Model Selection
+
+            Using $5$-fold cross validation on our training dataset with our selected features, we compared various models' performance on our combined dataset across our three states of interest (MA, WI, GA). Those models included:
+            - Naive Average
+            - Ordinary Least Squares Regression
+            - Ridge Regression
+            - Principal Component Analysis ($0.95$)
+            - Random Forest
+            - Adaboost
+            - XGBoost
                     ''')
                     
-
-
     ############################# ▲▲▲▲▲▲   OUR MODEL TAB   ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼ MASSACHUSETTS TAB ▼▼▼▼▼▼ #############################
 
@@ -497,13 +549,19 @@ def main():
 
         # Plot some trends with AP Performance, various features, etc.
         st.markdown("### Trends with AP Performance")
-        
 
-        MA_pickled_plots = ['MA_pass_vs_dorm_bed_land_grant_inverse_distance.pkl', 'MA_pass_vs_dorm_bed_private_inverse_distance.pkl', 'MA_pass_vs_dorm_bed_public_inverse_distance.pkl', 'MA_pass_vs_dorm_bed_R1R2_inverse_distance.pkl', 'MA_pass_vs_dorm_bed_STEM_inverse_distance.pkl', 'MA_pass_vs_enrollment_land_grant_inverse_distance.pkl', 'MA_pass_vs_enrollment_private_nfp_inverse_distance.pkl', 'MA_pass_vs_enrollment_Public_inverse_distance.pkl', 'MA_pass_vs_enrollment_R1R2_inverse_distance.pkl', 'MA_pass_vs_enrollment_STEM_inverse_distance.pkl', 'MA_pass_vs_Land_Grant_Inverse_Distance.pkl', 'MA_pass_vs_per_pupil_expenditures.pkl', 'MA_pass_vs_Private_nfp_Inverse_Distance.pkl', 'MA_pass_vs_Public_Inverse_Distance.pkl', 'MA_pass_vs_R1_R2_inverse_distance.pkl', 'MA_pass_vs_R1R2_Inverse_Distance.pkl', 'MA_pass_vs_school_district_income.pkl', 'MA_pass_vs_school_district_population.pkl', 'MA_pass_vs_STEM_Inverse_Distance.pkl']
+        MA_pickled_plots = [
+            'MA_pass_vs_school_district_income.pkl',
+            'MA_pass_vs_school_district_population.pkl',
+            'MA_pass_vs_closest_five_public_avg.pkl',
+            'MA_pass_vs_closest_five_private_nfp_avg.pkl',
+            'MA_pass_vs_closest_five_landgrnt_avg.pkl',
+            'MA_pass_vs_closest_five_avg_enrollment_landgrnt.pkl',
+            'MA_pass_vs_closest_five_avg_dormrooms_private_nfp.pkl'
+            ]
         left_co, right_co = st.columns(2)
         with left_co:
             for plot_filepath in MA_pickled_plots[:int(len(MA_pickled_plots) / 2)]:
-                print(plot_filepath)
                 pickled_plot(plot_filepath, prefix = pickled_path)
                 
         with right_co:
@@ -597,6 +655,25 @@ def main():
         # Some basic trends with AP Performance
         st.markdown("### Trends with AP Performance")
 
+        WI_pickled_plots = [
+            'shap_random_forest_bar_plot.pkl',
+            'shap_random_forest_scatter_plot.pkl',
+            'WI_AP_pass_rate_by_counties_vs_avg_five_private_dormrooms.pkl',
+            'WI_AP_pass_rate_by_counties_vs_avg_five_private.pkl',
+            'WI_AP_pass_rate_by_counties_vs_avg._dist_public.pkl',
+            'WI_AP_pass_rate_by_counties_vs_income.pkl',
+            'WI_AP_pass_rate_by_counties_vs_population.pkl',
+            'WI_AP_pass_rate_by_school_districts.pkl',
+        ]
+        left_co, right_co = st.columns(2)
+        with left_co:
+            for plot_filepath in WI_pickled_plots[:int(len(WI_pickled_plots) / 2)]:
+                pickled_plot(plot_filepath, prefix = pickled_path)
+                
+        with right_co:
+            for plot_filepath in WI_pickled_plots[int(len(WI_pickled_plots) / 2):]:
+                pickled_plot(plot_filepath, prefix = pickled_path)
+
     ############################# ▲▲▲▲▲▲ WISCONSIN TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  GEORGIA TAB  ▼▼▼▼▼▼ #############################
 
@@ -606,7 +683,7 @@ def main():
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Georgia. 
                     
-            Georgia is a mid-sized state (24th largest by land area) with a relatively **high population** (8th largest by population). Over half (57.2%) of the state's population is **concentrated in the Atlanta metro area**, which also hosts some of the state's most influential universities like Georgia Institute of Technology and the Unviersity of Georgia. Moreover, Georgia is **33.2% Black or African American**, and offers 9 **historically Black colleges**, ranking third across all states in both respects. Georgia's main industries are **areospace, automotive, and manufacturing**. 
+            Georgia is a mid-sized state (24th largest by land area) with a relatively **high population** (8th largest by population). Over half (57.2%) of the state's population is **concentrated in the Atlanta metro area**, which also hosts some of the state's most influential universities like Georgia Institute of Technology and the Unviersity of Georgia. Moreover, Georgia is **33.2% Black or African American**, and offers 9 **historically Black colleges**, ranking third across all states in both respects. Moorehouse College is a notable example that has been home to celebrated African American graduates and recent investments in research on issues affecting Black men. Georgia's main industries are **areospace, automotive, and manufacturing**. 
                     
             ### Summary
                     ''')
@@ -681,11 +758,108 @@ def main():
 
         # Some basic trends with AP Performance
         st.markdown("### Trends with AP Performance")
+
+        GA_pickled_plots = [
+
+        ]
+        left_co, right_co = st.columns(2)
+        with left_co:
+            for plot_filepath in GA_pickled_plots[:int(len(GA_pickled_plots) / 2)]:
+                pickled_plot(plot_filepath, prefix = pickled_path)
+                
+        with right_co:
+            for plot_filepath in GA_pickled_plots[int(len(GA_pickled_plots) / 2):]:
+                pickled_plot(plot_filepath, prefix = pickled_path)
     
     ############################# ▲▲▲▲▲▲   GEORGIA TAB   ▲▲▲▲▲▲ #############################
+# ############################# ▼▼▼▼▼▼  NORTH CAROLINA TAB  ▼▼▼▼▼▼ #############################
+
+#     with tab6: 
+#         pickled_path = data_prefix + 'NC_pickled/'
+#         st.markdown("## North Carolina")
+#         st.markdown('''
+#             We present some of our exploratory results based on the data available for AP performance in Georgia. 
+                    
+#             Georgia is a mid-sized state (24th largest by land area) with a relatively **high population** (8th largest by population). Over half (57.2%) of the state's population is **concentrated in the Atlanta metro area**, which also hosts some of the state's most influential universities like Georgia Institute of Technology and the Unviersity of Georgia. Moreover, Georgia is **33.2% Black or African American**, and offers 9 **historically Black colleges**, ranking third across all states in both respects. Moorehouse College is a notable example that has been home to celebrated African American graduates and recent investments in research on issues affecting Black men. Georgia's main industries are **areospace, automotive, and manufacturing**. 
+                    
+#             ### Summary
+#                     ''')
+        
+#         # Summary and Choropleth
+        
+#         left_co, right_co = st.columns(2)
+#         with left_co:
+#             st.markdown('''
+#                 #### AP Performance, Availability, Participation
+                        
+#                 Below we summarize the AP performance, availability, and participation in Georgia in 2022. 
+#                         ''')
+            
+#             ############################# ▼▼▼▼▼▼ NORTH CAROLINA AP TABLE ▼▼▼▼▼▼ #############################
+#             st.dataframe(data = NC_AP_table, 
+#                          hide_index = True,
+#                          key = 'NC_AP_table', 
+#                          on_select = "ignore",
+#                          selection_mode = ["multi-row", "multi-column"],
+#                          use_container_width = True,
+#                          height=int(35.2*(len(NC_AP_table)+1))
+#                          )
+#             ############################# ▲▲▲▲▲▲ NORTH CAROLINA AP TABLE ▲▲▲▲▲▲ #############################
+
+#             st.markdown('''
+#                 Georgia has the lowest passing rate out of all three states considered in our state-by-state analysis, but not by much. Actually, Georgia's passing rates ranked very well in 2022 in comparison to those of its southeastern counterparts, and were almost four percentage points above the national average. The state also experiences some of the worst disparities between Asian, White, and Black student participations.
+#                         ''')
+            
+#             # Scores
+#             pickled_plot('NC_score_distribution.pkl', prefix = pickled_path)
+
+#         with right_co:
+#             ##----------CHOROPLETH MAP OF NORTH CAROLINA
+
+#             st.markdown('''
+#                 #### Model Features and University Statistics
+                        
+#                 Below we present AP performance, per-capita income, population, and university data from the year 2022 in and around North Carolina (we include nearby states South Carolina, Georgia, Tennessee, and Virginia).
+#                         ''')
+
+#             ############################# ▼▼▼▼▼▼ NORTH CAROLINA CHOROPLETH ▼▼▼▼▼▼ #############################
+#             NC_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature NC choropleth')
+            
+#             # Generate the Choropleth map of NC counties and nearby universities
+#             choropleth(
+#                 geo_data = NC_geo_data, 
+#                 selected_feature = NC_selected_feature, 
+#                 university_data = NC_nearby_universities, 
+#                 features_dict = features_dict,
+#                 title = 'North Carolina by County 2022',
+#                 fields = ['County_State', 'PassRate', 'Income', 'Population', 'Year'],
+#                 aliases = ['County:', 'AP Pass Rate (%):', 'Per-capita Income: $', 'Population:', 'Year:'],
+#                 center = [35.8, -79.0],
+#                 zoom = 6
+#             )
+#             ############################# ▲▲▲▲▲▲ NORTH CAROLINA CHOROPLETH ▲▲▲▲▲▲ #############################
+
+#             st.markdown('''
+#                         Below we tally the universities which are either high research doctoral (R1/R2), historically Black, Hispanic serving, tribal, women's, public, or private not-for-profit. North Carolina's universities are quite equally distributed across the state.           
+#                         ''')
+
+#             ############################# ▼▼▼▼▼▼ NORTH CAROLINA UNIVERSITIES TABLE ▼▼▼▼▼▼ #############################
+#             st.dataframe(data = NC_stats, 
+#                          hide_index = True,
+#                          key = 'NC_summary_data', 
+#                          on_select = "ignore",
+#                          selection_mode = ["multi-row", "multi-column"],
+#                          use_container_width = True,
+#                          )
+#             ############################# ▲▲▲▲▲▲ NORTH CAROLINA UNIVERSITIES TABLE ▲▲▲▲▲▲ #############################
+
+#         # Some basic trends with AP Performance
+#         st.markdown("### Trends with AP Performance")
+    
+#     ############################# ▲▲▲▲▲▲   NORTH CAROLINA TAB   ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  REFERENCES TAB ▼▼▼▼▼▼ #############################
 
-    with tab7:
+    with tab8:
 
         st.markdown("## References")
         st.markdown('''
