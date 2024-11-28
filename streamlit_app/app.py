@@ -174,11 +174,19 @@ def main():
     # Change some CSS styling in the page for iframes, helps reliably center all choropleth maps and similar
     style = """
     <style>
+    /* Center iFrames */
     .stElementContainer iframe {
         display: block;
         margin-left: auto;
         margin-right: auto;
     }
+    /* Center Plotly plots */
+    div.user-select-none.svg-container {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    </style>
     """
     # Apply the CSS style
     st.markdown(style, unsafe_allow_html = True)
@@ -392,6 +400,8 @@ def main():
 
     with tab4: 
         pickled_path = data_prefix + 'MA_pickled/'
+        image_path = data_prefix + 'Massachusetts/plot/'
+
         st.markdown("## Massachusetts")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Massachusetts. Analysis on this state was particularly fruitful for the abundance of data on a school district level.
@@ -458,25 +468,59 @@ def main():
             ############################# ▲▲▲▲▲▲ MASSACHUSETTS UNIVERSITIES TABLE ▲▲▲▲▲▲ #############################
 
         # Plot some trends with AP Performance, various features, etc.
-        st.markdown("### Trends with AP Performance")
+        st.markdown("""
+            ### Trends with AP Performance
+            
+            We analyze AP performance in Massachusetts using a detailed, school district-level dataset from the Massachusetts Department of Elementary and Secondary Education. The state serves as an ideal focus for this study due to its dense population and world-class educational institutions, including some of the most renowned universities globally.
+                    
+            Although modest in size -- ranking 44th in land area -- Massachusetts is the 16th most populous state and is renowned for its academic and intellectual achievements. It is home to Harvard University and the Massachusetts Institute of Technology (MIT), both consistently ranked among the world's top universities. Other esteemed colleges, such as Boston University, Tufts University, and the University of Massachusetts system, further contribute to the state's leadership in higher education and innovation. This strong educational foundation aligns with a thriving economy driven by industries like healthcare, biotechnology, and professional and technical services. By exploring the impact of proximity to universities on AP performance, this study examines how access to world-class higher education resources enhances high school AP outcomes and prepares students for success in a competitive, knowledge-driven economy. 
+                    
+            ## SHAP Values for feature selection
+            
+            We modeled AP performance in Massachusetts with XGBoost. We further made use of SHAP values for feature selection. First, we use the SHAP summary bar plot to show the average impact of each feature on the model's predictions, as measured by their mean absolute SHAP values. The top five features identified as the most influential and hence selected for further analysis included: 
 
-        MA_pickled_plots = [
-            'MA_pass_vs_school_district_income.pkl',
-            'MA_pass_vs_school_district_population.pkl',
-            'MA_pass_vs_closest_five_public_avg.pkl',
-            'MA_pass_vs_closest_five_private_nfp_avg.pkl',
-            'MA_pass_vs_closest_five_landgrnt_avg.pkl',
-            'MA_pass_vs_closest_five_avg_enrollment_landgrnt.pkl',
-            'MA_pass_vs_closest_five_avg_dormrooms_private_nfp.pkl'
-            ]
-        left_co, right_co = st.columns(2)
-        with left_co:
-            for plot_filepath in MA_pickled_plots[:int(len(MA_pickled_plots) / 2)]:
-                pickled_plot(plot_filepath, prefix = pickled_path)
-                
-        with right_co:
-            for plot_filepath in MA_pickled_plots[int(len(MA_pickled_plots) / 2):]:
-                pickled_plot(plot_filepath, prefix = pickled_path)
+            1. `Per capita income`
+            2. `Population`
+            3. `Average distance to five closest public universities`
+            4. `Average distance to five closest private not-for-profit universities`
+            5. `Average annual enrollment for the five closest land grant universities`
+        """)
+        
+        st.image(image_path + 'shap_summary_plot_bar.png', caption = 'SHAP values for XGBoost on Massachusetts AP exam performance data over 2018-2022')
+
+        st.markdown("""            
+            Next, we present a density scatter plot of SHAP values to illustrate how each feature influences the model's predictions for individual validation samples. In the plot, each point represents a sample: its position along the $x$-axis indicates the feature's positive or negative impact on the model's output, and its color reflects the feature value (:red[red] for high values, :blue[blue] for low values). High-density areas highlight overlapping SHAP values, emphasizing the variability in feature impacts across samples.
+        """)
+
+        st.image(image_path + 'shap_summary_plot_density_scatter.png', caption = 'SHAP densities for XGBoost on Massachusetts AP exam performance data over 2018-2022')
+
+        st.markdown("""            
+            In both plots, we find that per-capita income is the most significant factor influencing AP outcomes in Massachusetts, outweighing the combined impact of the next four features. Wealthier school districts likely benefit from several advantages, including better funding that enables more AP course offerings, improved materials, and access to highly qualified teachers. Students in these financially advantaged areas also gain additional support through resources such as tutoring, test preparation, and enrichment programs, further enhancing their academic success.
+                    
+            ### Linear regression model for each of the five features
+                    
+            After identifying the top five features in our model, we analyze the linear relationship between AP outcomes and each of these key features using Ordinary Least Squares (OLS) linear regression, implemented through the statistical framework provided by `statsmodels`. The per-capita income of a school district shows a strong positive correlation with the percentage of AP exams scoring 3 to 5 (the AP pass rate), as indicated by the fitted :green[green] line. For example, districts with a per-capita income of \$200,000 have an AP pass rate of approximately 90\%, compared to a pass rate of only 50\% for districts with a per capita income of \$75,000.
+        """)
+
+        pickled_plot('MA_pass_vs_school_district_income.pkl', prefix = pickled_path)
+
+        st.markdown("""            
+            The district population show a weak negative correlation with the AP pass rate. Larger districts with higher populations generally exhibit lower AP pass rates compared to smaller, less populous districts. However, this trend is not particularly strong, especially among districts with low populations. The reason for this weak negative correlation is not apparent from the plot. We hypothesize that family per capita income may play an implicit yet significant role, as high-income families often reside in suburbs (areas with lower population density) rather than urban centers (areas with higher population density).
+        """)
+
+        pickled_plot('MA_pass_vs_school_district_population.pkl', prefix = pickled_path)
+
+        st.markdown("""            
+            The average distance to the five closest public universities plays an important role in the AP pass rate. This plot below shows that living closer to public universities (e.g., the UMass system) is associated with higher AP pass rates. For instance, reducing the distance from 30 miles to 10 miles increases the AP pass rate from 56\% to 65\%, a significant 9\% improvement.
+        """)
+
+        pickled_plot('MA_pass_vs_closest_five_public_avg.pkl', prefix = pickled_path)
+
+        st.markdown("""            
+            The average distance to the five closest private universities significantly impacts the AP pass rate. This plot illustrates that living closer to private universities (e.g., Harvard and MIT) correlates with higher AP pass rates. For example, residing within 20 miles of a prestigious private university is associated with a fitted AP pass rate exceeding 60\%.
+        """)
+
+        pickled_plot('MA_pass_vs_closest_five_private_nfp_avg.pkl', prefix = pickled_path)
 
     ############################# ▲▲▲▲▲▲ MASSACHUSETTS TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼   WISCONSIN TAB   ▼▼▼▼▼▼ #############################
