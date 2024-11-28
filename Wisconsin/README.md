@@ -15,6 +15,7 @@ This folder contains our codes for machine learning models for Wisconsin state. 
 ### Description of the models
 - We first did some statistical analysis with statsmodels. We created linear regression models one with all 17 features (called full model), another with only population and per capita income as features (called nonuni model) and another with only the 15 university related variables as features (called uni model). We then looked at the p-values of full model compared to both uni model and nonuni model. Both of the p-values were extremely small.
 - Next, we used sklearn and xgboost to make several predictive regression models: OLS linear regression (called full model), Ridge regression model, Adaboost regressor model, Random Forest regressor model and xgboost model. The average root mean squared errors and R-squared coefficients across the 5-fold cross validation and comparison with the baseline ("take the average and call it a day" model)is summarized as follows:
+
 | Model               | RMSE          | R-squared    |
 | ------------------- | ------------- | ------------ |
 | Baseline            | 13.895        | -0.029       |
@@ -23,5 +24,4 @@ This folder contains our codes for machine learning models for Wisconsin state. 
 | Adaboost model      | 10.214        | 0.444        |
 | Random Forest model | 9.864         | 0.480        |
 | Xgboost model       | 10.376        | 0.425        |
-| ------------------- | ------------- | ------------ |
 - Random Forest model performed the best, so we choose it to be our model for Wisconsin state to use on the testing data.
