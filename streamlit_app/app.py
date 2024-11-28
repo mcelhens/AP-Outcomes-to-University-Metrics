@@ -186,6 +186,18 @@ def main():
         margin-left: auto;
         margin-right: auto;
     }
+    /* Center images */
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* Exclude the GitHub badge */
+    img[src="https://img.shields.io/badge/GitHub-Repo-blue?logo=github"] {
+        display: inline;
+        margin-left: 0;
+        margin-right: 0;
+    }
     </style>
     """
     # Apply the CSS style
