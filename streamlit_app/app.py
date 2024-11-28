@@ -4,6 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import math
 import streamlit as st
+import matplotlib
 from streamlit_folium import st_folium
 from pathlib import Path
 import geopandas as gpd
@@ -11,7 +12,7 @@ import folium
 from shapely import wkt
 import pickle
 here_prefix = str(Path(__file__).parent) + '/'
-data_prefix = here_prefix + '../data/'
+data_prefix = str(Path(__file__).parent) + '/../data/'
 html_prefix = data_prefix + 'html/'
 
 ############################# ▲▲▲▲▲▲ IMPORTS ▲▲▲▲▲▲ #############################
@@ -258,12 +259,12 @@ def main():
         with c2:
             # Feature selection dropdown
             model_features = list(model_features_dict.keys())
-            selected_model_feature = st.selectbox('', model_features, label_visibility = 'collapsed', key = 'select feature for perturbation')
+            selected_model_feature = st.selectbox(model_features[0], model_features, label_visibility = 'collapsed', key = 'select feature for perturbation')
         with c3:
             st.write("changed by")
         with c4:
             # Number input for value change
-            value_change = st.number_input('',
+            value_change = st.number_input('Change',
                                         min_value = 0, 
                                         step = model_features_dict[selected_model_feature]['step'], 
                                         label_visibility = 'collapsed')
@@ -273,7 +274,7 @@ def main():
         with c6:
             # County selection dropdown
             county_options = county_geo_data[county_geo_data['PassRate'].notna()]['County_State'].unique()
-            selected_county = st.selectbox('', county_options, label_visibility = 'collapsed', key = 'select county for perturbation')
+            selected_county = st.selectbox(county_options[0], county_options, label_visibility = 'collapsed', key = 'select county for perturbation')
         with c7:
             # Get the prediction
             change_direction, prediction_change = predict_ap_pass_rate(selected_county, '2022', selected_model_feature, value_change)
