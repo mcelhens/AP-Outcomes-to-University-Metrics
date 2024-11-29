@@ -16,6 +16,34 @@ AP exams are scored on a whole number scale between 1 (lowest) and 5 (highest). 
 
 Beyond these socioeconomic factors, we wished to measure the strength of the effect of universities on AP outcomes. Without a clear source of data on all high school outreach programs offered by US universities, we made use of the various classifications offered by the [Carnegie Classifications of Institutions of Higher Education](https://carnegieclassifications.acenet.edu/). Of particular interest included R1 and R2 (i.e., doctoral with very high or high research activity, respectively), public, or private institutions. Other minority-serving aspects were also considered, such as historically Black, Hispanic-serving, and tribal colleges.
 
+## Methodology
+
+We first started with the national level state by state data on AP scores obtained from College Board's website as well as the data from Carnegie on classification of universities. The data available in College Board was quite limited -- it was only for four years: 2012, 2017, 2021 and 2022. And from the exploratory data analysis, it became clearer to us that state-by-state is probably not the resolution that we want for our investigations. For more details, we refer to the jupyter notebooks "Initial_analysis_national_level.ipynb" and "National_initial_investigations.ipynb". As such, we opted to search for county-by-county data in the Department of Education websites of various states. The four states -- Georgia, Massachusetts, North Carolina and Wisconsin -- had fairly comprehensive datasets.
+
+Because different states have different properties, we decided it would be better to run our analysis on each state separately first. The data processing, analysis and modelling for different states are present in their corresponding directory (the folder "Wisconsin" contains the work for Wisconsin state, for example). *So we refer to the corresponding directory for detailed data processing, exploratory data analysis and modelling for each state.*
+
+Once we were done with our work on each state, we combined the datasets from the four states to one dataframe and create a combined model for the four states. Our rationale was that while separate modelling would be preferable for different state, we would probably get more mileage out of our models on the states other than the four for which we had the data, if we combined them together. And the states that we have are quite diverse in characteristics. So, our hope is that while not perfect, the combined datasets will have better chance of encompassing all the counties in the 50 states in predictive modelling. The modelling is performed in the jupyter notebook "four_states_combined_models.ipynb" in the main directory.
+
+## Description of features and target variables
+The features and target variables for combined states model are same as that for the separate models for the individual states. Our target variable is the AP pass rate, which is defined as the percentage of exams scoring 3 or higher. The corresponding columns are named 'PERCENT_3_OR_ABOVE'. There are altogether 17 features that we use. Two are population and per capita income. The other 15 are related to nearby universities. We look at universities in five categories: R1/R2 (defined as having very high or high research activity in Carnegie classification), public, private not for profit, landgrant and STEM (defined as having at least one doctoral/research degree offered in STEM field). For each category, we consider five closest universities to the given county (or rather, its rough geographical center) and compute average distance, annual enrollment (in academic year 2019/20) and number of dorm rooms to/at those universities.
+
+## Summary of the models
+We used sklearn and xgboost to make several predictive regression models: OLS linear regression (called full model),  Adaboost regressor model, Random Forest regressor model and xgboost model. From these, we observed xgboost performed the best. So, to further refine the xgboost model, we performed some hyperparameter tuning. And to make the model more efficient, we also did some Principal Component Analysis (setting n_components = 0.95). From the hyperparameter tuning, we found the best hyperparameters to be: n_estimators = 800, max_depth = 3 and learning_rate = 0.1. And the PCA reduced the 17 features to 9 principal components.
+
+The performance of various models (as compared to the baseline "take the average and call it a day" model) is summarized as follows:
+
+| Model                                 | RMSE          | R-squared    |
+| ------------------------------------- | ------------- | ------------ |
+| Baseline                              | 19.436        | -0.004       |
+| OLS liner regression                  | 14.559        | 0.436        |
+| xgboost (w/o hyperparameter tuning)   | 10.699        | 0.695        |
+| Adaboost model                        | 12.906        | 0.557        |
+| Random Forest model                   | 10.953        | 0.681        |
+| Xgboost (with hyperparameter tuning)  | 10.315        | 0.716        |
+| Xgboost (PCA + hyperparameter tuning) | 10.577        | 0.702        |
+
+As we can see, the hyperparameter tuned xgboost model performs the best, but the xgboost PCA model (with hyperparameter tuning) is not far behind.
+
 ## Data references and required packages
 
 ### Data references in no particular style
