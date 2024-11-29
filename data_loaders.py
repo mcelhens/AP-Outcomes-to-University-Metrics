@@ -87,10 +87,6 @@ def gimmeAvailability(year, prefix = ''):
 
     return availability
 
-def gimmeGA(prefix = ''):
-    """Returns GA AP data counties were fixed manually, atlanta is pulled into Fulton county all other non-county districts are dropped"""
-    ga_outcomes=pd.read_csv(prefix + 'data/GA_2019-23_counties.csv')
-    return ga_outcomes
 
 def gimmeGA_Counties(prefix = ''):
     """Returns GA counties and cities"""
