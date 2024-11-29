@@ -429,7 +429,21 @@ def main():
         st.markdown("## The Model")
 
         st.markdown("""
-            Using the data we collected for AP performance (i.e., pass rates) for counties and/or school districts in four US states: Massachusetts, Wisconsin, Georgia, and North Carolina, we produced a model which we refer to as the *combined model*. Following our method of comparing various model architectures, we found that XGBoost performed best for prediction purposes even after PCA, and further performed hyperparameter tuning on XGBoost to improve its performance. The choices for this modeling are as follows: 
+            Using the data we collected for AP performance (i.e., pass rates) for counties and/or school districts in four US states: Massachusetts, Wisconsin, Georgia, and North Carolina, we produced a model which we refer to as the *combined model*. Following our method of comparing various model architectures, we found that XGBoost performed best for prediction purposes even after PCA, and further performed hyperparameter tuning on XGBoost to improve its performance. We summarize the results in the following table:
+        """)
+
+        st.dataframe(
+            data = {
+                'Models': ['Baseline', 'OLS Linear Regression', 'XGBoost (w/o hyperparameter tuning)', 'AdaBoost', 'Random Forest', 'XGBoost (w/ hyperparameter tuning)', 'XGBoost (PCA + hyperparameter tuning)'],
+                'RMSE': [19.436, 14.559, 10.699, 12.906, 10.953, 10.315, 10.577],
+                'R²': [-0.004, 0.436, 0.695, 0.557, 0.681, 0.716, 0.702]
+            },
+            on_select = 'ignore',
+            hide_index = True,
+        )
+
+        st.markdown("""            
+            The hyperparameters, feature selection, and evaluation choices made in this modeling process were as follows: 
 
             - Number of estimators in the XGBoost model: $800$.
             - Maximum depth in the XGBoost model: $3$. 
