@@ -223,7 +223,7 @@ def main():
     ############################# ▲▲▲▲▲▲ HEADER ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  TABS  ▼▼▼▼▼▼ #############################
 
-    tab1, tab2, tab3, tab4, tab5, tab6, tab8 = st.tabs(["Home", "Data Exploration", "Our Model", "Massachusetts", "Wisconsin", "Georgia", "References"])
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(["Home", "Explore the Model", "Modeling Methods", "The Model", "Massachusetts", "Wisconsin", "Georgia",  "References"])
 
     ############################# ▼▼▼▼▼▼ HOME TAB ▼▼▼▼▼▼ #############################
 
@@ -237,6 +237,10 @@ def main():
         ### Project Description
                     
         This project was designed to investigate the potential relationship between **[AP exam](https://apstudents.collegeboard.org/what-is-ap) performance** and the **presence of nearby universities**. It was initially hypothesized that local (especially R1/R2 or public) universities would contribute to better pass rates for AP exams in their vicinities as a result of their various outreach, dual-enrollment, tutoring, and similar programs for high schoolers. We produce a predictive model that uses a few features related to university presence, personal income, and population to predict AP exam performance.
+                    
+        You may interact with our main predictive model in the tab labeled `Explore the Model`. 
+        
+        You may further see our modeling methodology in the tab labeled `Modeling Method`, as well individual analyses for National (state-level) data, three states: Massachusetts, Wisconsin, and Georgia, as well as a combined analysis for those three states in their respective tabs. 
                     
         ### Background
 
@@ -262,7 +266,7 @@ def main():
     ############################# ▼▼▼▼▼▼ DATA EXPLORATION TAB ▼▼▼▼▼▼ #############################
 
     with tab2:
-        st.markdown("## Data Exploration")
+        st.markdown("## Explore the Model")
 
         ############################# ▼▼▼▼▼▼ COUNTY CHOROPLETH ▼▼▼▼▼▼ #############################
 
@@ -344,10 +348,10 @@ def main():
         ############################# ▲▲▲▲▲▲ BROADER CATEGORIES ▲▲▲▲▲▲ #############################
     
     ############################# ▲▲▲▲▲▲ DATA EXPLORATION TAB ▲▲▲▲▲▲ #############################
-    ############################# ▼▼▼▼▼▼     OUR MODEL TAB    ▼▼▼▼▼▼ #############################
+    ############################# ▼▼▼▼▼▼   MODEL METHODS TAB    ▼▼▼▼▼▼ #############################
 
     with tab3:
-        st.markdown("## Our Model")
+        st.markdown("## Modeling Methods")
 
         st.markdown('''
             The success of our model is largely driven by the features we select. The features we use are determined by a few criteria: **relevant**, **easy to obtain**, **easy to interpret**, and **easy to compute**.
@@ -418,10 +422,17 @@ def main():
             XGBoost and Random Forest were the top two performers across the states, but XGBoost was the best model in most contexts. 
                     ''')
                     
-    ############################# ▲▲▲▲▲▲   OUR MODEL TAB   ▲▲▲▲▲▲ #############################
+    ############################# ▲▲▲▲▲▲  MODEL METHODS TAB   ▲▲▲▲▲▲ #############################
+
+
+    ############################# ▼▼▼▼▼▼ THE MODEL TAB ▼▼▼▼▼▼ #############################
+    with tab4: 
+        st.markdown("## The Model")
+    
+    ############################# ▲▲▲▲▲▲  THE MODEL TAB   ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼ MASSACHUSETTS TAB ▼▼▼▼▼▼ #############################
 
-    with tab4: 
+    with tab5: 
         pickled_path = data_prefix + 'MA_pickled/'
         image_path = data_prefix + 'Massachusetts/plot/'
 
@@ -548,7 +559,7 @@ def main():
     ############################# ▲▲▲▲▲▲ MASSACHUSETTS TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼   WISCONSIN TAB   ▼▼▼▼▼▼ #############################
 
-    with tab5: 
+    with tab6: 
         pickled_path = data_prefix + 'WI_pickled/'
         image_path = data_prefix + 'Wisconsin/plot/'
 
@@ -638,7 +649,7 @@ def main():
             data = {
                 'Models': ['Baseline', 'OLS Linear Regression', 'Ridge', 'AdaBoost', 'Random Forest', 'XGBoost'],
                 'RMSE': [13.895, 11.933, 11.897, 10.214, 9.864, 10.376],
-                'R²': [0, 0.236, 0.242, 0.444, 0.480, 0.425]
+                'R²': [-0.029, 0.236, 0.242, 0.444, 0.480, 0.425]
             },
             on_select = 'ignore',
             hide_index = True,
@@ -700,7 +711,7 @@ def main():
     ############################# ▲▲▲▲▲▲ WISCONSIN TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  GEORGIA TAB  ▼▼▼▼▼▼ #############################
 
-    with tab6: 
+    with tab7: 
         pickled_path = data_prefix + 'GA_pickled/'
         image_path = data_prefix + 'Georgia/plot/'
 
@@ -873,7 +884,6 @@ def main():
     ############################# ▼▼▼▼▼▼  REFERENCES TAB ▼▼▼▼▼▼ #############################
 
     with tab8:
-
         st.markdown("## References")
         st.markdown('''
             1. Indiana University Center for Postsecondary Research (n.d.). The Carnegie Classification of Institutions of Higher Education, 2021 Edition. Bloomington, IN: Author. [Link](https://carnegieclassifications.acenet.edu/)
