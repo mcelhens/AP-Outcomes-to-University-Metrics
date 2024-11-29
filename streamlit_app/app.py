@@ -171,7 +171,7 @@ def main():
     ############################# ▲▲▲▲▲▲ CACHED ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼ STYLES ▼▼▼▼▼▼ #############################
     
-    # Change some CSS styling in the page for iframes, helps reliably center all choropleth maps and similar
+    # Change some CSS styling in the page for various components, mostly for centering in the page
     style = """
     <style>
     /* Center iFrames */
@@ -197,6 +197,17 @@ def main():
         display: inline;
         margin-left: 0;
         margin-right: 0;
+    }
+    /* Center the fullscreen container */
+    div[data-testid="stFullScreenFrame"] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    /* Ensure tables retain their internal layout */
+    div[data-testid="stDataFrame"] {
+        width: auto;
+        margin: 0;
     }
     </style>
     """
@@ -509,7 +520,7 @@ def main():
         st.markdown("""            
             In both plots, we find that per-capita income is the most significant factor influencing AP outcomes in Massachusetts, outweighing the combined impact of the next four features. Wealthier school districts likely benefit from several advantages, including better funding that enables more AP course offerings, improved materials, and access to highly qualified teachers. Students in these financially advantaged areas also gain additional support through resources such as tutoring, test preparation, and enrichment programs, further enhancing their academic success.
                     
-            ### Linear regression model for each of the five features
+            ### Pass rate against important features
                     
             After identifying the top five features in our model, we analyze the linear relationship between AP outcomes and each of these key features using Ordinary Least Squares (OLS) linear regression, implemented through the statistical framework provided by `statsmodels`. The per-capita income of a school district shows a strong positive correlation with the percentage of AP exams scoring 3 to 5 (the AP pass rate), as indicated by the fitted :green[green] line. For example, districts with a per-capita income of \$200,000 have an AP pass rate of approximately 90\%, compared to a pass rate of only 50\% for districts with a per capita income of \$75,000.
         """)
@@ -539,6 +550,8 @@ def main():
 
     with tab5: 
         pickled_path = data_prefix + 'WI_pickled/'
+        image_path = data_prefix + 'Wisconsin/plot/'
+
         st.markdown("## Wisconsin")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Wisconsin. 
@@ -607,32 +620,90 @@ def main():
             ############################# ▲▲▲▲▲▲ WISCONSIN UNIVERSITIES TABLE ▲▲▲▲▲▲ #############################
 
         # Some basic trends with AP Performance
-        st.markdown("### Trends with AP Performance")
+        st.markdown("""
+            ### Trends with AP Performance
+            
+            Wisconsin is a state in the Upper Midwest of the US, lying to the southwest of the Great Lakes. It is the 23rd largest state by area and 20th largest by population with a population of almost 6 million. It is the 28th richest state in terms of per capita income with a per capita income of \$61,992 in 2022 (according to Federal Reserve Bank of St. Louis). Owing to its fairly rural population, Wisconsin does not boast very many grand cities (with Milwaukee and Madison being the two most populous). And its economy is driven by manufacturing, agriculture and tourism. Wisconsin consists of 72 counties and more than 300 school districts. 
+                
+            Due to having a fairly rural population, the number of notable universities in Wisconsin is comparatively fewer, many of which are clustered around Milwaukee. The major public university system in the state is the University of Wisconsin System, which includes the flagship University of Wisconsin-Madison, and is one of the largest higher education systems in the country. Close to Wisconsin to the west is the Minneapolis-St. Paul metropolitan area, where one may find several colleges and universities such as the University of Minnesota Twin Cities, among others.
 
-        WI_pickled_plots = [
-            'shap_random_forest_bar_plot.pkl',
-            'shap_random_forest_scatter_plot.pkl',
-            'WI_AP_pass_rate_by_counties_vs_avg_five_private_dormrooms.pkl',
-            'WI_AP_pass_rate_by_counties_vs_avg_five_private.pkl',
-            'WI_AP_pass_rate_by_counties_vs_avg._dist_public.pkl',
-            'WI_AP_pass_rate_by_counties_vs_income.pkl',
-            'WI_AP_pass_rate_by_counties_vs_population.pkl',
-            'WI_AP_pass_rate_by_school_districts.pkl',
-        ]
+            The Wisconsin Department of Public Instruction is the state education management agency in Wisconsin. It keeps a comprehensive tab of [education-related data](https://dpi.wi.gov/wisedash/download-files) in the state, where one may find the pass rates (percentage of students scoring 3 or higher) of AP examinations by school districts and counties over five academic years: 2018/19 to 2022/23. Because of the limited availability of population and income related data for school districts, we opted to train on county-wise data for any machine learning models predicting AP pass rates in Wisconsin.
+                    
+            ## SHAP Values for feature selection
+            
+            We used various various regression tools available via `sklearn` or `xgboost`. The performance of the models (as measured by root mean squared error and coefficients of determination are summarized as follows.
+        """)
+
+        st.dataframe(
+            data = {
+                'Models': ['Baseline', 'OLS Linear Regression', 'Ridge', 'AdaBoost', 'Random Forest', 'XGBoost'],
+                'RMSE': [13.895, 11.933, 11.897, 10.214, 9.864, 10.376],
+                'R²': [0, 0.236, 0.242, 0.444, 0.480, 0.425]
+            },
+            on_select = 'ignore',
+            hide_index = True,
+        )
+
+        st.markdown("""            
+            As ssen, the Random Forest model performed the best in terms of both root mean squared error and $R^2$-coefficient. As such, we chose Random Forest as the model of our choice for Wisconsin state.
+
+            There were altogether 17 features present in our modeling. However, the features are not all equally important. We used Shapley Additive Explanations (SHAP for short) to interpret our Random Forest model and understand the important of various features on our random forest model. First, we use the SHAP summary bar plot to show the average impact of each feature on the model's predictions, as measured by their mean absolute SHAP values. The top five features identified as the most influential and hence selected for further analysis included: 
+                    
+            1. `Per capita income`
+            2. `Population`
+            3. `Average distance to five closest private not-for-profit universities`
+            4. `Average distance to five closest public universities`
+            5. `Average number of dorm rooms amongst the five closest STEM universities`
+        """)
+
+        st.image(pickled_path + 'shap_random_forest_bar_plot.png', caption = 'SHAP values for Random Forest model on Wisconsin AP exam performance data over 2018-2022')
+
+        st.markdown("""   
+            In particular, per-capita income and population dominate in importance towards explaining the variance in AP performance amongst the various features. Nonetheless, the contribution of the other 15 features -- when summed -- is quite significant.
+                    
+            The following SHAP scatter density plot elucidates the feature importance more clearly: in the scatter plot, each dot represents a sample whose color indicates the feature value on the sample (:red[red] for high value and :blue[blue] for low value). The placement of a point along the $x$-axis represents the feature's positive or negative impact on the model's output during that sample. One may see that per-capita income and population have higher quantity of red dots scattered on the positive side of the $x$-axis, more confirmation of these two features' predictive power.
+        """)
+
+        st.image(pickled_path + 'shap_random_forest_scatter_plot.png', caption = 'SHAP densities for Random Forest model on Wisconsin AP exam performance data over 2018-2022')
+
+        st.markdown("""
+                    
+            ### Pass rate against important features
+                    
+            Let us summarize the relationship of pass rate with the five important features identified by the SHAP plots. Intuitively, one should expect the pass rate to be positively correlated with per-capita income: higher income counties have boast over 80\% pass rates whereas low income counties have pass rates even below 30\%, barring a few exceptions. In fact, Forest County, WI offers both the highest AP exam pass rate and the lowest per-capita income amongst all Wisconsin counties. We visualize this relationship below.
+        """)
+
+        pickled_plot('WI_AP_pass_rate_by_counties_vs_income.pkl', prefix = pickled_path)
+
+        st.markdown("""            
+            The relationship between population and pass rate, on the other hand, is not as straightforward. While the OLS regression line fitted to these variables has positive slope, the scatter plot does not follow a visually clear trend. It is to some surprise that population concludes as the second most important feature in the chosen model. 
+        """)
+
+        pickled_plot('WI_AP_pass_rate_by_counties_vs_population.pkl', prefix = pickled_path)
+
+        st.markdown("""            
+            Moreover, one would expect that counties located closer to (or containing) particular universities would have higher pass rates for two reasons: (1) that most universities may be more likely to be found in wealthier counties, while (2) many universities (especially those public) should be invested in coummunity outreach programs improving the educational quality of nearby high schools. With its comparatively stronger public university system, Wisconsin might be expected to exhibit a stronger relationship between pass rates and distance to public universities. We one may observe from the below plot, this intuition matches reality. Notice the the trendline for pass rate against average distance to the closest five universities is almost flat for private universities, but significantly more negatively sloped for public. A simple explanation for why might posit that public universities are more obliged to develop community outreach programs to strengthen the educational quality of their surrouding localities. 
+        """)
+
         left_co, right_co = st.columns(2)
         with left_co:
-            for plot_filepath in WI_pickled_plots[:int(len(WI_pickled_plots) / 2)]:
-                pickled_plot(plot_filepath, prefix = pickled_path)
-                
+            pickled_plot('WI_AP_pass_rate_by_counties_vs_avg_five_private.pkl', prefix = pickled_path)
         with right_co:
-            for plot_filepath in WI_pickled_plots[int(len(WI_pickled_plots) / 2):]:
-                pickled_plot(plot_filepath, prefix = pickled_path)
+            pickled_plot('WI_AP_pass_rate_by_counties_vs_avg._dist_public.pkl', prefix = pickled_path)
+
+        st.markdown("""            
+            Finally, consider pass rate against the average number of dorm rooms amongst the closest five private universities. Without a strong intuitive reason *a priori*, we may not explain with much certainty the apparent negatively sloped trend. Perhaps a presence of large private universities is a marker for an absence of large public universities sharing the same space. 
+        """)
+
+        pickled_plot('WI_AP_pass_rate_by_counties_vs_avg_five_private_dormrooms.pkl', prefix = pickled_path)
 
     ############################# ▲▲▲▲▲▲ WISCONSIN TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  GEORGIA TAB  ▼▼▼▼▼▼ #############################
 
     with tab6: 
         pickled_path = data_prefix + 'GA_pickled/'
+        image_path = data_prefix + 'Georgia/plot/'
+
         st.markdown("## Georgia")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Georgia. 
