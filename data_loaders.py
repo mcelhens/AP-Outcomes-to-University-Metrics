@@ -88,3 +88,26 @@ def gimmeAvailability(year, prefix = ''):
     return availability
 
 
+def gimmeGA_Counties(prefix = ''):
+    """Returns GA counties and cities"""
+
+    ga_counties=[]
+    with open(prefix + 'data/GA_counties.txt') as topo_file:
+        for line in topo_file:
+            if 'County' in line:
+                county=line[:-8]
+                continue
+            else: city=line
+            ga_counties.append([county,city.replace("\n", "")])
+    ga_counties=pd.DataFrame(ga_counties,columns=['County','City'])
+    return ga_counties
+    
+    
+def gimmeMA(prefix = ''):
+    '''
+    Massachusetts AP score dataset.
+    Return the AP scores 3-5, sorted by 13 counties.
+    Data listed are from 2019 to 2022.
+    '''   
+    return pd.read_excel(prefix + 'data/MA_data/county_passrate_19_22.xlsx', sheet_name='2019-22')
+
