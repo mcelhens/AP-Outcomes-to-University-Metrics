@@ -27,7 +27,7 @@ def gimmeCountyPopulation(prefix = ''):
     return population[['County', 'State_Abbreviation', '2018', '2019', '2020', '2021', '2022']]
 
 
-def gimmeCarnegieLimted(prefix = ''): # limitations need revision
+def gimmeCarnegieLimited(prefix = ''): # limitations need revision
     """ Returns the limited Carnegie Dataset
         County information should be applied post-loading where appropriate
     """
