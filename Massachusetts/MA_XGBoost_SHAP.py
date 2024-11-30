@@ -23,7 +23,7 @@ shap.initjs()
 
 
 
-MA_AP_all_data = pd.read_csv('data/Massachusetts/AP_data_combined_18_22.csv')
+MA_AP_all_data = pd.read_csv('../data/Massachusetts/AP_data_combined_18_22.csv')
 data_MA_inference = MA_AP_all_data.drop(columns=['COUNTY', 'District Code', 'Year', 'Tests Taken'])    ## drop unnecessary columns
 
 
@@ -88,11 +88,11 @@ fig = shap.summary_plot(
 )
 
 # Save the plot
-with open('data/MA_pickled/shap_summary_plot_bar.pkl', 'wb') as f:
+with open('../data/MA_pickled/shap_summary_plot_bar.pkl', 'wb') as f:
     pickle.dump(fig, f)
     
 # Save the plot to a file
-plt.savefig('data/Massachusetts/plot/shap_summary_plot_bar.png', bbox_inches='tight')
+plt.savefig('../data/Massachusetts/plot/shap_summary_plot_bar.png', bbox_inches='tight')
 plt.show()
 plt.close()
 
@@ -115,10 +115,10 @@ fig = shap.summary_plot(
     plot_size=[12, 6])
 
 # Save the plot
-with open('data/MA_pickled/shap_summary_plot_density_scatter.pkl', 'wb') as f:
+with open('../data/MA_pickled/shap_summary_plot_density_scatter.pkl', 'wb') as f:
     pickle.dump(fig, f)
     
-plt.savefig('data/Massachusetts/plot/shap_summary_plot_density_scatter.png', bbox_inches='tight')
+plt.savefig('../data/Massachusetts/plot/shap_summary_plot_density_scatter.png', bbox_inches='tight')
 plt.show()
 plt.close()
 

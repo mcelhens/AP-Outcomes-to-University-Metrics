@@ -5,7 +5,7 @@ import statsmodels.api as sm
 import plotly.graph_objects as go
 import pickle
 
-MA_AP_all_data = pd.read_excel('data/Massachusetts/AP_data_combined_18_22.xlsx', sheet_name='2022-23')
+MA_AP_all_data = pd.read_excel('../data/Massachusetts/AP_data_combined_18_22.xlsx', sheet_name='2022-23')
 
 
 '''
@@ -115,7 +115,7 @@ fig.update_yaxes(range=[0, 100])
 fig.show()
 
 # Save the plot
-with open('data/MA_pickled/MA_pass_vs_school_district_income.pkl', 'wb') as f:
+with open('../data/MA_pickled/MA_pass_vs_school_district_income.pkl', 'wb') as f:
     pickle.dump(fig, f)
 
 
@@ -225,7 +225,7 @@ fig.update_yaxes(range=[0, 100])
 fig.show()
 
 # Save the plot
-with open('data/MA_pickled/MA_pass_vs_school_district_population.pkl', 'wb') as f:
+with open('../data/MA_pickled/MA_pass_vs_school_district_population.pkl', 'wb') as f:
     pickle.dump(fig, f)
 
 
@@ -335,7 +335,7 @@ fig.update_yaxes(range=[0, 100])
 fig.show()
 
 # Save the plot
-with open('data/MA_pickled/MA_pass_vs_closest_five_public_avg.pkl', 'wb') as f:
+with open('../data/MA_pickled/MA_pass_vs_closest_five_public_avg.pkl', 'wb') as f:
     pickle.dump(fig, f)
 
 
@@ -445,7 +445,7 @@ fig.update_yaxes(range=[0, 100])
 fig.show()
 
 # Save the plot
-with open('data/MA_pickled/MA_pass_vs_closest_five_private_nfp_avg.pkl', 'wb') as f:
+with open('../data/MA_pickled/MA_pass_vs_closest_five_private_nfp_avg.pkl', 'wb') as f:
     pickle.dump(fig, f)
 
 
@@ -555,7 +555,7 @@ fig.update_yaxes(range=[0, 100])
 fig.show()
 
 # Save the plot
-with open('data/MA_pickled/MA_pass_vs_closest_five_avg_enrollment_landgrnt.pkl', 'wb') as f:
+with open('../data/MA_pickled/MA_pass_vs_closest_five_avg_enrollment_landgrnt.pkl', 'wb') as f:
     pickle.dump(fig, f)
 
 
