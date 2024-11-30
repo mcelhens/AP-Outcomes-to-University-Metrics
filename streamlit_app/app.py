@@ -171,7 +171,7 @@ def main():
     ############################# ▲▲▲▲▲▲ CACHED ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼ STYLES ▼▼▼▼▼▼ #############################
     
-    # Change some CSS styling in the page for iframes, helps reliably center all choropleth maps and similar
+    # Change some CSS styling in the page for various components, mostly for centering in the page
     style = """
     <style>
     /* Center iFrames */
@@ -198,6 +198,17 @@ def main():
         margin-left: 0;
         margin-right: 0;
     }
+    /* Center the fullscreen container */
+    div[data-testid="stFullScreenFrame"] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    /* Ensure tables retain their internal layout */
+    div[data-testid="stDataFrame"] {
+        width: auto;
+        margin: 0;
+    }
     </style>
     """
     # Apply the CSS style
@@ -212,7 +223,7 @@ def main():
     ############################# ▲▲▲▲▲▲ HEADER ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  TABS  ▼▼▼▼▼▼ #############################
 
-    tab1, tab2, tab3, tab4, tab5, tab6, tab8 = st.tabs(["Home", "Data Exploration", "Our Model", "Massachusetts", "Wisconsin", "Georgia", "References"])
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs(["Home", "Explore the Model", "Modeling Methods", "The Model", "Massachusetts", "Wisconsin", "Georgia",  "References"])
 
     ############################# ▼▼▼▼▼▼ HOME TAB ▼▼▼▼▼▼ #############################
 
@@ -226,6 +237,10 @@ def main():
         ### Project Description
                     
         This project was designed to investigate the potential relationship between **[AP exam](https://apstudents.collegeboard.org/what-is-ap) performance** and the **presence of nearby universities**. It was initially hypothesized that local (especially R1/R2 or public) universities would contribute to better pass rates for AP exams in their vicinities as a result of their various outreach, dual-enrollment, tutoring, and similar programs for high schoolers. We produce a predictive model that uses a few features related to university presence, personal income, and population to predict AP exam performance.
+                    
+        You may interact with our main predictive model in the tab labeled `Explore the Model`. 
+        
+        You may further see our modeling methodology in the tab labeled `Modeling Method`, as well individual analyses for National (state-level) data, three states: Massachusetts, Wisconsin, and Georgia, as well as a combined analysis for those three states in their respective tabs. 
                     
         ### Background
 
@@ -251,7 +266,7 @@ def main():
     ############################# ▼▼▼▼▼▼ DATA EXPLORATION TAB ▼▼▼▼▼▼ #############################
 
     with tab2:
-        st.markdown("## Data Exploration")
+        st.markdown("## Explore the Model")
 
         ############################# ▼▼▼▼▼▼ COUNTY CHOROPLETH ▼▼▼▼▼▼ #############################
 
@@ -333,10 +348,10 @@ def main():
         ############################# ▲▲▲▲▲▲ BROADER CATEGORIES ▲▲▲▲▲▲ #############################
     
     ############################# ▲▲▲▲▲▲ DATA EXPLORATION TAB ▲▲▲▲▲▲ #############################
-    ############################# ▼▼▼▼▼▼     OUR MODEL TAB    ▼▼▼▼▼▼ #############################
+    ############################# ▼▼▼▼▼▼   MODEL METHODS TAB    ▼▼▼▼▼▼ #############################
 
     with tab3:
-        st.markdown("## Our Model")
+        st.markdown("## Modeling Methods")
 
         st.markdown('''
             The success of our model is largely driven by the features we select. The features we use are determined by a few criteria: **relevant**, **easy to obtain**, **easy to interpret**, and **easy to compute**.
@@ -378,10 +393,8 @@ def main():
             2. Feature selection can reduce overfitting.
             3. Feature selection can reduce the number of features used in the model, which can make the model more interpretable.
 
-            Other models are more robust to having high correlations between features. Regardless, we employed the popular feature selection method of Principal Component Analysis (PCA). We used the scikit-learn library to perform PCA, and found the following results.
-
-            `insert PCA plot here`
-
+            Other models are more robust to having high correlations between features. Regardless, we employed the popular feature selection method of Principal Component Analysis (PCA). We used the `scikit-learn` library to perform PCA. 
+                    
             Various feature importance metrics are available for feature selection as well. We made use of [Shapley (SHAP) values](https://shap.readthedocs.io/en/latest/example_notebooks/overviews/An%20introduction%20to%20explainable%20AI%20with%20Shapley%20values.html) for this. SHAP values are a measure of how much a feature contributes to the model's output, and they come from the study of game theory where the output of a cooperative game depends on whether a player has joined the game or not. Higher SHAP values indicate that the feature -- when included in the model -- is more influential in the model's predictions compared to when the feature is excluded. Various tabs include the SHAP plots for each resolution, and can be read from top to bottom: the highest features being the most important. 
 
             ### Final Model Features
@@ -407,10 +420,64 @@ def main():
             XGBoost and Random Forest were the top two performers across the states, but XGBoost was the best model in most contexts. 
                     ''')
                     
-    ############################# ▲▲▲▲▲▲   OUR MODEL TAB   ▲▲▲▲▲▲ #############################
+    ############################# ▲▲▲▲▲▲  MODEL METHODS TAB   ▲▲▲▲▲▲ #############################
+
+
+    ############################# ▼▼▼▼▼▼ THE MODEL TAB ▼▼▼▼▼▼ #############################
+    with tab4: 
+        image_path = data_prefix + 'Combined/'
+        st.markdown("## The Model")
+
+        st.markdown("""
+            Using the data we collected for AP performance (i.e., pass rates) for counties and/or school districts in four US states: Massachusetts, Wisconsin, Georgia, and North Carolina, we produced a model which we refer to as the *combined model*. Following our method of comparing various model architectures, we found that XGBoost performed best for prediction purposes even after PCA, and further performed hyperparameter tuning on XGBoost to improve its performance. We summarize the results in the following table:
+        """)
+
+        st.dataframe(
+            data = {
+                'Models': ['Baseline', 'OLS Linear Regression', 'XGBoost (w/o hyperparameter tuning)', 'AdaBoost', 'Random Forest', 'XGBoost (w/ hyperparameter tuning)', 'XGBoost (PCA + hyperparameter tuning)'],
+                'RMSE': [19.436, 14.559, 10.699, 12.906, 10.953, 10.315, 10.577],
+                'R²': [-0.004, 0.436, 0.695, 0.557, 0.681, 0.716, 0.702]
+            },
+            on_select = 'ignore',
+            hide_index = True,
+        )
+
+        st.markdown("""            
+            The hyperparameters, feature selection, and evaluation choices made in this modeling process were as follows: 
+
+            - Number of estimators in the XGBoost model: $800$.
+            - Maximum depth in the XGBoost model: $3$. 
+            - Learning rate of the XGBoost model: $0.1$. 
+            - Number of components in the Principal Component Analysis: $95\%$. 
+            - Number of principal components after PCA: $9$. 
+            - Number of folds in cross-validation when comparing models: $5$. 
+
+            Our final, combined model achieved a coefficient of determination $R^2 = 70.2\%$, meaning the combined model may use the top nine principal components to explain about $70\%$ of the variance in AP passing rates. And the combined model achieved root mean squared error of $\\text{RMSE} = 10.58$ percentage points on AP passing rates. The five features which were assigned highest importance according to their SHAP values were as follows:
+                    
+            1. `Per capita income`
+            2. `Average distance to the five closest land grant universities`
+            3. `Population`
+            4. `Average distance to the five closest public universities`
+            5. `Average distance to five closest private not-for-profit universities`
+                    
+            We summarize these importances in the following SHAP plots.
+        """)
+        
+        left_co, right_co = st.columns(2)
+        with left_co:
+            st.image(image_path + 'shap_summary_plot_bar.png', caption = 'SHAP values for XGBoost on combined (four states) AP exam performance data over 2018-2022')
+        with right_co: 
+            st.image(image_path + 'shap_summary_plot_density_scatter.png', caption = 'SHAP densities for XGBoost on combined (four states) AP exam performance data over 2018-2022')
+
+        st.markdown("""
+           Despite our suspicions that R1/R2 universities would have a stronger influence on AP exam performance than other university features, it turns out that the *control* (i.e., the governance and funding structure of the institution), as well as the *institutional designation* (i.e., whether it has land-grant status), displayed stronger predictive powers for the counties and school districts' performances on AP tests in these states.          
+        """)
+            
+    
+    ############################# ▲▲▲▲▲▲  THE MODEL TAB   ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼ MASSACHUSETTS TAB ▼▼▼▼▼▼ #############################
 
-    with tab4: 
+    with tab5: 
         pickled_path = data_prefix + 'MA_pickled/'
         image_path = data_prefix + 'Massachusetts/plot/'
 
@@ -496,20 +563,20 @@ def main():
             3. `Average distance to five closest public universities`
             4. `Average distance to five closest private not-for-profit universities`
             5. `Average annual enrollment for the five closest land grant universities`
-        """)
-        
-        st.image(image_path + 'shap_summary_plot_bar.png', caption = 'SHAP values for XGBoost on Massachusetts AP exam performance data over 2018-2022')
-
-        st.markdown("""            
-            Next, we present a density scatter plot of SHAP values to illustrate how each feature influences the model's predictions for individual validation samples. In the plot, each point represents a sample: its position along the $x$-axis indicates the feature's positive or negative impact on the model's output, and its color reflects the feature value (:red[red] for high values, :blue[blue] for low values). High-density areas highlight overlapping SHAP values, emphasizing the variability in feature impacts across samples.
-        """)
-
-        st.image(image_path + 'shap_summary_plot_density_scatter.png', caption = 'SHAP densities for XGBoost on Massachusetts AP exam performance data over 2018-2022')
-
-        st.markdown("""            
-            In both plots, we find that per-capita income is the most significant factor influencing AP outcomes in Massachusetts, outweighing the combined impact of the next four features. Wealthier school districts likely benefit from several advantages, including better funding that enables more AP course offerings, improved materials, and access to highly qualified teachers. Students in these financially advantaged areas also gain additional support through resources such as tutoring, test preparation, and enrichment programs, further enhancing their academic success.
                     
-            ### Linear regression model for each of the five features
+            Next, we present a both a bar plot and density scatter plot of SHAP values to illustrate how each feature influences the model's predictions for individual validation samples. In the density plot on the right, each point represents a sample: its position along the $x$-axis indicates the feature's positive or negative impact on the model's output, and its color reflects the feature value (:red[red] for high values, :blue[blue] for low values). High-density areas highlight overlapping SHAP values, emphasizing the variability in feature impacts across samples.
+        """)
+
+        left_co, right_co = st.columns(2)
+        with left_co:
+            st.image(image_path + 'shap_summary_plot_bar.png', caption = 'SHAP values for XGBoost on Massachusetts AP exam performance data over 2018-2022')
+        with right_co:
+            st.image(image_path + 'shap_summary_plot_density_scatter.png', caption = 'SHAP densities for XGBoost on Massachusetts AP exam performance data over 2018-2022')        
+
+        st.markdown("""            
+            In both plots above, we find that per-capita income is the most significant factor influencing AP outcomes in Massachusetts, outweighing the combined impact of the next four features. Wealthier school districts likely benefit from several advantages, including better funding that enables more AP course offerings, improved materials, and access to highly qualified teachers. Students in these financially advantaged areas also gain additional support through resources such as tutoring, test preparation, and enrichment programs, further enhancing their academic success.
+                    
+            ### Pass rate against important features
                     
             After identifying the top five features in our model, we analyze the linear relationship between AP outcomes and each of these key features using Ordinary Least Squares (OLS) linear regression, implemented through the statistical framework provided by `statsmodels`. The per-capita income of a school district shows a strong positive correlation with the percentage of AP exams scoring 3 to 5 (the AP pass rate), as indicated by the fitted :green[green] line. For example, districts with a per-capita income of \$200,000 have an AP pass rate of approximately 90\%, compared to a pass rate of only 50\% for districts with a per capita income of \$75,000.
         """)
@@ -537,8 +604,10 @@ def main():
     ############################# ▲▲▲▲▲▲ MASSACHUSETTS TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼   WISCONSIN TAB   ▼▼▼▼▼▼ #############################
 
-    with tab5: 
+    with tab6: 
         pickled_path = data_prefix + 'WI_pickled/'
+        image_path = data_prefix + 'Wisconsin/plot/'
+
         st.markdown("## Wisconsin")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Wisconsin. 
@@ -607,32 +676,89 @@ def main():
             ############################# ▲▲▲▲▲▲ WISCONSIN UNIVERSITIES TABLE ▲▲▲▲▲▲ #############################
 
         # Some basic trends with AP Performance
-        st.markdown("### Trends with AP Performance")
+        st.markdown("""
+            ### Trends with AP Performance
+            
+            Wisconsin is a state in the Upper Midwest of the US, lying to the southwest of the Great Lakes. It is the 23rd largest state by area and 20th largest by population with a population of almost 6 million. It is the 28th richest state in terms of per capita income with a per capita income of \$61,992 in 2022 (according to Federal Reserve Bank of St. Louis). Owing to its fairly rural population, Wisconsin does not boast very many grand cities (with Milwaukee and Madison being the two most populous). And its economy is driven by manufacturing, agriculture and tourism. Wisconsin consists of 72 counties and more than 300 school districts. 
+                
+            Due to having a fairly rural population, the number of notable universities in Wisconsin is comparatively fewer, many of which are clustered around Milwaukee. The major public university system in the state is the University of Wisconsin System, which includes the flagship University of Wisconsin-Madison, and is one of the largest higher education systems in the country. Close to Wisconsin to the west is the Minneapolis-St. Paul metropolitan area, where one may find several colleges and universities such as the University of Minnesota Twin Cities, among others.
 
-        WI_pickled_plots = [
-            'shap_random_forest_bar_plot.pkl',
-            'shap_random_forest_scatter_plot.pkl',
-            'WI_AP_pass_rate_by_counties_vs_avg_five_private_dormrooms.pkl',
-            'WI_AP_pass_rate_by_counties_vs_avg_five_private.pkl',
-            'WI_AP_pass_rate_by_counties_vs_avg._dist_public.pkl',
-            'WI_AP_pass_rate_by_counties_vs_income.pkl',
-            'WI_AP_pass_rate_by_counties_vs_population.pkl',
-            'WI_AP_pass_rate_by_school_districts.pkl',
-        ]
+            The Wisconsin Department of Public Instruction is the state education management agency in Wisconsin. It keeps a comprehensive tab of [education-related data](https://dpi.wi.gov/wisedash/download-files) in the state, where one may find the pass rates (percentage of students scoring 3 or higher) of AP examinations by school districts and counties over five academic years: 2018/19 to 2022/23. Because of the limited availability of population and income related data for school districts, we opted to train on county-wise data for any machine learning models predicting AP pass rates in Wisconsin.
+                    
+            ## SHAP Values for feature selection
+            
+            We used various various regression tools available via `sklearn` or `xgboost`. The performance of the models (as measured by root mean squared error and coefficients of determination are summarized as follows.
+        """)
+
+        st.dataframe(
+            data = {
+                'Models': ['Baseline', 'OLS Linear Regression', 'Ridge', 'AdaBoost', 'Random Forest', 'XGBoost'],
+                'RMSE': [13.895, 11.933, 11.897, 10.214, 9.864, 10.376],
+                'R²': [-0.029, 0.236, 0.242, 0.444, 0.480, 0.425]
+            },
+            on_select = 'ignore',
+            hide_index = True,
+        )
+
+        st.markdown("""            
+            As ssen, the Random Forest model performed the best in terms of both root mean squared error and $R^2$-coefficient. As such, we chose Random Forest as the model of our choice for Wisconsin state.
+
+            There were altogether 17 features present in our modeling. However, the features are not all equally important. We used Shapley Additive Explanations (SHAP for short) to interpret our Random Forest model and understand the important of various features on our random forest model. First, we use the SHAP summary bar plot to show the average impact of each feature on the model's predictions, as measured by their mean absolute SHAP values. The top five features identified as the most influential and hence selected for further analysis included: 
+                    
+            1. `Per capita income`
+            2. `Population`
+            3. `Average distance to five closest private not-for-profit universities`
+            4. `Average distance to five closest public universities`
+            5. `Average number of dorm rooms amongst the five closest STEM universities`
+                    
+            In particular, per-capita income and population dominate in importance towards explaining the variance in AP performance amongst the various features. Nonetheless, the contribution of the other 15 features -- when summed -- is quite significant.
+                    
+            The following SHAP bar and scatter density plots elucidate the feature importances more clearly: in the scatter plot, each dot represents a sample whose color indicates the feature value on the sample (:red[red] for high value and :blue[blue] for low value). The placement of a point along the $x$-axis represents the feature's positive or negative impact on the model's output during that sample. One may see that per-capita income and population have higher quantity of red dots scattered on the positive side of the $x$-axis, more confirmation of these two features' predictive power.
+        """)
+
         left_co, right_co = st.columns(2)
         with left_co:
-            for plot_filepath in WI_pickled_plots[:int(len(WI_pickled_plots) / 2)]:
-                pickled_plot(plot_filepath, prefix = pickled_path)
-                
+            st.image(pickled_path + 'shap_random_forest_bar_plot.png', caption = 'SHAP values for Random Forest model on Wisconsin AP exam performance data over 2018-2022')
         with right_co:
-            for plot_filepath in WI_pickled_plots[int(len(WI_pickled_plots) / 2):]:
-                pickled_plot(plot_filepath, prefix = pickled_path)
+            st.image(pickled_path + 'shap_random_forest_scatter_plot.png', caption = 'SHAP densities for Random Forest model on Wisconsin AP exam performance data over 2018-2022')       
+
+        st.markdown("""
+            ### Pass rate against important features
+                    
+            Let us summarize the relationship of pass rate with the five important features identified by the SHAP plots. Intuitively, one should expect the pass rate to be positively correlated with per-capita income: higher income counties have boast over 80\% pass rates whereas low income counties have pass rates even below 30\%, barring a few exceptions. In fact, Forest County, WI offers both the highest AP exam pass rate and the lowest per-capita income amongst all Wisconsin counties. We visualize this relationship below.
+        """)
+
+        pickled_plot('WI_AP_pass_rate_by_counties_vs_income.pkl', prefix = pickled_path)
+
+        st.markdown("""            
+            The relationship between population and pass rate, on the other hand, is not as straightforward. While the OLS regression line fitted to these variables has positive slope, the scatter plot does not follow a visually clear trend. It is to some surprise that population concludes as the second most important feature in the chosen model. 
+        """)
+
+        pickled_plot('WI_AP_pass_rate_by_counties_vs_population.pkl', prefix = pickled_path)
+
+        st.markdown("""            
+            Moreover, one would expect that counties located closer to (or containing) particular universities would have higher pass rates for two reasons: (1) that most universities may be more likely to be found in wealthier counties, while (2) many universities (especially those public) should be invested in coummunity outreach programs improving the educational quality of nearby high schools. With its comparatively stronger public university system, Wisconsin might be expected to exhibit a stronger relationship between pass rates and distance to public universities. We one may observe from the below plot, this intuition matches reality. Notice the the trendline for pass rate against average distance to the closest five universities is almost flat for private universities, but significantly more negatively sloped for public. A simple explanation for why might posit that public universities are more obliged to develop community outreach programs to strengthen the educational quality of their surrouding localities.
+        """)
+
+        left_co, right_co = st.columns(2)
+        with left_co:
+            pickled_plot('WI_AP_pass_rate_by_counties_vs_avg_five_private.pkl', prefix = pickled_path)
+        with right_co:
+            pickled_plot('WI_AP_pass_rate_by_counties_vs_avg._dist_public.pkl', prefix = pickled_path)
+
+        st.markdown("""            
+            Finally, consider pass rate against the average number of dorm rooms amongst the closest five private universities. Without a strong intuitive reason *a priori*, we may not explain with much certainty the apparent negatively sloped trend. Perhaps a presence of large private universities is a marker for an absence of large public universities sharing the same space. 
+        """)
+
+        pickled_plot('WI_AP_pass_rate_by_counties_vs_avg_five_private_dormrooms.pkl', prefix = pickled_path)
 
     ############################# ▲▲▲▲▲▲ WISCONSIN TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  GEORGIA TAB  ▼▼▼▼▼▼ #############################
 
-    with tab6: 
+    with tab7: 
         pickled_path = data_prefix + 'GA_pickled/'
+        image_path = data_prefix + 'Georgia/plot/'
+
         st.markdown("## Georgia")
         st.markdown('''
             We present some of our exploratory results based on the data available for AP performance in Georgia. 
@@ -714,95 +840,9 @@ def main():
                 pickled_plot(plot_filepath, prefix = pickled_path)
     
     ############################# ▲▲▲▲▲▲   GEORGIA TAB   ▲▲▲▲▲▲ #############################
-# ############################# ▼▼▼▼▼▼  NORTH CAROLINA TAB  ▼▼▼▼▼▼ #############################
-
-#     with tab6: 
-#         pickled_path = data_prefix + 'NC_pickled/'
-#         st.markdown("## North Carolina")
-#         st.markdown('''
-#             We present some of our exploratory results based on the data available for AP performance in Georgia. 
-                    
-#             Georgia is a mid-sized state (24th largest by land area) with a relatively **high population** (8th largest by population). Over half (57.2%) of the state's population is **concentrated in the Atlanta metro area**, which also hosts some of the state's most influential universities like Georgia Institute of Technology and the Unviersity of Georgia. Moreover, Georgia is **33.2% Black or African American**, and offers 9 **historically Black colleges**, ranking third across all states in both respects. Moorehouse College is a notable example that has been home to celebrated African American graduates and recent investments in research on issues affecting Black men. Georgia's main industries are **areospace, automotive, and manufacturing**. 
-                    
-#             ### Summary
-#                     ''')
-        
-#         # Summary and Choropleth
-        
-#         left_co, right_co = st.columns(2)
-#         with left_co:
-#             st.markdown('''
-#                 #### AP Performance, Availability, Participation
-                        
-#                 Below we summarize the AP performance, availability, and participation in Georgia in 2022. 
-#                         ''')
-            
-#             ############################# ▼▼▼▼▼▼ NORTH CAROLINA AP TABLE ▼▼▼▼▼▼ #############################
-#             st.dataframe(data = NC_AP_table, 
-#                          hide_index = True,
-#                          key = 'NC_AP_table', 
-#                          on_select = "ignore",
-#                          selection_mode = ["multi-row", "multi-column"],
-#                          use_container_width = True,
-#                          height=int(35.2*(len(NC_AP_table)+1))
-#                          )
-#             ############################# ▲▲▲▲▲▲ NORTH CAROLINA AP TABLE ▲▲▲▲▲▲ #############################
-
-#             st.markdown('''
-#                 Georgia has the lowest passing rate out of all three states considered in our state-by-state analysis, but not by much. Actually, Georgia's passing rates ranked very well in 2022 in comparison to those of its southeastern counterparts, and were almost four percentage points above the national average. The state also experiences some of the worst disparities between Asian, White, and Black student participations.
-#                         ''')
-            
-#             # Scores
-#             pickled_plot('NC_score_distribution.pkl', prefix = pickled_path)
-
-#         with right_co:
-#             ##----------CHOROPLETH MAP OF NORTH CAROLINA
-
-#             st.markdown('''
-#                 #### Model Features and University Statistics
-                        
-#                 Below we present AP performance, per-capita income, population, and university data from the year 2022 in and around North Carolina (we include nearby states South Carolina, Georgia, Tennessee, and Virginia).
-#                         ''')
-
-#             ############################# ▼▼▼▼▼▼ NORTH CAROLINA CHOROPLETH ▼▼▼▼▼▼ #############################
-#             NC_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature NC choropleth')
-            
-#             # Generate the Choropleth map of NC counties and nearby universities
-#             choropleth(
-#                 geo_data = NC_geo_data, 
-#                 selected_feature = NC_selected_feature, 
-#                 university_data = NC_nearby_universities, 
-#                 features_dict = features_dict,
-#                 title = 'North Carolina by County 2022',
-#                 fields = ['County_State', 'PassRate', 'Income', 'Population', 'Year'],
-#                 aliases = ['County:', 'AP Pass Rate (%):', 'Per-capita Income: $', 'Population:', 'Year:'],
-#                 center = [35.8, -79.0],
-#                 zoom = 6
-#             )
-#             ############################# ▲▲▲▲▲▲ NORTH CAROLINA CHOROPLETH ▲▲▲▲▲▲ #############################
-
-#             st.markdown('''
-#                         Below we tally the universities which are either high research doctoral (R1/R2), historically Black, Hispanic serving, tribal, women's, public, or private not-for-profit. North Carolina's universities are quite equally distributed across the state.           
-#                         ''')
-
-#             ############################# ▼▼▼▼▼▼ NORTH CAROLINA UNIVERSITIES TABLE ▼▼▼▼▼▼ #############################
-#             st.dataframe(data = NC_stats, 
-#                          hide_index = True,
-#                          key = 'NC_summary_data', 
-#                          on_select = "ignore",
-#                          selection_mode = ["multi-row", "multi-column"],
-#                          use_container_width = True,
-#                          )
-#             ############################# ▲▲▲▲▲▲ NORTH CAROLINA UNIVERSITIES TABLE ▲▲▲▲▲▲ #############################
-
-#         # Some basic trends with AP Performance
-#         st.markdown("### Trends with AP Performance")
-    
-#     ############################# ▲▲▲▲▲▲   NORTH CAROLINA TAB   ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  REFERENCES TAB ▼▼▼▼▼▼ #############################
 
     with tab8:
-
         st.markdown("## References")
         st.markdown('''
             1. Indiana University Center for Postsecondary Research (n.d.). The Carnegie Classification of Institutions of Higher Education, 2021 Edition. Bloomington, IN: Author. [Link](https://carnegieclassifications.acenet.edu/)
