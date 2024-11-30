@@ -27,7 +27,7 @@ def gimmeCountyPopulation(prefix = ''):
     return population[['County', 'State_Abbreviation', '2018', '2019', '2020', '2021', '2022']]
 
 
-def gimmeCarnegieLimted(prefix = ''): # limitations need revision
+def gimmeCarnegieLimited(prefix = ''): # limitations need revision
     """ Returns the limited Carnegie Dataset
         County information should be applied post-loading where appropriate
     """
@@ -87,18 +87,4 @@ def gimmeAvailability(year, prefix = ''):
 
     return availability
 
-
-def gimmeGA_Counties(prefix = ''):
-    """Returns GA counties and cities"""
-
-    ga_counties=[]
-    with open(prefix + 'data/GA_counties.txt') as topo_file:
-        for line in topo_file:
-            if 'County' in line:
-                county=line[:-8]
-                continue
-            else: city=line
-            ga_counties.append([county,city.replace("\n", "")])
-    ga_counties=pd.DataFrame(ga_counties,columns=['County','City'])
-    return ga_counties
 

@@ -1,5 +1,7 @@
 # Metrics to consider from reported datasets
 
+This tracked our initial list of potential metrics to consider. With early visualization and state-level data information we reduced this set to our final 5 types of universities and 17 total features.
+
 ## Carnegie University Categorization Dataset
 
 1. Basic categorizations: exploratory
@@ -22,11 +24,22 @@
          * Colloquially: land-grant universities are a sub-category of public university.
 6. Selectivity index categorization
 
-### Correction for size disparities in US options
+## Final 17 features by district/county in each state
 
-1. Correct for population of state
-2. Correct for geographic area of state
-3. Aggregate states into geographic regions
-     * This might consider northeast regions where cross state accessibility is high.
-     * Cross state accessibility is much lower in other parts of the US
-4. Limiting to land grant universities
+1. Population
+2. Per capita income
+3. Nearest 5 R1/R2 universities by average distance.
+4. Nearest 5 R1/R2 universities by average enrollment.
+5. Nearest 5 R1/R2 universities by average number of dormbeds.
+6. Nearest 5 public universities by average distance.
+7. Nearest 5 public universities by average enrollment.
+8. Nearest 5 public universities by average number of dormbeds.
+9. Nearest 5 private not for profit universities by average distance.
+10. Nearest 5 private not for profit universities by average enrollment.
+11. Nearest 5 private not for profit universities by average number of dormbeds.
+12. Nearest 5 land-grant universities by average distance.
+13. Nearest 5 land-grant universities by average enrollment.
+14. Nearest 5 land-grant universities by average number of dormbeds.
+15. Nearest 5 STEM-specialized universities by average distance.
+16. Nearest 5 STEM-specialized universities by average enrollment.
+17. Nearest 5 STEM-specialized universities by average number of dormbeds.
