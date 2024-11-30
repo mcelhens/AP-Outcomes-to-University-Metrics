@@ -101,18 +101,62 @@ All p-values are on the order of $10^{-5}$ or smaller.
 6. Full 17 feature model with Ridge Regression `sklearn`
 7. 9 transformed feature model with PCA `sklearn`
 8. Full 17 feature model with xgboost `xgboost`
+9. Adaboost model
+10. Random Forest model
 
-|Model             |RMSE   |STDEV   |
-|------------------|-------|--------|
-|Baseline          | 20.05 | 0.9866 |
-|Full Linear       | 16.57 | 1.399  |
-|Non-university    | 18.23 | 1.204  |
-|University-only   | 17.78 | 1.337  |
-|No dormroom       | 17.06 | 1.249  |
-|Full Ridge        | 16.56 | 1.391  |
-|PCA Transformation| 17.09 | 1.252  |
-|xgboost           | 12.05 | 1.269  |
+The following table comes from 5-fold cross validation.
 
-### SHAPE calculations
+|Model             |RMSE   |STDEV   |R2 Score |
+|------------------|-------|--------|---------|
+|Baseline          | 20.05 | 0.9866 | -0.0372 |
+|Full Linear       | 16.57 | 1.399  | 0.5615  |
+|Non-university    | 18.23 | 1.204  | **      |
+|University-only   | 17.78 | 1.337  | **      |
+|No dormroom       | 17.06 | 1.249  | **      |
+|Full Ridge        | 16.56 | 1.391  | 0.5209  |
+|PCA Transformation| 17.09 | 1.252  | 0.6086  |
+|xgboost           | 12.05 | 1.269  | 0.6086  |
+|Adaboost          | 12.90 | 1.168  | 0.5615  |
+|Random Forest     | 13.52 | 1.153  | 0.5209  |
 
-To better visualize the role of the 17 features we performed some simple SHAPE calculations. Georgia is notable for having a less severe dependence on population and income. Further investigations would be useful.
+As XGBoost performed generally optimal, we computed RMSE and R2 against the test data reserved for scores of 10.27 and 0.6185 respectively.
+
+#### SHAPLY calculations
+
+To better visualize the role of the 17 features we performed some simple SHAP calculations. Georgia is notable for having a less severe dependence on population and income. Further investigations would be useful. We also calculated the values of the ranked feature importance.
+
+![SHAP Image](shap_xgb.png)
+
+Feature Importance from SHAP:
+
+|                                Feature|  Importance|
+|---|---|
+|                      per_capita_income|    5.920026|
+|                             population|    2.900259|
+|   closest_five_avg_dormrooms_landgrant|    2.632638|
+|             closest_five_landgrant_avg|    1.897238|
+|           closest_five_private_nfp_avg|    1.854983|
+|     closest_five_avg_enrollment_public|    1.238844|
+|        closest_five_avg_dormrooms_r1r2|    1.051907|
+|      closest_five_avg_dormrooms_public|    1.037098|
+|closest_five_avg_enrollment_private_nfp|    0.928828|
+|                  closest_five_r1r2_avg|    0.895733|
+| closest_five_avg_dormrooms_private_nfp|    0.697346|
+|                closest_five_public_avg|    0.575374|
+|       closest_five_avg_enrollment_r1r2|    0.342270|
+|       closest_five_avg_enrollment_stem|    0.299934|
+|                  closest_five_stem_avg|    0.205257|
+|  closest_five_avg_enrollment_landgrant|    0.180089|
+|        closest_five_avg_dormrooms_stem|    0.000000|
+
+### Visualizations
+
+We visualized the relationships to pass rate using seaborn's regplot. Noteably the closest 5 distances nearly all had a negative impact except landgrant universities. The population extremes are an issue thus population on the log scale is presented. This comes with the expense of linear visualization. Due to the jagged feature size cohesive visualization was a challenge.
+
+<!-- ![Regression Visualization](feature_regplots.png) -->
+
+<img src="feature_regplots.png" alt="Regression Visualization" height="1500"/>
+
+## Conclusion
+
+Georgia proves interesting in it's modestly reduced dependence on income; however, it generally trends like the other states. It's largest university influence was landgrant university dorms and distance both with slight positive relationships. Shockingly nearby universities of other types do not have a positive relationship. Landgrant universities had the highest average distance away. One has to ask if perhaps the distance is so far that it may actually be an erroneous conclusion. XGBoost and PCA methods performed near identically however PCA's limitations on data that is not normal led us to select XGBoost as the optimal model for Georgia. Overall, Georgia provides evidence to the variance of states across the US. Further research would be advantaged by minority considerations at least at the university level, the use of more years, and the absorbtion of other city districts into their appropriate counties.
