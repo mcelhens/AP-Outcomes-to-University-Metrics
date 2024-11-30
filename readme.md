@@ -50,10 +50,11 @@ As we can see, the hyperparameter-tuned XGBoost model performs the best, but the
 
 1. Indiana University Center for Postsecondary Research (n.d.). The Carnegie Classification of Institutions of Higher Education, 2021 edition, Bloomington, IN.
 2. United States Census Bureau -- the United States Office of Management and Budget. Metropolitan and Micropolitan. Core based statistical areas (CBSAs), metropolitan divisions, and combined statistical areas (CSAs). July, 2023.
-3. GA Governor's Office of Student Achievement, Data Dashboards, Advanced Placement (AP) Scores, Examination Years 2019, 2020, 2021, 2022, 2023 (school year is one year less)
-4. MA Department of Elementary and Secondary Education, Statewide Reports: 2022-23 Advanced Placement Performance
-5. Wisconsin Department of Public Instruction, Advanced Placement (AP) Scores, 2019-2023: [https://dpi.wi.gov/wisedash/download-files](https://dpi.wi.gov/wisedash/download-files)
-6. Federal Reserve Bank of St. Louis
+3. GA Governor's Office of Student Achievement, Data Dashboards, Advanced Placement (AP) Scores, Years 2019, 2020, 2021, 2022, 2023
+4. GA Department of Community Affairs Office of Research, Municipalities by County
+5. MA Department of Elementary and Secondary Education, Statewide Reports: 2022-23 Advanced Placement Performance
+6. Wisconsin Department of Public Instruction, Advanced Placement (AP) Scores, 2019-2023: https://dpi.wi.gov/wisedash/download-files
+7. Federal Reserve Bank of St. Louis
 
 ### Python packages featured in this project
 
