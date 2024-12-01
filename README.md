@@ -62,6 +62,7 @@ As we can see, the hyperparameter-tuned XGBoost model performs the best, but the
 - `sklearn`
 - `pandas`
 - `statsmodels`
+- `xgboost`
 - `plotly`
 - `matplotlib`
 - `seaborn`
