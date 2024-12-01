@@ -60,6 +60,12 @@ As we can see, the hyperparameter-tuned XGBoost model performs the best, but the
 
 Surprisingly, the performance is even better than on cross-validation!
 
+The SHAP summary density scatter plot is given as follows:
+
+![SHAP bar plot](data/Combined/shap_summary_plot_density_scatter.png "SHAP feature importance values")
+
+Unsurprisingly, per capita income is the most important feature in our model, but the contribution of university related features is not negligible. Especially, proximity to land-grant, private and public universities seems to have noticeable impact on AP outcomes. On the other hand, the proximity to more research oriented universities (R1/R2 and STEM) seems to have less pronounced impact.
+
 ## Data references and required packages
 
 ### Data references in no particular style
