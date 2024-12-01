@@ -48,14 +48,13 @@ As we can see, the hyperparameter-tuned XGBoost model performs the best, but the
 
 ### Data references in no particular style
 
-1. [AP National and State Data](https://apcentral.collegeboard.org/about-ap/ap-data-research/national-state-data). AP Central. College Board. 2024.
-2. Indiana University Center for Postsecondary Research (n.d.). The Carnegie Classification of Institutions of Higher Education, 2021 edition, Bloomington, IN.
-3. United States Census Bureau -- the United States Office of Management and Budget. Metropolitan and Micropolitan. Core based statistical areas (CBSAs), metropolitan divisions, and combined statistical areas (CSAs). July, 2023.
-4. GA Governor's Office of Student Achievement, Data Dashboards, Advanced Placement (AP) Scores, Years 2019, 2020, 2021, 2022, 2023
-5. GA Department of Community Affairs Office of Research, Municipalities by County
-6. MA Department of Elementary and Secondary Education, Statewide Reports: 2022-23 Advanced Placement Performance
-7. [Advanced Placement (AP) Scores, 2019-2023](https://dpi.wi.gov/wisedash/download-files). Wisconsin Department of Public Instruction. 
-8. Federal Reserve Bank of St. Louis. 
+1. Indiana University Center for Postsecondary Research (n.d.). The Carnegie Classification of Institutions of Higher Education, 2021 edition, Bloomington, IN.
+2. United States Census Bureau -- the United States Office of Management and Budget. Metropolitan and Micropolitan. Core based statistical areas (CBSAs), metropolitan divisions, and combined statistical areas (CSAs). July, 2023.
+3. GA Governor's Office of Student Achievement, Data Dashboards, Advanced Placement (AP) Scores, Years 2019, 2020, 2021, 2022, 2023
+4. GA Department of Community Affairs Office of Research, Municipalities by County
+5. MA Department of Elementary and Secondary Education, Statewide Reports: 2022-23 Advanced Placement Performance
+6. Wisconsin Department of Public Instruction, Advanced Placement (AP) Scores, 2019-2023: https://dpi.wi.gov/wisedash/download-files
+7. Federal Reserve Bank of St. Louis
 
 ### Python packages featured in this project
 
