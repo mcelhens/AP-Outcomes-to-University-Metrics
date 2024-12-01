@@ -543,6 +543,22 @@ def main():
         st.markdown("""
            Despite our suspicions that R1/R2 universities would have a stronger influence on AP exam performance than other university features, it turns out that the *control* (i.e., the governance and funding structure of the institution), as well as the *institutional designation* (i.e., whether it has land-grant status), displayed stronger predictive powers for the counties and school districts' performances on AP tests in these states.          
         """)
+
+        st.markdown("### Results: Wisconsin, 2017-2018")
+
+        st.markdown("""
+           We now test how well the combined model performs on historical data from Wisconsin. We ask the model to predict AP pass rates for all counties in Wisconsin, and compare those predictions to reality. We map the results below.               
+        """)
+
+        left_co, right_co = st.columns(2)
+        with left_co:
+            display_html_plot(f'Predicted AP Pass Rate by Wisconsin County, 2017-2018 Choropleth.html')
+        with right_co: 
+            display_html_plot(f'True AP Pass Rate by Wisconsin County, 2017-2018 Choropleth.html')
+
+        st.markdown("""
+            Some discussion.
+        """)
     
     ############################# ▲▲▲▲▲▲  THE MODEL TAB   ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼ MASSACHUSETTS TAB ▼▼▼▼▼▼ #############################
