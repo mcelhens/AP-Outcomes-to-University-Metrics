@@ -8,3 +8,4 @@ Shapely==2.0.6
 streamlit==1.40.1
 streamlit_folium==0.23.2
 joblib
+sklearn
