@@ -85,32 +85,16 @@ model_features_dict = {
 # Set the title and favicon that appear in the Browser's tab bar.
 st.set_page_config(
     layout = 'wide',
-    page_title = 'AP Outcomes vs University Metrics',
+    page_title = 'University Influence on AP Exam Outcomes',
     page_icon = ':material/school:',
 )
 
-@st.cache_data
-def load_universities_data():
-    universities_data = pd.read_csv(data_prefix + 'carnegie_with_location.csv')[['name', 'stabbr', 'latitude', 'longitude']]
-    MA_nearby_universities = universities_data[universities_data['stabbr'].isin(MA_neighbors)]
-    WI_nearby_universities = universities_data[universities_data['stabbr'].isin(WI_neighbors)]
-    GA_nearby_universities = universities_data[universities_data['stabbr'].isin(GA_neighbors)]
-    return universities_data, MA_nearby_universities, WI_nearby_universities, GA_nearby_universities
-
-@st.cache_data
-def load_national_choropleth_data():
-    return pd.read_csv(here_prefix + "US_States_Map_Data.csv")
-
-@st.cache_data
-def load_county_choropleth_data():
-    counties_map_data = pd.read_csv(here_prefix + 'States_Counties_Map_Data.csv')
-    counties_map_data['Year'] = counties_map_data['Year'].astype(str)
-    return counties_map_data[counties_map_data['Year'] == '2022']
-    
+# Carnegie broader categories data  
 @st.cache_data
 def load_broader_categories():
     return pd.read_csv(data_prefix + 'broader_categories_counts.csv')
 
+# Summary stats for three states
 @st.cache_data
 def get_state_summaries():
     MA_stats = pd.read_csv(here_prefix + 'MA_summary_stats.csv')
@@ -118,6 +102,7 @@ def get_state_summaries():
     GA_stats = pd.read_csv(here_prefix + 'GA_summary_stats.csv')
     return MA_stats, WI_stats, GA_stats
 
+# AP performance/availability/participation data for three states
 @st.cache_data
 def get_state_AP_tables():
     MA_AP_table = pd.read_csv(here_prefix + 'MA_AP_table.csv')
@@ -125,15 +110,29 @@ def get_state_AP_tables():
     GA_AP_table = pd.read_csv(here_prefix + 'GA_AP_table.csv')
     return MA_AP_table, WI_AP_table, GA_AP_table
 
+# Wisconsin's predictive model
 @st.cache_data
 def get_WI_data_and_model():
-    WI_full_df = pd.read_csv('../data/Wisconsin/train_test_split/Wisconsin_closest_five_method.csv')
+    WI_full_df = pd.read_csv(data_prefix + 'Wisconsin/train_test_split/Wisconsin_closest_five_method.csv')
     WI_full_df.drop(['Unnamed: 0'], axis = 1, inplace = True)
-    WI_model = joblib.load('../data/WI_pickled/WI_random_forest_model.pkl')
+    WI_model = joblib.load(data_prefix + 'WI_pickled/WI_random_forest_model.pkl')
     return WI_full_df, WI_model
+
+# Three states' counties data
+def load_county_choropleth_data():
+    counties_map_data = pd.read_csv(here_prefix + 'States_Counties_Map_Data.csv')
+    counties_map_data['Year'] = counties_map_data['Year'].astype(str)
+    return counties_map_data[counties_map_data['Year'] == '2022']
 
 ############################# ▲▲▲▲▲▲ CACHING ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ METHODS ▼▼▼▼▼▼ #############################
+
+# Produce geo_dataframe from shape data
+def reconstruct_geo(pre_geo_data):
+    pre_geo_data['geometry'] = pre_geo_data['geometry'].apply(wkt.loads)
+    geo_data = gpd.GeoDataFrame(pre_geo_data, geometry = 'geometry')
+    geo_data.set_crs(epsg = 4326, inplace = True)
+    return geo_data
 
 def WI_predict_perturb(df, model, county = 'Adams', feature = 'population', feature_change = 0):
     try:
@@ -145,14 +144,8 @@ def WI_predict_perturb(df, model, county = 'Adams', feature = 'population', feat
         return change_direction, round(abs(prediction_change), 1)
     except:
         return 0
-
-def reconstruct_geo(pre_geo_data):
-    pre_geo_data['geometry'] = pre_geo_data['geometry'].apply(wkt.loads)
-    geo_data = gpd.GeoDataFrame(pre_geo_data, geometry = 'geometry')
-    geo_data.set_crs(epsg = 4326, inplace = True)
-    return geo_data
-
-def pickled_plot(filepath, prefix = ''): 
+    
+def display_pickled_plot(filepath, prefix = ''): 
     try:
         with open(prefix + filepath, 'rb') as f:
             st.plotly_chart(pickle.load(f))
@@ -176,19 +169,11 @@ def main():
     ############################# ▼▼▼▼▼▼ CACHED ▼▼▼▼▼▼ #############################
 
     # Load in cached data and models
-    pre_national_geo_data = load_national_choropleth_data()
     pre_county_geo_data = load_county_choropleth_data()
-    universities_data, MA_nearby_universities, WI_nearby_universities, GA_nearby_universities = load_universities_data()
+    county_geo_data = reconstruct_geo(pre_county_geo_data)
     MA_stats, WI_stats, GA_stats = get_state_summaries()
     MA_AP_table, WI_AP_table, GA_AP_table = get_state_AP_tables()
     WI_full_df, WI_model = get_WI_data_and_model()
-
-    # Reconstruct geometries from WKT strings (not hashable so can't cache this part)
-    national_geo_data = reconstruct_geo(pre_national_geo_data)
-    county_geo_data = reconstruct_geo(pre_county_geo_data)
-    MA_geo_data = county_geo_data[county_geo_data['State_Abbreviation'] == 'MA']
-    WI_geo_data = county_geo_data[county_geo_data['State_Abbreviation'] == 'WI']
-    GA_geo_data = county_geo_data[county_geo_data['State_Abbreviation'] == 'GA']
     
     ############################# ▲▲▲▲▲▲ CACHED ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼ STYLES ▼▼▼▼▼▼ #############################
@@ -355,9 +340,12 @@ def main():
     ############################# ▼▼▼▼▼▼   MODEL METHODS TAB    ▼▼▼▼▼▼ #############################
 
     with tab3:
-        st.markdown("## Modeling Methods")
 
-        st.markdown('''
+        st.markdown("## Modeling Problem")
+
+        st.markdown("""
+            Our target variable is the AP pass rate of a locality (be that a state, county, or school district), which is defined as the percentage of exams scoring 3 or higher. 
+                    
             The success of our model is largely driven by the features we select. The features we use are determined by a few criteria: **relevant**, **easy to obtain**, **easy to interpret**, and **easy to compute**.
 
             We tested models using a number of features, some of which were directly sourced from the datasets we use, and some of which were constructed from other features. In this tab, we present our general procedure for engineering and selecting features for the final model, as well as present the features we use in our final model.
@@ -424,6 +412,8 @@ def main():
             - `Distance to Closets Five Universities`: really, this feature was included many times but for a number of types of universities (as determined by the Carnegie Classification): R1/R2, Public, Private Non-Profit, Land Grant, and STEM-focused.
             - `Average Enrollment in Closest Five Universities`: again, split by university type.
             - `Average Number of Dorm Rooms in Closest Five Universities`: again, split by university type.
+                    
+            There are altogether twenty features that we use. Two are population and per-capita income. Fifteen of the others are related to nearby universities. For each of the five university categories, we consider the five closest universities to the given locality and compute the average distance to, the annual enrollment (in academic year 2019-2020) at, and the number of dorm rooms at those universities. The last three are one-hot encoders to distinguish the state in which a locality lies.
 
             ### Model Selection
 
@@ -437,7 +427,7 @@ def main():
             - XGBoost
 
             XGBoost and Random Forest were the top two performers across the states, but XGBoost was the best model in most contexts. 
-                    ''')
+        """)
         
         st.markdown("### Model Training")
 
@@ -497,24 +487,40 @@ def main():
 
         st.dataframe(
             data = {
-                'Models': ['Baseline', 'OLS Linear Regression', 'XGBoost (w/o hyperparameter tuning)', 'AdaBoost', 'Random Forest', 'XGBoost (w/ hyperparameter tuning)', 'XGBoost (PCA + hyperparameter tuning)'],
-                'RMSE': [19.436, 14.559, 10.699, 12.906, 10.953, 10.315, 10.577],
-                'R²': [-0.004, 0.436, 0.695, 0.557, 0.681, 0.716, 0.702]
+                'Model': ['Baseline', 'OLS Linear Regression', 'XGBoost (w/o hyperparameter tuning)', 'AdaBoost', 'Random Forest', 'XGBoost (w/ hyperparameter tuning)', 'XGBoost (PCA + hyperparameter tuning)'],
+                'RMSE': [19.423, 14.816, 10.994, 13.455, 11.343, 10.546, 11.152],
+                'R²': [0, 0.436, 0.679, 0.520, 0.657, 0.702, 0.669]
             },
             on_select = 'ignore',
             hide_index = True,
         )
+
+        st.markdown("""
+                    As we can see, the hyperparameter-tuned XGBoost model performs the best, but the hyperparameter-tuned XGBoost with PCA was not far behind. Because of the reduction of the features, we expect the model with PCA to be more efficient and potentially also minimize overfitting issues. So, we decided to choose it as our final model to test on the testing data. The performance is as follows:""")
+        
+        st.dataframe(
+            data = {
+                'Model': ['XGBoost (PCA + hyperparameter tuning)'],
+                'RMSE': [9.227],
+                'R²': [0.773]
+            },
+            on_select = 'ignore',
+            hide_index = True,
+        )
+
+        st.markdown("That is, over $77\%$ of the variation in AP pass rate is explained via this XGBoost model by the variance in the various features. And the model is typically within 9.3 percentage points of the true AP pass rate.")
 
         st.markdown("### Modeling Choices")
 
         st.markdown("""            
             The hyperparameters, feature selection, and evaluation choices made in this modeling process were as follows: 
 
-            - Number of estimators in the XGBoost model: $800$.
-            - Maximum depth in the XGBoost model: $3$. 
-            - Learning rate of the XGBoost model: $0.1$. 
-            - Number of components in the Principal Component Analysis: $95\%$. 
-            - Number of principal components after PCA: $9$. 
+            - Number of estimators in the XGBoost model: $950$.
+            - Maximum depth in the XGBoost model: $4$. 
+            - Learning rate of the XGBoost model: $0.03$. 
+            - Number of components in the Principal Component Analysis (PCA): $95\%$. 
+            - Number of features considered in PCA: $20$.
+            - Number of principal components after PCA: $10$. 
             - Number of folds in cross-validation when comparing models: $5$. 
                     
             ### Model Evaluation
@@ -552,13 +558,30 @@ def main():
 
         left_co, right_co = st.columns(2)
         with left_co:
-            display_html_plot(f'Predicted AP Pass Rate by Wisconsin County, 2017-2018 Choropleth.html')
+            st.markdown("#### Predicted")
+            display_html_plot(f'Wisconsin Prediction Choropleth.html')
+            st.markdown("""
+                The accuracy of the predictions by the combined model on this year's worth of Wisconsin county data are as shown on the right. 
+                        
+                In context, this means that our combined model can explain over $56\%$ of the variance in AP pass rates in Wisconsin during 2017-2018 from the variance in the various features feeding its principal component features. Moreover, the model is only off in its predictions by about $8.4$ percentage points on average. 
+            """)
         with right_co: 
-            display_html_plot(f'True AP Pass Rate by Wisconsin County, 2017-2018 Choropleth.html')
+            st.markdown("#### Truth")
+            display_html_plot(f'Wisconsin True Choropleth.html')
+            st.dataframe(
+                data = {
+                    'Model': ['XGBoost (PCA + hyperparameter tuning)'],
+                    'RMSE': [8.392],
+                    'R²': [0.562]
+                },
+                on_select = 'ignore',
+                hide_index = True,
+            )
+        
 
-        st.markdown("""
-            Some discussion.
-        """)
+        
+
+        
     
     ############################# ▲▲▲▲▲▲  THE MODEL TAB   ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼ MASSACHUSETTS TAB ▼▼▼▼▼▼ #############################
@@ -602,7 +625,7 @@ def main():
                         ''')
 
             # Scores
-            pickled_plot('MA_score_distribution.pkl', prefix = pickled_path)
+            display_pickled_plot('MA_score_distribution.pkl', prefix = pickled_path)
 
         with right_co:
             ##----------CHOROPLETH MAP OF MASSACHUSETTS
@@ -667,25 +690,25 @@ def main():
             After identifying the top five features in our model, we analyze the linear relationship between AP outcomes and each of these key features using Ordinary Least Squares (OLS) linear regression, implemented through the statistical framework provided by `statsmodels`. The per-capita income of a school district shows a strong positive correlation with the percentage of AP exams scoring 3 to 5 (the AP pass rate), as indicated by the fitted :green[green] line. For example, districts with a per-capita income of \$200,000 have an AP pass rate of approximately 90\%, compared to a pass rate of only 50\% for districts with a per capita income of \$75,000.
         """)
 
-        pickled_plot('MA_pass_vs_school_district_income.pkl', prefix = pickled_path)
+        display_pickled_plot('MA_pass_vs_school_district_income.pkl', prefix = pickled_path)
 
         st.markdown("""            
             The district population show a weak negative correlation with the AP pass rate. Larger districts with higher populations generally exhibit lower AP pass rates compared to smaller, less populous districts. However, this trend is not particularly strong, especially among districts with low populations. The reason for this weak negative correlation is not apparent from the plot. We hypothesize that family per capita income may play an implicit yet significant role, as high-income families often reside in suburbs (areas with lower population density) rather than urban centers (areas with higher population density).
         """)
 
-        pickled_plot('MA_pass_vs_school_district_population.pkl', prefix = pickled_path)
+        display_pickled_plot('MA_pass_vs_school_district_population.pkl', prefix = pickled_path)
 
         st.markdown("""            
             The average distance to the five closest public universities plays an important role in the AP pass rate. This plot below shows that living closer to public universities (e.g., the UMass system) is associated with higher AP pass rates. For instance, reducing the distance from 30 miles to 10 miles increases the AP pass rate from 56\% to 65\%, a significant 9\% improvement.
         """)
 
-        pickled_plot('MA_pass_vs_closest_five_public_avg.pkl', prefix = pickled_path)
+        display_pickled_plot('MA_pass_vs_closest_five_public_avg.pkl', prefix = pickled_path)
 
         st.markdown("""            
             The average distance to the five closest private universities significantly impacts the AP pass rate. This plot illustrates that living closer to private universities (e.g., Harvard and MIT) correlates with higher AP pass rates. For example, residing within 20 miles of a prestigious private university is associated with a fitted AP pass rate exceeding 60\%.
         """)
 
-        pickled_plot('MA_pass_vs_closest_five_private_nfp_avg.pkl', prefix = pickled_path)
+        display_pickled_plot('MA_pass_vs_closest_five_private_nfp_avg.pkl', prefix = pickled_path)
 
     ############################# ▲▲▲▲▲▲ MASSACHUSETTS TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼   WISCONSIN TAB   ▼▼▼▼▼▼ #############################
@@ -731,7 +754,7 @@ def main():
                         ''')
             
             # Scores
-            pickled_plot('WI_score_distribution.pkl', prefix = pickled_path)
+            display_pickled_plot('WI_score_distribution.pkl', prefix = pickled_path)
 
         with right_co:
             ##----------CHOROPLETH MAP OF WISCONSIN
@@ -818,13 +841,13 @@ def main():
             Let us summarize the relationship of pass rate with the five important features identified by the SHAP plots. Intuitively, one should expect the pass rate to be positively correlated with per-capita income: higher income counties have boast over 80\% pass rates whereas low income counties have pass rates even below 30\%, barring a few exceptions. In fact, Forest County, WI offers both the highest AP exam pass rate and the lowest per-capita income amongst all Wisconsin counties. We visualize this relationship below.
         """)
 
-        pickled_plot('WI_AP_pass_rate_by_counties_vs_income.pkl', prefix = pickled_path)
+        display_pickled_plot('WI_AP_pass_rate_by_counties_vs_income.pkl', prefix = pickled_path)
 
         st.markdown("""            
             The relationship between population and pass rate, on the other hand, is not as straightforward. While the OLS regression line fitted to these variables has positive slope, the scatter plot does not follow a visually clear trend. It is to some surprise that population concludes as the second most important feature in the chosen model. 
         """)
 
-        pickled_plot('WI_AP_pass_rate_by_counties_vs_population.pkl', prefix = pickled_path)
+        display_pickled_plot('WI_AP_pass_rate_by_counties_vs_population.pkl', prefix = pickled_path)
 
         st.markdown("""            
             Moreover, one would expect that counties located closer to (or containing) particular universities would have higher pass rates for two reasons: (1) that most universities may be more likely to be found in wealthier counties, while (2) many universities (especially those public) should be invested in coummunity outreach programs improving the educational quality of nearby high schools. With its comparatively stronger public university system, Wisconsin might be expected to exhibit a stronger relationship between pass rates and distance to public universities. We one may observe from the below plot, this intuition matches reality. Notice the the trendline for pass rate against average distance to the closest five universities is almost flat for private universities, but significantly more negatively sloped for public. A simple explanation for why might posit that public universities are more obliged to develop community outreach programs to strengthen the educational quality of their surrouding localities.
@@ -832,15 +855,15 @@ def main():
 
         left_co, right_co = st.columns(2)
         with left_co:
-            pickled_plot('WI_AP_pass_rate_by_counties_vs_avg_five_private.pkl', prefix = pickled_path)
+            display_pickled_plot('WI_AP_pass_rate_by_counties_vs_avg_five_private.pkl', prefix = pickled_path)
         with right_co:
-            pickled_plot('WI_AP_pass_rate_by_counties_vs_avg._dist_public.pkl', prefix = pickled_path)
+            display_pickled_plot('WI_AP_pass_rate_by_counties_vs_avg._dist_public.pkl', prefix = pickled_path)
 
         st.markdown("""            
             Finally, consider pass rate against the average number of dorm rooms amongst the closest five private universities. Without a strong intuitive reason *a priori*, we may not explain with much certainty the apparent negatively sloped trend. Perhaps a presence of large private universities is a marker for an absence of large public universities sharing the same space. 
         """)
 
-        pickled_plot('WI_AP_pass_rate_by_counties_vs_avg_five_private_dormrooms.pkl', prefix = pickled_path)
+        display_pickled_plot('WI_AP_pass_rate_by_counties_vs_avg_five_private_dormrooms.pkl', prefix = pickled_path)
 
     ############################# ▲▲▲▲▲▲ WISCONSIN TAB ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  GEORGIA TAB  ▼▼▼▼▼▼ #############################
@@ -884,7 +907,7 @@ def main():
                         ''')
             
             # Scores
-            pickled_plot('GA_score_distribution.pkl', prefix = pickled_path)
+            display_pickled_plot('GA_score_distribution.pkl', prefix = pickled_path)
 
         with right_co:
             ##----------CHOROPLETH MAP OF GEORGIA
@@ -917,17 +940,17 @@ def main():
         # Some basic trends with AP Performance
         st.markdown("### Trends with AP Performance")
 
-        GA_pickled_plots = [
+        GA_display_pickled_plots = [
 
         ]
         left_co, right_co = st.columns(2)
         with left_co:
-            for plot_filepath in GA_pickled_plots[:int(len(GA_pickled_plots) / 2)]:
-                pickled_plot(plot_filepath, prefix = pickled_path)
+            for plot_filepath in GA_display_pickled_plots[:int(len(GA_display_pickled_plots) / 2)]:
+                display_pickled_plot(plot_filepath, prefix = pickled_path)
                 
         with right_co:
-            for plot_filepath in GA_pickled_plots[int(len(GA_pickled_plots) / 2):]:
-                pickled_plot(plot_filepath, prefix = pickled_path)
+            for plot_filepath in GA_display_pickled_plots[int(len(GA_display_pickled_plots) / 2):]:
+                display_pickled_plot(plot_filepath, prefix = pickled_path)
     
     ############################# ▲▲▲▲▲▲   GEORGIA TAB   ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  REFERENCES TAB ▼▼▼▼▼▼ #############################
