@@ -10,10 +10,6 @@ This file pulled and processed the Georgia results to include university metrics
 
 \* Fulton county and Atlanta Public Schools were manually combined due to author's knowledge of the Atlanta Metro Area. No other manual corrections of school districts were utilized. This district was manually corrected due to the bulk of Fulton county overlapping with Atlanta.
 
-### GA_outcomes.ipynb
-
-This file was used for initial visualization of the Georgia data particularly initial correlation calculations.
-
 ### GA_modelling.ipynb
 
 This file was used to calculate the Georgia models and calculate initial fit metrics.
@@ -109,17 +105,17 @@ The following table comes from 5-fold cross validation.
 |Model             |RMSE   |STDEV   |R2 Score |
 |------------------|-------|--------|---------|
 |Baseline          | 20.05 | 0.9866 | -0.0372 |
-|Full Linear       | 16.57 | 1.399  | 0.5615  |
+|Full Linear       | 16.57 | 1.399  | 0.2827  |
 |Non-university    | 18.23 | 1.204  | **      |
 |University-only   | 17.78 | 1.337  | **      |
 |No dormroom       | 17.06 | 1.249  | **      |
-|Full Ridge        | 16.56 | 1.391  | 0.5209  |
-|PCA Transformation| 17.09 | 1.252  | 0.6086  |
+|Full Ridge        | 16.56 | 1.391  | 0.2841  |
+|PCA Transformation| 17.09 | 1.252  | 0.2385  |
 |xgboost           | 12.05 | 1.269  | 0.6086  |
 |Adaboost          | 12.90 | 1.168  | 0.5615  |
 |Random Forest     | 13.52 | 1.153  | 0.5209  |
 
-As XGBoost performed generally optimal, we computed RMSE and R2 against the test data reserved for scores of 10.27 and 0.6185 respectively.
+**As XGBoost performed generally optimal, we computed RMSE and R2 against the test data reserved for scores of 10.27 and 0.6755 respectively.**
 
 #### SHAPLY calculations
 
@@ -159,4 +155,4 @@ We visualized the relationships to pass rate using seaborn's regplot. Noteably t
 
 ## Conclusion
 
-Georgia proves interesting in it's modestly reduced dependence on income; however, it generally trends like the other states. It's largest university influence was landgrant university dorms and distance both with slight positive relationships. Shockingly nearby universities of other types do not have a positive relationship. Landgrant universities had the highest average distance away. One has to ask if perhaps the distance is so far that it may actually be an erroneous conclusion. XGBoost and PCA methods performed near identically however PCA's limitations on data that is not normal led us to select XGBoost as the optimal model for Georgia. Overall, Georgia provides evidence to the variance of states across the US. Further research would be advantaged by minority considerations at least at the university level, the use of more years, and the absorbtion of other city districts into their appropriate counties.
+Georgia proves interesting in it's modestly reduced dependence on income; however, it generally trends like the other states. It's largest university influence was landgrant university dorms and distance both with slight positive relationships. Shockingly nearby universities of other types do not have a positive relationship. Landgrant universities had the highest average distance away. One has to ask if perhaps the distance is so far that it may actually be an erroneous conclusion. We selected XGBoost as the optimal model for Georgia. Overall, Georgia provides evidence to the variance of states across the US. Further research would be advantaged by minority considerations at least at the university level, the use of more years, and the absorbtion of other city districts into their appropriate counties.

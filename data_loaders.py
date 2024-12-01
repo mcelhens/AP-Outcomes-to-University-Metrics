@@ -27,7 +27,7 @@ def gimmeCountyPopulation(prefix = ''):
     return population[['County', 'State_Abbreviation', '2018', '2019', '2020', '2021', '2022']]
 
 
-def gimmeCarnegieLimted(prefix = ''): # limitations need revision
+def gimmeCarnegieLimited(prefix = ''): # limitations need revision
     """ Returns the limited Carnegie Dataset
         County information should be applied post-loading where appropriate
     """
@@ -101,4 +101,13 @@ def gimmeGA_Counties(prefix = ''):
             ga_counties.append([county,city.replace("\n", "")])
     ga_counties=pd.DataFrame(ga_counties,columns=['County','City'])
     return ga_counties
+    
+    
+def gimmeMA(prefix = ''):
+    '''
+    Massachusetts AP score dataset.
+    Return the AP scores 3-5, sorted by 13 counties.
+    Data listed are from 2019 to 2022.
+    '''   
+    return pd.read_excel(prefix + 'data/MA_data/county_passrate_19_22.xlsx', sheet_name='2019-22')
 
