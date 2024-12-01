@@ -71,6 +71,8 @@ Surprisingly, the performance is even better than on cross-validation!
 5. MA Department of Elementary and Secondary Education, Statewide Reports -- Advanced Placement Performance. Academic year: 2019-2023.
 6. Wisconsin Department of Public Instruction, Advanced Placement (AP) Scores, 2019-2023: https://dpi.wi.gov/wisedash/download-files
 7. Federal Reserve Bank of St. Louis
+8. The Bureau of Economic Analysis of the United States Department of Commerce
+9. Advanced Placement (AP) -- College Board
 
 ### Python packages featured in this project
 

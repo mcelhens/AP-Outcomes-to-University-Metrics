@@ -26,4 +26,18 @@ This folder contains our codes for machine learning models for Wisconsin state. 
 | Xgboost model       | 10.376        | 0.425        |
 
 - Random Forest model performed the best, so we choose it to be our model for Wisconsin state to use on the testing data.
-- The RMSE of our prediction is 7.038. The $R^2$-coefficient of our prediction is 0.422. That is, the model captures roughly 42.2% of the variation of the testing data.
+- The `SHAP` values for our Random Forest model is summarized in the following bar plot:
+
+![SHAP bar plot](WI_Shap.png "SHAP feature importance values")
+
+- As expected, per capita income is the most important feature in our model, but population is not far behind. The distances to private and public universities also carry some weight in our model. So, we conclude that while the university metrics are not as significant as the socio-economic factors on AP-performance, they still have some impact.
+
+- The performance of our Random Forest model on the testing data is as follows:
+
+| Model                | RMSE           | $R^2$         |
+| -------------------- | -------------- | ------------- |
+| Random Forest model  | 7.038          | 0.422         |
+
+- The testing data predictions vs actual values scatter plot is given as follows:
+
+![prediction scatter plot](WI_predictions.png "Predicted values vs actual values")
