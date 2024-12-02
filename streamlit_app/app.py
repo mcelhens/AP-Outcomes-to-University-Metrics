@@ -737,6 +737,26 @@ def main():
                     
             Although modest in size -- ranking 44th in land area -- Massachusetts is the 16th most populous state and is renowned for its academic and intellectual achievements. It is home to Harvard University and the Massachusetts Institute of Technology (MIT), both consistently ranked among the world's top universities. Other esteemed colleges, such as Boston University, Tufts University, and the University of Massachusetts system, further contribute to the state's leadership in higher education and innovation. This strong educational foundation aligns with a thriving economy driven by industries like healthcare, biotechnology, and professional and technical services. By exploring the impact of proximity to universities on AP performance, this study examines how access to world-class higher education resources enhances high school AP outcomes and prepares students for success in a competitive, knowledge-driven economy. 
                     
+            ### Model Selection and Performance
+            
+            We used various regression tools available via `sklearn` or `xgboost`. The performance of the models (as measured by root mean squared error and coefficients of determination) are summarized as follows.
+                    
+            We summarize the results of testing various models trained on the county-level AP performance data from Massachusetts between 2018-2019 and 2022-2023. 
+        """)
+
+        st.dataframe(
+            data = {
+                'Models': ['Baseline', 'OLS Linear Regression', 'Ridge', 'AdaBoost', 'Random Forest', 'XGBoost'],
+                'RMSE': [17.390, 12.496, 12.514, 10.710, 9.169, 9.078],
+                'R²': [0.000, 0.483, 0.482, 0.620, 0.721, 0.725]
+            },
+            on_select = 'ignore',
+            hide_index = True,
+        )
+
+        st.markdown("""            
+            As seen, the XGBoost model performed the best in terms of both root mean squared error and $R^2$-coefficient. As such, we chose XGBoost as the model of our choice for Massachusetts.
+                    
             ### SHAP Values for Feature Selection
             
             We modeled AP performance in Massachusetts with XGBoost. We further made use of SHAP values for feature selection. First, we use the SHAP summary bar plot to show the average impact of each feature on the model's predictions, as measured by their mean absolute SHAP values. The top five features identified as the most influential and hence selected for further analysis included: 
