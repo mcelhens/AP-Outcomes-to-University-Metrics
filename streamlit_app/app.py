@@ -281,31 +281,30 @@ def main():
         st.markdown("## Home")
 
         st.markdown("""
-                    
             Are you a university looking for opportunities to enact educational equity in your surrounding area? Are you a state or local official in charge of the strategic planning around improving standardized testing results amongst high schoolers? Or are you a parent deciding where to settle and have your children live and learn? We have prepared the following app to summarize how nearby universities can impact the quality of even primary education. 
                     
             How do universities influence local high schoolers’ standardized test performance? What benefits can universities offer despite the socio-economic limitations felt by their neighboring communities? We aim to provide a data-driven answer to these questions, as well as provide a user-friendly tool to our various stakeholders that permits them to explore the effect certain variables have on standardized testing performance. 
         """)
 
         st.markdown('''
-        ### Project Description
-                    
-        This project was designed to investigate the potential relationship between **[AP exam](https://apstudents.collegeboard.org/what-is-ap) performance** and the **presence of nearby universities**. It was initially hypothesized that local (especially R1/R2 or public) universities would contribute to better pass rates for AP exams in their vicinities as a result of their various outreach, dual-enrollment, tutoring, and similar programs for high schoolers. We produce a predictive model that uses a few features related to university presence, personal income, and population to predict AP exam performance.
-                    
-        You may interact with our main predictive model in the tab labeled `Explore the Model`. 
-        
-        You may further see our modeling methodology in the tab labeled `Modeling Method`, as well individual analyses for National (state-level) data, three states: Massachusetts, Wisconsin, and Georgia, as well as a combined analysis for those three states in their respective tabs. 
-                    
-        ### Background
+            ### Project Description
+                        
+            This project was designed to investigate the potential relationship between **[AP exam](https://apstudents.collegeboard.org/what-is-ap) performance** and the **presence of nearby universities**. It was initially hypothesized that local (especially R1/R2 or public) universities would contribute to better pass rates for AP exams in their vicinities as a result of their various outreach, dual-enrollment, tutoring, and similar programs for high schoolers. We produce a predictive model that uses a few features related to university presence, personal income, and population to predict AP exam performance.
+                        
+            You may interact with our main predictive model in the tab labeled `Explore the Model`. 
+            
+            You may further see our modeling methodology in the tab labeled `Modeling Method`, as well individual analyses for National (state-level) data, three states: Massachusetts, Wisconsin, and Georgia, as well as a combined analysis for those three states in their respective tabs. 
+                        
+            ### Background
 
-        AP exams are standardized tests widely available at high schools across the United States. During the 2022-2023 school year, [79\%](https://arc.net/l/quote/ewvgnupe) of all public high school students attended schools offering at least five AP courses. These exams are popular for their potential to earn college credits during high school by achieving high scores. In fact, high scores in most AP exams are eligible to receive college credits at roughly [2000](https://apcentral.collegeboard.org/media/pdf/program-summary-report-2024.pdf) higher-education institutions. 
+            AP exams are standardized tests widely available at high schools across the United States. During the 2022-2023 school year, [79\%](https://arc.net/l/quote/ewvgnupe) of all public high school students attended schools offering at least five AP courses. These exams are popular for their potential to earn college credits during high school by achieving high scores. In fact, high scores in most AP exams are eligible to receive college credits at roughly [2000](https://apcentral.collegeboard.org/media/pdf/program-summary-report-2024.pdf) higher-education institutions. 
 
-        AP exams are scored on a whole number scale between 1 (lowest) and 5 (highest). A student is said to *pass* their AP exam if they score a 3 or higher on the exam. The *pass rate* of a locality would be the proportion of AP exams passed out of all exams taken by its students during a single year. AP outcomes are often correlated to measures of socioeconomic factors: a [recent study](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4574500) confirmed that negative socioeconomic factors have a strong negative influence on exam scores; as well as being a non-native English language speaker. 
+            AP exams are scored on a whole number scale between 1 (lowest) and 5 (highest). A student is said to *pass* their AP exam if they score a 3 or higher on the exam. The *pass rate* of a locality would be the proportion of AP exams passed out of all exams taken by its students during a single year. AP outcomes are often correlated to measures of socioeconomic factors: a [recent study](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4574500) confirmed that negative socioeconomic factors have a strong negative influence on exam scores; as well as being a non-native English language speaker. 
 
-        Beyond these socioeconomic factors, we would like to measure the strength of the effect of universities on AP outcomes. Without a clear source of data on all high school outreach programs offered by US universities, we make use of the various classifications offered by the [Carnegie Classifications of Institutions of Higher Education](https://carnegieclassifications.acenet.edu/). Of particular interest include R1 and R2 (i.e., doctoral with very high or high research activity, respectively), public, private, or land-grant institutions. Other minority-serving aspects are also considered, such as historically Black, Hispanic-serving, and tribal colleges.
+            Beyond these socioeconomic factors, we would like to measure the strength of the effect of universities on AP outcomes. Without a clear source of data on all high school outreach programs offered by US universities, we make use of the various classifications offered by the [Carnegie Classifications of Institutions of Higher Education](https://carnegieclassifications.acenet.edu/). Of particular interest include R1 and R2 (i.e., doctoral with very high or high research activity, respectively), public, private, or land-grant institutions. Other minority-serving aspects are also considered, such as historically Black, Hispanic-serving, and tribal colleges.
 
-        **Authors (alphabetical)**: *Prabhat Devkota, Shrabana Hazra, Jung-Tsung Li, Shannon J. McElhenney, Raymond Tana*
-                    ''')
+            **Authors (alphabetical)**: *Prabhat Devkota, Shrabana Hazra, Jung-Tsung Li, Shannon J. McElhenney, Raymond Tana*
+        ''')
 
         ############################# ▲▲▲▲▲▲    INTRODUCTION     ▲▲▲▲▲▲ #############################
         ############################# ▼▼▼▼▼▼ NATIONAL CHOROPLETH ▼▼▼▼▼▼ #############################
@@ -329,7 +328,7 @@ def main():
         st.markdown("### Explore Model Predictions: Wisconsin")
 
         st.markdown("""
-            What lies below is a tool for exploring how changes in certain features (such as per-capita income, population, or distance to a certain type of university) would be expected to alter AP performance in a county, all according to our predicted model. We focus on the state of Wisconsin for this demonstration. Wisconsin officials may find benefit in this tool when strategically planning appropriate measures for improving educational outcomes; whereas Wisconsin residents (especially parents) may wish to use this tool when comparing the educational outcomes expected in one locality versus another. 
+            What lies below is a tool for exploring how changes in certain features (such as per-capita income, population, or distance to a certain type of university) would be expected to alter AP performance in a county, all according to our prediction model. We focus on the state of Wisconsin for this demonstration. Wisconsin officials may find benefit in this tool when strategically planning appropriate measures for improving educational outcomes; whereas Wisconsin residents (especially parents) may wish to use this tool when comparing the educational outcomes expected in one locality versus another. 
         """)
             
         with st.container(border = True):
@@ -518,9 +517,9 @@ def main():
         st.markdown("### Model Training")
 
         st.markdown("""
-        One limitation of producing a model to predict AP performance involves the poor resolution of data across the country: some states have very few counties, or very few reporting school districts, to usefully train model on a single year's worth of data. Instead, we wished to train on a combination of the past few years' worth of data. For this to have any hope of producing a powerful model, one would hope that university influences remain mostly consistent across those few years. One way to see this is the case is by observing the stasis evidenced through Carnegie Basic classifications.
-        
-        Carnegie [Basic Classifications](https://carnegieclassifications.acenet.edu/carnegie-classification/classification-methodology/basic-classification/) are rather detailed: some [33](https://carnegieclassifications.acenet.edu/wp-content/uploads/2023/03/CCIHE2021-FlowCharts.pdf) different classifications were used in the 2021 Basic Classifications scheme. Moreover, the definitions of these classifications have not been consistent across the years. In order to get a picture of how the number of universities in certain classifications has changed over the past few decades, we manually define some broader classifications that can be compared across the various classification schemes employed by Carnegie, and present their frequencies over time below. 
+            One limitation of producing a model to predict AP performance involves the poor resolution of data across the country: some states have very few counties, or very few reporting school districts, to usefully train model on a single year's worth of data. Instead, we wished to train on a combination of the past few years' worth of data. For this to have any hope of producing a powerful model, one would hope that university influences remain mostly consistent across those few years. One way to see this is the case is by observing the stasis evidenced through Carnegie Basic classifications.
+            
+            Carnegie [Basic Classifications](https://carnegieclassifications.acenet.edu/carnegie-classification/classification-methodology/basic-classification/) are rather detailed: some [33](https://carnegieclassifications.acenet.edu/wp-content/uploads/2023/03/CCIHE2021-FlowCharts.pdf) different classifications were used in the 2021 Basic Classifications scheme. Moreover, the definitions of these classifications have not been consistent across the years. In order to get a picture of how the number of universities in certain classifications has changed over the past few decades, we manually define some broader classifications that can be compared across the various classification schemes employed by Carnegie, and present their frequencies over time below. 
         """)
 
         broader_categories_counts_df = load_broader_categories()
@@ -582,7 +581,7 @@ def main():
         )
 
         st.markdown("""
-                    As we can see, the hyperparameter-tuned XGBoost model performs the best, but the hyperparameter-tuned XGBoost with PCA was not far behind. Because of the reduction of the features, we expect the model with PCA to be more efficient and potentially also minimize overfitting issues. So, we decided to choose it as our final model to test on the testing data. The performance is as follows:
+            As we can see, the hyperparameter-tuned XGBoost model performs the best, but the hyperparameter-tuned XGBoost with PCA was not far behind. Because of the reduction of the features, we expect the model with PCA to be more efficient and potentially also minimize overfitting issues. So, we decided to choose it as our final model to test on the testing data. The performance is as follows:
         """)
         
         st.dataframe(
@@ -724,7 +723,7 @@ def main():
             ############################# ▲▲▲▲▲▲ MASSACHUSETTS CHOROPLETH ▲▲▲▲▲▲ #############################  
 
             st.markdown('''
-                        Below we tally the universities which are either high research doctoral (R1/R2), historically Black, Hispanic serving, tribal, women's, public, or private not-for-profit. Most of Massachusetts' universities are concentrated around Boston in the east of the state.                         
+                Below we tally the universities which are either high research doctoral (R1/R2), historically Black, Hispanic serving, tribal, women's, public, or private not-for-profit. Most of Massachusetts' universities are concentrated around Boston in the east of the state.                         
             ''')
             
             ############################# ▼▼▼▼▼▼ MASSACHUSETTS UNIVERSITIES TABLE ▼▼▼▼▼▼ #############################
@@ -850,9 +849,7 @@ def main():
             ############################# ▲▲▲▲▲▲ WISCONSIN AP TABLE ▲▲▲▲▲▲ #############################            
             
             st.markdown('''
-                        Wisconsin 
-
-                        Wisconsin follows the pattern of northern states outperforming the rest of the country in AP exam pass rates. In fact, Wisconsin is in the top 10 states in terms of pass rate for 2022. But Wisconsin has some of the worst participation by Black students in the country. 
+                Wisconsin follows the pattern of northern states outperforming the rest of the country in AP exam pass rates. In fact, Wisconsin is in the top 10 states in terms of pass rate for 2022. But Wisconsin has some of the worst participation by Black students in the country. 
             ''')
             
             # Scores
@@ -865,7 +862,7 @@ def main():
                 #### Model Features and University Statistics
                         
                 Below we present AP performance, per-capita income, population, and university data from the year 2022 in and around Wisconsin (we include nearby states Minnesota, Michigan, Illinois, and Iowa).
-                        ''')
+            ''')
 
             ############################# ▼▼▼▼▼▼ WISCONSIN CHOROPLETH ▼▼▼▼▼▼ #############################
             WI_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature WI choropleth')
@@ -873,8 +870,8 @@ def main():
             ############################# ▲▲▲▲▲▲ WISCONSIN CHOROPLETH ▲▲▲▲▲▲ #############################
 
             st.markdown('''
-                        Below we tally the universities which are either high research doctoral (R1/R2), historically Black, Hispanic serving, tribal, women's, public, or private not-for-profit. Most of Wisconsin's universities are concentrated in the south and east of the state. But a significant number of universities exist in its neighboring states, including in Chicago and Minneapolis-St. Paul.      
-                        ''')
+                Below we tally the universities which are either high research doctoral (R1/R2), historically Black, Hispanic serving, tribal, women's, public, or private not-for-profit. Most of Wisconsin's universities are concentrated in the south and east of the state. But a significant number of universities exist in its neighboring states, including in Chicago and Minneapolis-St. Paul.      
+            ''')
 
             ############################# ▼▼▼▼▼▼ WISCONSIN UNIVERSITIES TABLE ▼▼▼▼▼▼ #############################
             st.dataframe(data = WI_stats, 
@@ -1026,7 +1023,7 @@ def main():
             ############################# ▲▲▲▲▲▲ GEORGIA CHOROPLETH ▲▲▲▲▲▲ #############################
 
             st.markdown('''
-                        Below we tally the universities which are either high research doctoral (R1/R2), historically Black, Hispanic serving, tribal, women's, public, or private not-for-profit. Many of Georgia's universities are concentrated around Atlanta in the north of the state.                     
+                Below we tally the universities which are either high research doctoral (R1/R2), historically Black, Hispanic serving, tribal, women's, public, or private not-for-profit. Many of Georgia's universities are concentrated around Atlanta in the north of the state.                     
             ''')
 
             ############################# ▼▼▼▼▼▼ GEORGIA UNIVERSITIES TABLE ▼▼▼▼▼▼ #############################
