@@ -12,14 +12,14 @@ This project aims to model and analyze AP outcomes in Massachusetts using variou
 
 ## File Descriptions
 
-1. `MA_model_selection.ipynb`<br>
-   Develops and evaluates various machine learning models to determine that XGBoost is the best model for the Massachusetts dataset.
+1. **`MA_model_selection.ipynb`**
+   Evaluates various machine learning models to determine that `XGBoost` is the best model for the Massachusetts dataset.
 
-2. `MA_XGBoost_SHAP.ipynb`<br>
-   Trains the Massachusetts AP dataset using XGBoost, analyzes feature importance, and explores feature correlations with AP outcomes using SHAP.
+2. **`MA_XGBoost_SHAP.ipynb`**
+   Trains the Massachusetts AP dataset using `XGBoost`, analyzes feature importance, and explores feature correlations with AP outcomes using SHAP.
 
-3. `MA_plotly.ipynb`<br>
-   Uses Plotly for interactive visualizations showing the linear relationships between AP outcomes and the top five significant features.
+3. **`MA_plotly.ipynb`**
+   Uses `Plotly` for interactive visualizations showing the linear relationships between AP outcomes and the top five significant features.
 
 ---
 
@@ -49,7 +49,7 @@ The model utilizes 17 features, categorized as follows:
 
 ### Data Sources and Computations
 - **County Locations**: Derived from [SimpleMaps US Counties dataset](https://simplemaps.com/data/us-counties) and saved in `../data/uscounties.csv`.
-- **University Locations**: Primarily acquired using Google Geocoders.
+- **University Locations**: Acquired using Google Geocoders.
 - **Distance Calculation**: Computed using the `geopy.distance` function.
 - **Training Data**: Combines Massachusetts AP data from the 2019–2023 academic years.
 
@@ -59,8 +59,6 @@ The model utilizes 17 features, categorized as follows:
 3. Average distance to the five closest public universities
 4. Average distance to the five closest private not-for-profit universities
 5. Average annual enrollment for the five closest land-grant universities
-
-Features like total AP exam count and student count were excluded due to potential multicollinearity with population and inconsistent availability across datasets.
 
 ---
 
@@ -87,7 +85,7 @@ We evaluated the following models using 5-fold cross-validation:
 | **Random Forest**     | 9.169  | 0.027    | 0.721     |
 | **XGBoost**           | 9.078  | 0.040    | 0.725     |
 
-- **Best Model**: XGBoost, chosen for its superior performance on RMSE and R-squared.
+- **Best Model**: XGBoost, chosen for its performance on RMSE and R-squared.
 
 ---
 
