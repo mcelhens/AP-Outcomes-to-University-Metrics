@@ -17,6 +17,7 @@ N_CORES = joblib.cpu_count(only_physical_cores = True)
 here_prefix = str(Path(__file__).parent) + '/'
 data_prefix = str(Path(__file__).parent) + '/../data/'
 html_prefix = data_prefix + 'html/'
+parent_prefix = str(Path(__file__).parent) + '/../'
 
 ############################# ▲▲▲▲▲▲ IMPORTS ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ GLOBALS ▼▼▼▼▼▼ #############################
@@ -62,21 +63,6 @@ national_features_dict = {
     'Native American or Alaska Native Participation (%)': '%NativeAmericanOrAlaskaNative',
     'Native Hawaiian or other Pacific Islander Participation (%)': '%NativeHawaiianOrOtherPacificIslander',
     'Two or More Races Participation (%)': '%TwoOrMoreRaces',
-}
-
-model_features_dict = {
-    'Per capita Personal Income': {
-        'units': 'dollars',
-        'min': -100000,
-        'max': 500000,
-        'step': 10000,
-    },
-    'Average Distance to Nearby Universities': {
-        'units': 'miles',
-        'min': -30,
-        'max': 100,
-        'step': 1,
-    },
 }
 
 ############################# ▲▲▲▲▲▲ GLOBALS ▲▲▲▲▲▲ #############################
@@ -134,16 +120,69 @@ def reconstruct_geo(pre_geo_data):
     geo_data.set_crs(epsg = 4326, inplace = True)
     return geo_data
 
-def WI_predict_perturb(df, model, county = 'Adams', feature = 'population', feature_change = 0):
+def predict_changed_row_entry(model, row, feature, changed_value):
+    changed_row = row.copy(deep = True)
+    changed_row[feature] = max(changed_value, 0)
+    return round(float(model.predict(changed_row)[0]), 1)
+
+def WI_predict_perturb(df, model, county, feature_name, feature_change, feature_dict):
     try:
+        feature = feature_dict[feature_name]['label']
+        unit = feature_dict[feature_name]['unit']
+        step = feature_dict[feature_name]['step']
+        
         row = pd.DataFrame(df[(df['COUNTY'] == county) & (df['Year'] == 2022)][df.columns[8:]].iloc[0]).T
-        changed_row = row.copy(deep = True)
-        changed_row[feature] = max(row[feature].iloc[0] + feature_change, 0)
-        prediction_change = float(model.predict(changed_row)[0]) - float(model.predict(row)[0])
-        change_direction = 'increase' if prediction_change >= 0 else 'decrease'
-        return change_direction, round(abs(prediction_change), 1)
-    except:
-        return 0
+        original_feature_value = row[feature].iloc[0]
+        changed_feature_value = max(original_feature_value + feature_change, 0)
+        prediction_at_original = float(model.predict(row)[0])
+        prediction_at_changed = predict_changed_row_entry(model, row, feature, changed_feature_value)
+        prediction_change = round(prediction_at_changed - prediction_at_original, 1)
+        change_direction = 'increase' if prediction_change > 0 else 'decrease' if prediction_change < 0 else 'not change'
+
+        X = [changed_feature_value + step * n  for n in range(-10, 11, 2)]
+        y = [predict_changed_row_entry(model, row, feature, x) for x in X]
+        fixed_point = [changed_feature_value, prediction_at_changed]
+
+        fig = go.Figure()
+
+        fig.add_trace(go.Scatter(
+            x = X, 
+            y = y, 
+            mode = 'lines+markers', 
+            line = dict(
+                color = 'rgb(255, 102, 0)',
+                width = 4
+            ),
+            showlegend = False,
+            name = "Pred. Rate"
+        ))
+
+        fig.add_trace(go.Scatter(
+            x = [fixed_point[0]], 
+            y = [fixed_point[1]], 
+            mode = 'markers', 
+            marker = dict(
+                color = 'rgb(255, 102, 0)',
+                size = 20
+            ),
+            showlegend = False,
+            hoverinfo = 'skip',
+        ))
+
+        fig.update_layout(
+            title = f'Nearby Values of {feature_name}',
+            xaxis_title = f'{feature_name} ({unit})',
+            yaxis_title = 'Predicted AP Pass Rate (%)',
+            height = 400,
+            template = 'plotly_white',
+            showlegend = False
+        )
+
+        fig.update_layout(hovermode='x')
+
+        return change_direction, abs(prediction_change), fig
+    except Exception as e:
+        return None, None, None
     
 def display_pickled_plot(filepath, prefix = ''): 
     try:
@@ -160,6 +199,7 @@ def display_html_plot(filepath, height = 500):
     except Exception as e:
         print(f"Failed to load html asset with filepath {html_prefix + filepath}")
         print(f"Error encountered: {e}")
+
 
 ############################# ▲▲▲▲▲▲   METHODS  ▲▲▲▲▲▲ #############################
 ############################# ▼▼▼▼▼▼ APP LAYOUT ▼▼▼▼▼▼ #############################
@@ -282,63 +322,102 @@ def main():
         st.markdown("### Explore Model Predictions: Wisconsin")
 
         st.markdown("""
-                    What lies below is a tool for exploring how changes in certain features (such as per-capita income, population, or distance to a certain type of university) would be expected to alter AP performance in a county, all according to our predicted model. We focus on the state of Wisconsin for this demonstration. Wisconsin officials may find benefit in this tool when strategically planning appropriate measures for improving educational outcomes; whereas Wisconsin residents (especially parents) may wish to use this tool when comparing the educational outcomes expected in one locality versus another. 
+            What lies below is a tool for exploring how changes in certain features (such as per-capita income, population, or distance to a certain type of university) would be expected to alter AP performance in a county, all according to our predicted model. We focus on the state of Wisconsin for this demonstration. Wisconsin officials may find benefit in this tool when strategically planning appropriate measures for improving educational outcomes; whereas Wisconsin residents (especially parents) may wish to use this tool when comparing the educational outcomes expected in one locality versus another. 
+        """)
+            
+        with st.container(border = True):
+            st.markdown("## Wisconsin AP Pass Rate Prediction Model Exploration Tool")
+            left_co, right_co = st.columns(2)
+            with left_co:
+                st.markdown("""
+                    #### On the left
+                            
+                    1. **Select a feature** to manually change using the dropdown.
+                    2. **Input a desired numerical change** to that feature using the number input. 
+                    3. **Select the county** in Wisconsin whose feature you'll change using the dropdown.
+                """)
+            with right_co:
+                st.markdown("""
+                    #### On the right
+                            
+                    4. **Observe the predicted change** to AP pass rates. 
+                    5. **View nearby changes** to the same feature and their associated changes to AP pass rate in the plot below.
+                """)
 
-                    The tool works as follows:
-                    1. 
-                    """)
+            left_co, right_co = st.columns(2)
+            with left_co.container(border = True):
+                c1, c2 = st.columns([0.2, 0.8])
+                with c1:
+                    st.write("If")
+                with c2:
+                    # Feature selection dropdown
+                    model_features = list(explore_features_dict.keys())
+                    selected_model_feature = st.selectbox(model_features[0], model_features, label_visibility = 'collapsed', key = 'Select Feature to Perturb')
 
-        # Create columns to arrange components inline
-        c1, c2, c3, c4, c5, c6, c7 = st.columns([0.4, 3.5, 1, 1, 1, 2, 5])
+                c3, c4, c5 = st.columns([0.2, 0.5, 0.3])
+                with c3:
+                    st.write("changed by")
+                with c4: 
+                    # Number input for value change
+                    value_change = st.number_input('Change',
+                                            value = 0,
+                                            min_value = - explore_features_dict[selected_model_feature]['max'],
+                                            step = explore_features_dict[selected_model_feature]['step'], 
+                                            max_value = explore_features_dict[selected_model_feature]['max'],
+                                            label_visibility = 'collapsed')
+                with c5:
+                    # Units (adjust based on feature)
+                    st.write(explore_features_dict[selected_model_feature]['unit'])
+                
+                c6, c7, c8 = st.columns([0.2, 0.5, 0.3])
+                with c6:
+                    st.write("in")
+                with c7:
+                    # County selection dropdown
+                    county_options = np.sort(county_geo_data[(county_geo_data['PassRate'].notna()) & (county_geo_data['State_Abbreviation'] == 'WI')]['County'].unique())
+                    selected_county = st.selectbox(county_options[0], county_options, label_visibility = 'collapsed', key = 'select WI county to perturb')
+                with c8:
+                    st.write("county, Wisconsin,")
+                display_html_plot(f'Wisconsin AP Pass Rate (3 or higher) Choropleth short.html', height = 300)
 
-        with c1:
-            st.write("If")
-        with c2:
-            # Feature selection dropdown
-            model_features = list(explore_features_dict.keys())
-            selected_model_feature = st.selectbox(model_features[0], model_features, label_visibility = 'collapsed', key = 'Select Feature to Perturb')
-        with c3:
-            st.write("changed by")
-        with c4:
-            # Number input for value change
-            value_change = st.number_input('Change',
-                                        min_value = explore_features_dict[selected_model_feature]['min'],
-                                        step = explore_features_dict[selected_model_feature]['step'], 
-                                        max_value = explore_features_dict[selected_model_feature]['max'],
-                                        label_visibility = 'collapsed')
-        with c5:
-            # Units (adjust based on feature)
-            st.write(explore_features_dict[selected_model_feature]['unit'] + " in")
-        with c6:
-            # County selection dropdown
-            county_options = np.sort(county_geo_data[(county_geo_data['PassRate'].notna()) & (county_geo_data['State_Abbreviation'] == 'WI')]['County'].unique())
-            selected_county = st.selectbox(county_options[0], county_options, label_visibility = 'collapsed', key = 'select WI county to perturb')
-        with c7:
-            # Get the prediction
-            # change_direction, prediction_change = WI_predict_perturb(df = WI_full_df, model = WI_model, county = selected_county, feature = selected_model_feature, feature_change = value_change)
-            change_direction = "increase"
-            prediction_change = 10
-            # Display the prediction result
-            if value_change > 0:
-                st.write(f"then AP pass rates would **{change_direction}** by **{prediction_change} percentage points**.")
-            else:
-                st.write("then no change.")
+            with right_co.container(border = True):
+                c8, c9 = st.columns([0.2, 0.8])
+                with c8:
+                    st.write("then")
+                with c9:
 
-        ############################# ▲▲▲▲▲▲   PERTURBATIONS    ▲▲▲▲▲▲ #############################
-        ############################# ▼▼▼▼▼▼ COUNTY CHOROPLETH ▼▼▼▼▼▼ #############################
+                    # Get the prediction
+                    change_direction, prediction_change, fig = WI_predict_perturb(
+                        df = WI_full_df, 
+                        model = WI_model, 
+                        county = selected_county, 
+                        feature_name = selected_model_feature,
+                        feature_change = value_change,
+                        feature_dict = explore_features_dict
+                    )
 
-        st.markdown("### County-level Choropleth Map")
-
-        st.markdown("Below you may explore AP performance data within our three main states of interest: Massachusetts, Wisconsin, and Georgia at the level of their counties. You may select a feature to display in the dropdown above the map, and hover over localities for a fuller view. Universities are drawn as dots on the map.")
-
-        county_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature main choropleth')
-        display_html_plot(f'County {county_selected_feature} Choropleth.html')
-
-        ############################# ▲▲▲▲▲▲ COUNTY CHOROPLETH ▲▲▲▲▲▲ #############################
-    
-    ############################# ▲▲▲▲▲▲ DATA EXPLORATION TAB ▲▲▲▲▲▲ #############################
-    ############################# ▼▼▼▼▼▼   MODEL METHODS TAB    ▼▼▼▼▼▼ #############################
-
+                    if change_direction == None or prediction_change == None:
+                        st.write(f'the model is not sure how the AP pass rate would change (it threw an error).')
+                    elif value_change == 0 or prediction_change == 0:
+                        st.write("we would expect **no significant change** in the county's AP pass rate.")
+                    else:
+                        st.write(f"we would expect this county's AP pass rate to **{change_direction}** by **{prediction_change} percentage points**.")
+                    st.plotly_chart(fig)
+    #     ############################ ▲▲▲▲▲▲   PERTURBATIONS    ▲▲▲▲▲▲ #############################
+    #     ############################ ▼▼▼▼▼▼ COUNTY CHOROPLETH ▼▼▼▼▼▼ #############################
+    #
+    #     st.markdown("### County-level Choropleth Map")
+    #
+    #     st.markdown("Below you may explore AP performance data within our three main states of interest: Massachusetts, Wisconsin, and Georgia at the level of their counties. You may select a feature to display in the dropdown above the map, and hover over localities for a fuller view. Universities are drawn as dots on the map.")
+    # 
+    #     county_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature main choropleth')
+    #     display_html_plot(f'County {county_selected_feature} Choropleth.html')
+    #
+    #     ############################ ▲▲▲▲▲▲ COUNTY CHOROPLETH ▲▲▲▲▲▲ #############################
+    # 
+    # ############################ ▲▲▲▲▲▲ DATA EXPLORATION TAB ▲▲▲▲▲▲ #############################
+    # ############################ ▼▼▼▼▼▼   MODEL METHODS TAB    ▼▼▼▼▼▼ #############################
+    # 
     with tab3:
 
         st.markdown("## Modeling Problem")
@@ -577,12 +656,7 @@ def main():
                 on_select = 'ignore',
                 hide_index = True,
             )
-        
 
-        
-
-        
-    
     ############################# ▲▲▲▲▲▲  THE MODEL TAB   ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼ MASSACHUSETTS TAB ▼▼▼▼▼▼ #############################
 
@@ -795,6 +869,8 @@ def main():
             The Wisconsin Department of Public Instruction is the state education management agency in Wisconsin. It keeps a comprehensive tab of [education-related data](https://dpi.wi.gov/wisedash/download-files) in the state, where one may find the pass rates (percentage of students scoring 3 or higher) of AP examinations by school districts and counties over five academic years: 2018/19 to 2022/23. Because of the limited availability of population and income related data for school districts, we opted to train on county-wise data for any machine learning models predicting AP pass rates in Wisconsin.
                     
             ### Model Selection and Performance
+            
+            We used various regression tools available via `sklearn` or `xgboost`. The performance of the models (as measured by root mean squared error and coefficients of determination) are summarized as follows.
                     
             We summarize the results of testing various models trained on the county-level AP performance data from Wisconsin between 2018-2019 and 2022-2023. 
         """)
@@ -810,11 +886,9 @@ def main():
         )
 
         st.markdown("""            
-            As seen, the Random Forest model performed the best in terms of both root mean squared error and $R^2$-coefficient. As such, we chose Random Forest as the model of our choice for Wisconsin state.
+            As seen, the Random Forest model performed the best in terms of both root mean squared error and $R^2$-coefficient. As such, we chose Random Forest as the model of our choice for Wisconsin.
                     
             ### SHAP Values for Feature Selection
-            
-            We used various various regression tools available via `sklearn` or `xgboost`. The performance of the models (as measured by root mean squared error and coefficients of determination are summarized as follows.
 
             There were altogether 17 features present in our modeling. However, the features are not all equally important. We used Shapley Additive Explanations (SHAP for short) to interpret our Random Forest model and understand the important of various features on our random forest model. First, we use the SHAP summary bar plot to show the average impact of each feature on the model's predictions, as measured by their mean absolute SHAP values. The top five features identified as the most influential and hence selected for further analysis included: 
                     
@@ -870,7 +944,7 @@ def main():
 
     with tab7: 
         pickled_path = data_prefix + 'GA_pickled/'
-        image_path = data_prefix + 'Georgia/plot/'
+        image_path = parent_prefix + 'Georgia/'
 
         st.markdown("## Georgia")
         st.markdown('''
@@ -938,19 +1012,72 @@ def main():
             ############################# ▲▲▲▲▲▲ GEORGIA UNIVERSITIES TABLE ▲▲▲▲▲▲ #############################
 
         # Some basic trends with AP Performance
-        st.markdown("### Trends with AP Performance")
+        st.markdown(""" 
+                    
+            ### Trends with AP Performance
+                    
+            First, we summarize the results of our analysis on Georgia: Georgia proves interesting in its modestly reduced dependence on income; however, it generally trends like the other states. Its largest university influence was land-grant university dorms and distance both with slight positive relationships. To our surprise, nearby universities of other types do not have a positive relationship. Land-grant universities had the highest average distance away. One has to ask if perhaps the distance is so far that it may actually be an erroneous conclusion. We selected XGBoost as the optimal model for Georgia. Overall, Georgia provides evidence to the variance of states across the US. Further research would be advantaged by minority considerations at least at the university level, training over more years of data, and the absorbtion of other city districts into their appropriate counties.
+              
+            We trained various regression tools available via `sklearn` or `xgboost`. The performance of the models (as measured by root mean squared error and coeffiients of determination) are summarized as follows.
+        """)
 
-        GA_display_pickled_plots = [
+        st.dataframe(
+            data = {
+                'Models': ['Baseline', 'OLS Linear Regression', 'Ridge', 'AdaBoost', 'Random Forest', 'XGBoost'],
+                'RMSE': [20.05,  16.57, 16.56, 12.90, 13.52, 12.05],
+                'R²': [-0.037, 0.283, 0.284, 0.562, 0.521, 0.609]
+            },
+            on_select = 'ignore',
+            hide_index = True,
+        )
 
-        ]
+        st.markdown(""" 
+            As seen, the XGBoost model performed the best in terms of both root mean squared error and $R^2$-coefficient. As such, we chose XGBoost as the model of our choice for Georgia.
+                    
+            ### SHAP Values for Feature Selection
+
+            There were altogether 17 features present in our modeling. However, the features are not all equally important. We used Shapley Additive Explanations (SHAP for short) to interpret our Random Forest model and understand the important of various features on our random forest model. First, we use the SHAP summary bar plot to show the average impact of each feature on the model's predictions, as measured by their mean absolute SHAP values. The top five features identified as the most influential and hence selected for further analysis included: 
+                    
+            1. `Per capita income`
+            2. `Population`
+            3. `Average number of dorm rooms amongst the five closest land-trant universities`
+            4. `Average distance to five closest land-grant universities`
+            5. `Average distance to five closest private, not-for-profit universities`
+                    
+            In particular, per-capita income and population dominate in importance towards explaining the variance in AP performance amongst the various features. Nonetheless, the contribution of the other 15 features -- when summed -- is quite significant.
+                    
+            The following SHAP bar and scatter density plots elucidate the feature importances more clearly: in the scatter plot, each dot represents a sample whose color indicates the feature value on the sample (:red[red] for high value and :blue[blue] for low value). The placement of a point along the $x$-axis represents the feature's positive or negative impact on the model's output during that sample. One may see that per-capita income and population have higher quantity of red dots scattered on the positive side of the $x$-axis, more confirmation of these two features' predictive power.
+        """)
+
         left_co, right_co = st.columns(2)
         with left_co:
-            for plot_filepath in GA_display_pickled_plots[:int(len(GA_display_pickled_plots) / 2)]:
-                display_pickled_plot(plot_filepath, prefix = pickled_path)
-                
+            st.image(image_path + 'shap_summary_xbg.png', caption = 'SHAP values for Random Forest model on Georgia AP exam performance data over 2018-2022')
         with right_co:
-            for plot_filepath in GA_display_pickled_plots[int(len(GA_display_pickled_plots) / 2):]:
-                display_pickled_plot(plot_filepath, prefix = pickled_path)
+            st.image(image_path + 'shap_xgb.png', caption = 'SHAP densities for Random Forest model on Georgia AP exam performance data over 2018-2022')       
+
+        st.markdown("""
+            ### Pass Rate against Important Features
+                    
+            Let us summarize the relationship of pass rate with the five important features identified by the SHAP plots. Intuitively, one should expect the pass rate to be positively correlated with per-capita income and population. This is what we see:
+        """)
+
+        left_co, right_co = st.columns(2)
+        with left_co:
+            display_pickled_plot('GA_AP_pass_rate_by_counties_per_capita_income.pkl', prefix = pickled_path)
+        with right_co:
+            display_pickled_plot('GA_AP_pass_rate_by_counties_population.pkl', prefix = pickled_path)
+
+        st.markdown("""                    
+            Less important of relationships are visualized below. 
+        """)
+
+        display_pickled_plot('GA_AP_pass_rate_by_counties_closest_five_avg_dormrooms_landgrant.pkl', prefix = pickled_path)
+        
+        left_co, right_co = st.columns(2)
+        with left_co:
+            display_pickled_plot('GA_AP_pass_rate_by_counties_closest_five_landgrant_avg.pkl', prefix = pickled_path)
+        with right_co:
+            display_pickled_plot('GA_AP_pass_rate_by_counties_closest_five_private_nfp_avg.pkl', prefix = pickled_path)
     
     ############################# ▲▲▲▲▲▲   GEORGIA TAB   ▲▲▲▲▲▲ #############################
     ############################# ▼▼▼▼▼▼  REFERENCES TAB ▼▼▼▼▼▼ #############################
