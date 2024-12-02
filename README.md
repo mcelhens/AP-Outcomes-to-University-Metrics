@@ -16,11 +16,17 @@ AP exams are scored on a whole number scale between 1 (lowest) and 5 (highest). 
 
 Beyond these socioeconomic factors, we wished to measure the strength of the effect of universities on AP outcomes. Without a clear source of data on all high school outreach programs offered by US universities, we made use of the various classifications offered by the [Carnegie Classifications of Institutions of Higher Education](https://carnegieclassifications.acenet.edu/). Of particular interest included R1 and R2 (i.e., doctoral with very high or high research activity, respectively), public, or private institutions. Other minority-serving aspects were also considered, such as historically Black, Hispanic-serving, and tribal colleges.
 
-## Description of the files
+## Description of the Repository
+- Each state's analysis is separated into its own folder: `Georgia`, `Massachusetts`, `North_Carolina`, and `Wisconsin`.
+- Datasets used in our project are stored in the directory: `data`.
+- All code to generate the Streamlit app is held in the directory: `streamlit_app`.
+- Various exploratory data analyses can be found in the main directory of the repository, as well.
+
+## Description of the Files
 - `broader_carnegie_classificatins.ipynb` contains exploration of the Carnegie classification data file `data/CCIHE2021-PublicData.xlsx`.
 - `data_fixing.ipynb` and `Poorly_formatted_data_fixer.ipynb` contain some codes we used to process the badly presented AP datasets we obtained from various sources (esp. College Board and Department of Education of various states).
 - `data_loaders.py` contains some functions that we routinely use to load various datasets in clean format. `distance_dorm_descriptors.py` contains the functions that we used to compute the distance, enrollment and dormrooms related features.
-- `features.ipynb` contains some exploration of relation between various classification categories in Carnegie data file `data/CCIHE2021-PublicData.xlsx`. `features.py` is a supporting file to that notebook.
+- `features.ipynb` contains some exploration of relation between various classification categories in Carnegie data file `data/CCIHE2021-PublicData.xlsx`. 
 - `four_states_combined_model.ipynb` contains our modelling for the combined county-by-county AP data of the four states GA, MA, NC and WI.
 - `Initial_analysis_national_level.ipynb` contains exploratory data analysis, exploring relation of AP pass rate with socio-economic and university count related features, done on state-by-state level, part of which led us to conclude why state-by-state was not a right resolution for our purposes.
 - `models.py` contains some functions that allows one to explore our Machine Learning models.

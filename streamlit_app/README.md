@@ -1,22 +1,21 @@
-# AP Outcomes to University Metrics -- Dashboard
+# AP Outcomes vs. University: Streamlit App
 
-This is a Streamlit app, work in progress.
+We summarize the repository of code that generates the Streamlit app.
 
-Demo based on: [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gdp-dashboard-template.streamlit.app/)
+View the app here: [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://ap-outcomes.streamlit.app/)
 
-### How to run it on your own machine
+## How to run it on your own machine
 
 1. Install the requirements
 
    ```
-   $ conda install pandas streamlit 
-   $ conda install -c conda-forge streamlit-folium
+   $ conda install -c conda-forge pandas streamlit geopandas joblib scikit-learn streamlit-folium
    ```
 
 2. Run the app
 
    ```
-   $ streamlit run app.py
+   $ streamlit run streamlit_app/app.py
    ```
 
 3. Editing with Live Preview
@@ -26,3 +25,16 @@ Demo based on: [![Open in Streamlit](https://static.streamlit.io/badges/streamli
 4. Stopping the server
 
    Simply press `Ctrl + C` in the terminal to stop locally serving the Streamlit app. 
+
+
+## Directory Structure
+
+```
+streamlit_app/
+├── ...    
+├── data/               Dataframes used in the app
+├── notebooks/          Notebooks that generate plots
+├── app.py              Main Streamlit application
+├── README.md        
+└── requirements.txt    Python dependencies
+```

@@ -83,17 +83,17 @@ def load_broader_categories():
 # Summary stats for three states
 @st.cache_data
 def get_state_summaries():
-    MA_stats = pd.read_csv(here_prefix + 'MA_summary_stats.csv')
-    WI_stats = pd.read_csv(here_prefix + 'WI_summary_stats.csv')
-    GA_stats = pd.read_csv(here_prefix + 'GA_summary_stats.csv')
+    MA_stats = pd.read_csv(here_prefix + 'data/MA_summary_stats.csv')
+    WI_stats = pd.read_csv(here_prefix + 'data/WI_summary_stats.csv')
+    GA_stats = pd.read_csv(here_prefix + 'data/GA_summary_stats.csv')
     return MA_stats, WI_stats, GA_stats
 
 # AP performance/availability/participation data for three states
 @st.cache_data
 def get_state_AP_tables():
-    MA_AP_table = pd.read_csv(here_prefix + 'MA_AP_table.csv')
-    WI_AP_table = pd.read_csv(here_prefix + 'WI_AP_table.csv')
-    GA_AP_table = pd.read_csv(here_prefix + 'GA_AP_table.csv')
+    MA_AP_table = pd.read_csv(here_prefix + 'data/MA_AP_table.csv')
+    WI_AP_table = pd.read_csv(here_prefix + 'data/WI_AP_table.csv')
+    GA_AP_table = pd.read_csv(here_prefix + 'data/GA_AP_table.csv')
     return MA_AP_table, WI_AP_table, GA_AP_table
 
 # Wisconsin's predictive model
@@ -106,7 +106,7 @@ def get_WI_data_and_model():
 
 # Three states' counties data
 def load_county_choropleth_data():
-    counties_map_data = pd.read_csv(here_prefix + 'States_Counties_Map_Data.csv')
+    counties_map_data = pd.read_csv(here_prefix + 'data/States_Counties_Map_Data.csv')
     counties_map_data['Year'] = counties_map_data['Year'].astype(str)
     return counties_map_data[counties_map_data['Year'] == '2022']
 
@@ -279,6 +279,13 @@ def main():
         ############################# ▼▼▼▼▼▼ INTRODUCTION ▼▼▼▼▼▼ #############################
 
         st.markdown("## Home")
+
+        st.markdown("""
+                    
+            Are you a university looking for opportunities to enact educational equity in your surrounding area? Are you a state or local official in charge of the strategic planning around improving standardized testing results amongst high schoolers? Or are you a parent deciding where to settle and have your children live and learn? We have prepared the following app to summarize how nearby universities can impact the quality of even primary education. 
+                    
+            How do universities influence local high schoolers’ standardized test performance? What benefits can universities offer despite the socio-economic limitations felt by their neighboring communities? We aim to provide a data-driven answer to these questions, as well as provide a user-friendly tool to our various stakeholders that permits them to explore the effect certain variables have on standardized testing performance. 
+        """)
 
         st.markdown('''
         ### Project Description
@@ -575,7 +582,8 @@ def main():
         )
 
         st.markdown("""
-                    As we can see, the hyperparameter-tuned XGBoost model performs the best, but the hyperparameter-tuned XGBoost with PCA was not far behind. Because of the reduction of the features, we expect the model with PCA to be more efficient and potentially also minimize overfitting issues. So, we decided to choose it as our final model to test on the testing data. The performance is as follows:""")
+                    As we can see, the hyperparameter-tuned XGBoost model performs the best, but the hyperparameter-tuned XGBoost with PCA was not far behind. Because of the reduction of the features, we expect the model with PCA to be more efficient and potentially also minimize overfitting issues. So, we decided to choose it as our final model to test on the testing data. The performance is as follows:
+        """)
         
         st.dataframe(
             data = {
@@ -671,7 +679,7 @@ def main():
             Massachusetts is **densely-populated**, being the 16th most populated state yet 44th in terms of land area. Massachusetts offers iconic institutions such as Harvard University and Massachusetts Institute of Technology, as well as a strong public university system (UMass), placing the state as a **firm leader in higher education** within the US. Massachusetts's main industries are mainly **professional or technical **services, real estate, or healthcare**.
                     
             ### Summary
-                    ''')
+        ''')
         
         # Summary and Choropleth
         
@@ -681,7 +689,7 @@ def main():
                 #### AP Performance, Availability, Participation
                         
                 Below we summarize the AP performance, availability, and participation in Massachusetts in 2022-2023. 
-                        ''')
+            ''')
 
             ############################# ▼▼▼▼▼▼ MASSACHUSETTS AP TABLE ▼▼▼▼▼▼ #############################
             st.dataframe(data = MA_AP_table, 
@@ -696,7 +704,7 @@ def main():
             
             st.markdown('''
                 Massachusetts performs slightly above average to most states in AP exams, reflecting its students having strong preparation and support on average. Massachusetts ranked 4th amongst all states in percent of students earning the top score (5) in their AP exams. And a large majority of its school districts offer at least five exams, meaning the state prioritizes college readiness for its high schoolers. However, it is clear that are some distinct disparaties in participation and access to AP exams between racial groups, despite having the second highest Black participation in the country.
-                        ''')
+            ''')
 
             # Scores
             display_pickled_plot('MA_score_distribution.pkl', prefix = pickled_path)
@@ -708,7 +716,7 @@ def main():
                 #### Model Features and University Statistics
                         
                 Below we present AP performance, per-capita income, population, and university data from the year 2022 in and around Massachusetts (we include nearby states New York, Vermont, New Hampshire, Maine, Rhode Island, and Connecticut).
-                        ''')
+            ''')
 
             ############################# ▼▼▼▼▼▼ MASSACHUSETTS CHOROPLETH ▼▼▼▼▼▼ #############################  
             MA_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature MA choropleth')
@@ -717,7 +725,7 @@ def main():
 
             st.markdown('''
                         Below we tally the universities which are either high research doctoral (R1/R2), historically Black, Hispanic serving, tribal, women's, public, or private not-for-profit. Most of Massachusetts' universities are concentrated around Boston in the east of the state.                         
-                        ''')
+            ''')
             
             ############################# ▼▼▼▼▼▼ MASSACHUSETTS UNIVERSITIES TABLE ▼▼▼▼▼▼ #############################
             st.dataframe(data = MA_stats, 
@@ -818,7 +826,7 @@ def main():
             Wisconsin is a **mid-sized** state (23rd largest by land area) with a similarly middling population density (20th highest). Wisconsin is well known for its public **University of Wisconsin System** with its flagship campus in Madison: the system is a significant driver of higher education and research in the state. The state's main industries include **agriculture and manufacturing**.
                     
             ### Summary
-                    ''')
+        ''')
         
         # Summary and Choropleth
         
@@ -828,7 +836,7 @@ def main():
                 #### AP Performance, Availability, Participation
                         
                 Below we summarize the AP performance, availability, and participation in Wisconsin in 2022-2023. 
-                        ''')
+            ''')
 
             ############################# ▼▼▼▼▼▼ WISCONSIN AP TABLE ▼▼▼▼▼▼ #############################
             st.dataframe(data = WI_AP_table, 
@@ -845,7 +853,7 @@ def main():
                         Wisconsin 
 
                         Wisconsin follows the pattern of northern states outperforming the rest of the country in AP exam pass rates. In fact, Wisconsin is in the top 10 states in terms of pass rate for 2022. But Wisconsin has some of the worst participation by Black students in the country. 
-                        ''')
+            ''')
             
             # Scores
             display_pickled_plot('WI_score_distribution.pkl', prefix = pickled_path)
@@ -973,7 +981,7 @@ def main():
             Georgia is a mid-sized state (24th largest by land area) with a relatively **high population** (8th largest by population). Over half (57.2%) of the state's population is **concentrated in the Atlanta metro area**, which also hosts some of the state's most influential universities like Georgia Institute of Technology and the Unviersity of Georgia. Moreover, Georgia is **33.2% Black or African American**, and offers 9 **historically Black colleges**, ranking third across all states in both respects. Moorehouse College is a notable example that has been home to celebrated African American graduates and recent investments in research on issues affecting Black men. Georgia's main industries are **areospace, automotive, and manufacturing**. 
                     
             ### Summary
-                    ''')
+        ''')
         
         # Summary and Choropleth
         
@@ -983,7 +991,7 @@ def main():
                 #### AP Performance, Availability, Participation
                         
                 Below we summarize the AP performance, availability, and participation in Georgia in 2022-2023. 
-                        ''')
+            ''')
             
             ############################# ▼▼▼▼▼▼ GEORGIA AP TABLE ▼▼▼▼▼▼ #############################
             st.dataframe(data = GA_AP_table, 
@@ -998,7 +1006,7 @@ def main():
 
             st.markdown('''
                 Georgia has the lowest passing rate out of all three states considered in our state-by-state analysis, but not by much. Actually, Georgia's passing rates ranked very well in 2022-2023 in comparison to those of its southeastern counterparts, and were almost four percentage points above the national average. The state also experiences some of the worst disparities between Asian, White, and Black student participations.
-                        ''')
+            ''')
             
             # Scores
             display_pickled_plot('GA_score_distribution.pkl', prefix = pickled_path)
@@ -1010,7 +1018,7 @@ def main():
                 #### Model Features and University Statistics
                         
                 Below we present AP performance, per-capita income, population, and university data from the year 2022 in and around Georgia (we include nearby states North Carolina, South Carolina, Florida, Alabama, and Tennessee).
-                        ''')
+            ''')
 
             ############################# ▼▼▼▼▼▼ GEORGIA CHOROPLETH ▼▼▼▼▼▼ #############################
             GA_selected_feature = st.selectbox("Select Feature to Display", features_dict.keys(), key = 'select a feature GA choropleth')
@@ -1019,7 +1027,7 @@ def main():
 
             st.markdown('''
                         Below we tally the universities which are either high research doctoral (R1/R2), historically Black, Hispanic serving, tribal, women's, public, or private not-for-profit. Many of Georgia's universities are concentrated around Atlanta in the north of the state.                     
-                        ''')
+            ''')
 
             ############################# ▼▼▼▼▼▼ GEORGIA UNIVERSITIES TABLE ▼▼▼▼▼▼ #############################
             st.dataframe(data = GA_stats, 
@@ -1036,7 +1044,7 @@ def main():
                     
             ### Trends with AP Performance
                     
-            First, we summarize the results of our analysis on Georgia: Georgia proves interesting in its modestly reduced dependence on income; however, it generally trends like the other states. Its largest university influence was land-grant university dorms and distance both with slight positive relationships. To our surprise, nearby universities of other types do not have a positive relationship. Land-grant universities had the highest average distance away. One has to ask if perhaps the distance is so far that it may actually be an erroneous conclusion. We selected XGBoost as the optimal model for Georgia. Overall, Georgia provides evidence to the variance of states across the US. Further research would be advantaged by minority considerations at least at the university level, training over more years of data, and the absorbtion of other city districts into their appropriate counties.
+            First, we summarize the results of our analysis on Georgia: Georgia proves interesting in its modestly reduced dependence on income; however, it generally trends like the other states. Its largest university influence was land-grant university dorms and distance. To our surprise, both of these relationships were slightly positive. Nearby universities of other types do not have a positive relationship. Land-grant universities had the highest average distance away. One has to ask if perhaps the distance is so far that it may actually be an erroneous conclusion. We selected XGBoost as the optimal model for Georgia. Overall, Georgia provides evidence to the variance of states across the US. Further research would be advantaged by minority considerations at least at the university level, training over more years of data, and the absorbtion of other city districts into their appropriate counties.
               
             We trained various regression tools available via `sklearn` or `xgboost`. The performance of the models (as measured by root mean squared error and coeffiients of determination) are summarized as follows.
         """)
@@ -1056,7 +1064,7 @@ def main():
                     
             ### SHAP Values for Feature Selection
 
-            There were altogether 17 features present in our modeling. However, the features are not all equally important. We used Shapley Additive Explanations (SHAP for short) to interpret our Random Forest model and understand the important of various features on our random forest model. First, we use the SHAP summary bar plot to show the average impact of each feature on the model's predictions, as measured by their mean absolute SHAP values. The top five features identified as the most influential and hence selected for further analysis included: 
+            There were altogether 17 features present in our modeling. However, the features are not all equally important. We used Shapley Additive Explanations (SHAP for short) to interpret our XGBoost model and understand the important of various features on our XGBoost model. First, we use the SHAP summary bar plot to show the average impact of each feature on the model's predictions, as measured by their mean absolute SHAP values. The top five features identified as the most influential and hence selected for further analysis included: 
                     
             1. `Per capita income`
             2. `Population`
@@ -1071,9 +1079,9 @@ def main():
 
         left_co, right_co = st.columns(2)
         with left_co:
-            st.image(image_path + 'shap_summary_xbg.png', caption = 'SHAP values for Random Forest model on Georgia AP exam performance data over 2018-2022')
+            st.image(image_path + 'shap_summary_xbg.png', caption = 'SHAP values for XGBoost model on Georgia AP exam performance data over 2018-2022')
         with right_co:
-            st.image(image_path + 'shap_xgb.png', caption = 'SHAP densities for Random Forest model on Georgia AP exam performance data over 2018-2022')       
+            st.image(image_path + 'shap_xgb.png', caption = 'SHAP densities for XGBoost model on Georgia AP exam performance data over 2018-2022')       
 
         st.markdown("""
             ### Pass Rate against Important Features
@@ -1109,12 +1117,12 @@ def main():
             2. United States Census Bureau, United States Office of Management and Budget (July, 2023). Metropolitan and Micropolitan Core-Based Statistical Areas (CBSAs), Metropolitan Divisions, and Combined Statistical Areas (CSAs). [Link](https://www.census.gov/geographies/reference-maps/2023/geo/cbsa.html)
             3. Georgia Governor's Office of Student Achievement. Data Dashboards: Advanced Placement (AP) Scores, Years 2019–2023. [Link](https://gosa.georgia.gov/dashboards-data-report-card/downloadable-data)
             4. Georgia Department of Community Affairs Office of Research. Municipalities by County. [Link](https://dca.georgia.gov/)
-            5. Massachusetts Department of Elementary and Secondary Education. Statewide Reports: 2022–23 Advanced Placement Performance. [Link](https://profiles.doe.mass.edu/statereport/ap.aspx)
+            5. Massachusetts Department of Elementary and Secondary Education. Statewide Reports: 2019–23 Advanced Placement Performance. [Link](https://profiles.doe.mass.edu/statereport/ap.aspx)
             6. Wisconsin Department of Public Instruction. Advanced Placement (AP) Scores, 2019–2023. [Link](https://dpi.wi.gov/wisedash/download-files)
             7. Federal Reserve Bank of St. Louis. [Link](https://fred.stlouisfed.org/)
             8. United States Census Bureau. Cartographic Boundary Fiels - Shapefile. 2018. [Link](https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html)
             9. AP National and State Data. AP Central. College Board. 2024. [Link](](https://apcentral.collegeboard.org/about-ap/ap-data-research/national-state-data). 
-                    ''')
+        ''')
 
     ############################# ▲▲▲▲▲▲ REFERENCES TAB ▲▲▲▲▲▲ #############################
     ############################# ▲▲▲▲▲▲  TABS  ▲▲▲▲▲▲ #############################
