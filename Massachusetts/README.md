@@ -1,4 +1,4 @@
-# AP Outcomes data processing and modelling for Massachusetts
+# AP outcomes data processing and modelling for Massachusetts
 This folder contains our codes for machine learning models for Massachusetts. The datasets are in ../data/Massachusetts folder of the main directory.
 
 ### Description of the files
