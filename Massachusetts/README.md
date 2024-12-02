@@ -53,13 +53,6 @@ The model utilizes 17 features, categorized as follows:
 - **Distance Calculation**: Computed using the `geopy.distance` function.
 - **Training Data**: Combines Massachusetts AP data from the 2019–2023 academic years.
 
-### Top 5 Features Identified by SHAP
-1. Per capita income
-2. Population
-3. Average distance to the five closest public universities
-4. Average distance to the five closest private not-for-profit universities
-5. Average annual enrollment for the five closest land-grant universities
-
 ---
 
 ## Statistical and Machine Learning Models
@@ -89,5 +82,27 @@ We evaluated the following models using 5-fold cross-validation:
 
 ---
 
+## Top 5 Features Identified by SHAP
+
+We use `XGBoost` for the Massachusetts AP performance analysis and made use of SHAP values for feature selection. 
+
+First, we use the SHAP summary bar plot to show the average impact of each feature on the model’s predictions, as measured by their mean absolute SHAP values. We identify the top five features as
+1. Per capita income
+2. Population
+3. Average distance to the five closest public universities
+4. Average distance to the five closest private not-for-profit universities
+5. Average annual enrollment for the five closest land-grant universities
+
+![SHAP Image](shap_summary_plot_bar.png)
+
+
+Next, we present a density scatter plot of SHAP values to illustrate how each feature influences the model’s predictions for individual validation samples. In the plot, each point represents a sample: its position along the x-axis indicates the feature’s positive or negative impact on the model’s output, and its color reflects the feature value (red for high values, blue for low values). High-density areas highlight overlapping SHAP values, emphasizing the variability in feature impacts across samples.
+
+![SHAP Image](shap_summary_plot_density_scatter.png)
+
+---
+
 ## Conclusion
-`XGBoost` was identified as the best-performing model for predicting AP outcomes in Massachusetts. The repository includes the codes for model training, feature importance analysis, and interactive visualizations.
+`XGBoost` emerged as the best-performing model for predicting AP outcomes in Massachusetts. The repository includes resources for model training, feature importance analysis, and interactive visualizations.
+
+SHAP value analysis identified **per capita income** as the most influential factor, surpassing the combined impact of the next four features. Wealthier districts likely benefit from better funding, more AP offerings, superior resources, and additional academic support, which collectively enhance AP performance outcomes.
