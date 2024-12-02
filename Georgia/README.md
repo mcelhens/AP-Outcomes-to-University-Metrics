@@ -119,7 +119,7 @@ The following table comes from 5-fold cross validation.
 
 #### SHAPLY calculations
 
-To better visualize the role of the 17 features we performed some simple SHAP calculations. Georgia is notable for having a less severe dependence on population and income. Further investigations would be useful. We also calculated the values of the ranked feature importance.
+To better visualize the role of the 17 features we performed some simple SHAP calculations on our XGBoost results. Georgia is notable for having a less severe dependence on population and income. Further investigations would be useful. We also calculated the values of the ranked feature importance.
 
 ![SHAP Image](shap_xgb.png)
 
@@ -155,4 +155,4 @@ We visualized the relationships to pass rate using seaborn's regplot. Noteably t
 
 ## Conclusion
 
-Georgia proves interesting in it's modestly reduced dependence on income; however, it generally trends like the other states. It's largest university influence was landgrant university dorms and distance both with slight positive relationships. Shockingly nearby universities of other types do not have a positive relationship. Landgrant universities had the highest average distance away. One has to ask if perhaps the distance is so far that it may actually be an erroneous conclusion. We selected XGBoost as the optimal model for Georgia. Overall, Georgia provides evidence to the variance of states across the US. Further research would be advantaged by minority considerations at least at the university level, the use of more years, and the absorbtion of other city districts into their appropriate counties.
+Georgia proves interesting in it's modestly reduced dependence on income; however, it generally trends like the other states. It's largest university influence was landgrant university dorms and distance both with slight positive relationships (via slope). This is interesting in that we would expect negative slopes on distances to suggest that nearby universities are beneficial to AP scores, i.e. as universities get closer scores go up. Landgrant universities had the highest average distance away. One has to ask if perhaps the distance is so far that it may actually be an erroneous conclusion. We selected XGBoost as the optimal model for Georgia. Overall, Georgia provides evidence to the variance of states across the US. Further research would be advantaged by minority considerations at least at the university level, the use of more years, and the absorbtion of other city districts into their appropriate counties.
