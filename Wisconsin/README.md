@@ -44,7 +44,8 @@ This folder contains our codes for machine learning models for Wisconsin state. 
 ![SHAP bar plot](WI_Shap.png "SHAP feature importance values")
 
 - As expected, per capita income is the most important feature in our model, but population is not far behind. The distances to private and public universities also carry some weight in our model (the impact of R1/R2 and STEM universities, however, is less pronounced). So, we conclude that while the university metrics are not as significant as the socio-economic factors on AP-performance, they still have some impact.
--Sinc Wisconsin has comparatively rural population with fairly robust public university system, one would expect proximity to public universities will have positive impact on the AP outcomes. Indeed, this expectation is vindicated by the following SHAP scatter density plot, where we can see high impact sample dots concentrated on the negative (closer = less distance) side of x-axis for `closest_five_public_avg` and `closest_five_landgrnt_avg`. On the other hand, for private univesities, the high impact sample dots are scattered on both sides of x-axis.
+
+-Since Wisconsin has comparatively rural population with fairly robust public university system, one would expect proximity to public universities will have positive impact on the AP outcomes. Indeed, this expectation is vindicated by the following SHAP scatter density plot, where we can see high impact sample dots concentrated on the negative (closer = less distance) side of x-axis for `closest_five_public_avg` and `closest_five_landgrnt_avg`. On the other hand, for private univesities, the high impact sample dots are scattered on both sides of x-axis.
 
 ![SHAP density scatter plot](WI_summary_scatter.png "SHAP feature importance scatter density")
 
